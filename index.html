@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -13,10 +12,6 @@
 <script src="https://js.tosspayments.com/v2/standard"></script>
 
 <style>
-
-/* ================================
-   기본
-================================ */
 
 *{
 box-sizing:border-box;
@@ -38,11 +33,6 @@ font-family:inherit;
 img{
 display:block;
 }
-
-
-/* ================================
-   헤더
-================================ */
 
 .header{
 position:sticky;
@@ -88,11 +78,6 @@ padding:10px 16px;
 border-radius:6px;
 }
 
-
-/* ================================
-   히어로
-================================ */
-
 .hero{
 max-width:1200px;
 margin:30px auto;
@@ -112,11 +97,6 @@ color:#ccc;
 line-height:1.7;
 }
 
-
-/* ================================
-   컨테이너
-================================ */
-
 .container{
 max-width:1200px;
 margin:auto;
@@ -127,11 +107,6 @@ padding:0 20px 60px;
 font-size:28px;
 margin:40px 0 20px;
 }
-
-
-/* ================================
-   검색
-================================ */
 
 .search{
 width:100%;
@@ -160,11 +135,6 @@ border-radius:20px;
 background:#111;
 color:#fff;
 }
-
-
-/* ================================
-   상품
-================================ */
 
 .products{
 display:grid;
@@ -224,11 +194,6 @@ padding:70px 20px;
 color:#888;
 }
 
-
-/* ================================
-   모달
-================================ */
-
 .modal-bg{
 position:fixed;
 inset:0;
@@ -284,11 +249,6 @@ color:#555;
 line-height:1.7;
 }
 
-
-/* ================================
-   버튼
-================================ */
-
 .btn{
 width:100%;
 padding:13px;
@@ -307,11 +267,6 @@ background:#777;
 background:#d00000;
 }
 
-
-/* ================================
-   입력
-================================ */
-
 .input{
 width:100%;
 padding:13px;
@@ -319,11 +274,6 @@ border:1px solid #ddd;
 border-radius:6px;
 margin-top:10px;
 }
-
-
-/* ================================
-   장바구니
-================================ */
 
 .cart-item{
 display:flex;
@@ -353,11 +303,6 @@ font-size:22px;
 font-weight:bold;
 margin-top:20px;
 }
-
-
-/* ================================
-   관리자
-================================ */
 
 .admin-form{
 display:grid;
@@ -433,11 +378,6 @@ background:#111;
 background:#d00000;
 }
 
-
-/* ================================
-   주문
-================================ */
-
 .order{
 border:1px solid #eee;
 border-radius:10px;
@@ -489,11 +429,6 @@ border-radius:6px;
 margin-top:10px;
 }
 
-
-/* ================================
-   결제 상태
-================================ */
-
 .payment-loading{
 display:none;
 position:fixed;
@@ -523,11 +458,6 @@ font-size:14px;
 line-height:1.6;
 }
 
-
-/* ================================
-   기타
-================================ */
-
 .notice{
 line-height:1.8;
 color:#555;
@@ -540,11 +470,6 @@ text-align:center;
 padding:50px 20px;
 margin-top:50px;
 }
-
-
-/* ================================
-   모바일
-================================ */
 
 @media(max-width:900px){
 
@@ -584,13 +509,7 @@ padding:0 15px 40px;
 
 </head>
 
-
 <body>
-
-
-<!-- ==================================
-     HEADER
-================================== -->
 
 <header class="header">
 
@@ -602,7 +521,6 @@ ondblclick="openAdminLogin()"
 >
 CARD POCKET
 </div>
-
 
 <nav class="nav">
 
@@ -624,7 +542,6 @@ NOTICE
 
 </nav>
 
-
 <button
 class="cart-button"
 onclick="openCart()"
@@ -636,14 +553,7 @@ onclick="openCart()"
 
 </header>
 
-
-
-<!-- ==================================
-     MAIN
-================================== -->
-
 <main id="home">
-
 
 <section class="hero">
 
@@ -652,28 +562,19 @@ CARD POCKET
 </h1>
 
 <p>
-
 특별한 포켓몬 카드를 일상 속에서 즐기는 방법.<br>
-
 정품 트레이딩 카드를 활용한 수제 카드 마그넷입니다.
-
 </p>
 
 </section>
 
-
-
 <div class="container">
-
-
-<!-- 상품 -->
 
 <section id="products">
 
 <h2 class="section-title">
 PRODUCT
 </h2>
-
 
 <input
 id="searchInput"
@@ -682,12 +583,10 @@ placeholder="상품명을 검색해보세요."
 oninput="renderProducts()"
 >
 
-
 <div
 id="filters"
 class="filters"
 ></div>
-
 
 <div
 id="productList"
@@ -702,16 +601,11 @@ class="products"
 
 </section>
 
-
-
-<!-- ABOUT -->
-
 <section id="about">
 
 <h2 class="section-title">
 ABOUT
 </h2>
-
 
 <div class="notice">
 
@@ -727,24 +621,17 @@ CARD POCKET은 정품 트레이딩 카드를 활용하여 제작한
 
 </section>
 
-
-
-<!-- NOTICE -->
-
 <section id="notice">
 
 <h2 class="section-title">
 NOTICE
 </h2>
 
-
 <div class="notice">
 
 • 상품에 따라 카드의 상태가 다를 수 있습니다.<br>
-
 • 수작업으로 제작되기 때문에 제품마다
 약간의 차이가 있을 수 있습니다.<br>
-
 • 실제 상품의 색상은 모니터 환경에 따라
 다르게 보일 수 있습니다.
 
@@ -752,16 +639,9 @@ NOTICE
 
 </section>
 
-
 </div>
 
 </main>
-
-
-
-<!-- ==================================
-     FOOTER
-================================== -->
 
 <footer class="footer">
 
@@ -774,12 +654,6 @@ CARD POCKET
 Handmade Card Magnet Shop
 
 </footer>
-
-
-
-<!-- ==================================
-     상품 상세
-================================== -->
 
 <div
 id="productModal"
@@ -795,28 +669,23 @@ onclick="closeModal('productModal')"
 ×
 </button>
 
-
 <img
 id="detailImage"
 >
 
-
 <h2
 id="detailName"
 ></h2>
-
 
 <div
 id="detailPrice"
 class="modal-price"
 ></div>
 
-
 <div
 id="detailDescription"
 class="modal-description"
 ></div>
-
 
 <button
 class="btn"
@@ -825,16 +694,9 @@ onclick="addDetailToCart()"
 장바구니 담기
 </button>
 
-
 </div>
 
 </div>
-
-
-
-<!-- ==================================
-     장바구니
-================================== -->
 
 <div
 id="cartModal"
@@ -850,14 +712,11 @@ onclick="closeModal('cartModal')"
 ×
 </button>
 
-
 <h2>
 장바구니
 </h2>
 
-
 <div id="cartItems"></div>
-
 
 <div class="cart-total">
 
@@ -869,7 +728,6 @@ onclick="closeModal('cartModal')"
 
 </div>
 
-
 <button
 class="btn"
 onclick="openCheckout()"
@@ -877,16 +735,9 @@ onclick="openCheckout()"
 주문하기
 </button>
 
-
 </div>
 
 </div>
-
-
-
-<!-- ==================================
-     주문
-================================== -->
 
 <div
 id="checkoutModal"
@@ -902,11 +753,9 @@ onclick="closeModal('checkoutModal')"
 ×
 </button>
 
-
 <h2>
 주문하기
 </h2>
-
 
 <p
 style="color:#777;margin-bottom:10px;line-height:1.6"
@@ -914,13 +763,11 @@ style="color:#777;margin-bottom:10px;line-height:1.6"
 배송받으실 정보를 입력해주세요.
 </p>
 
-
 <input
 id="buyerName"
 class="input"
 placeholder="이름"
 >
-
 
 <input
 id="buyerPhone"
@@ -929,13 +776,11 @@ placeholder="전화번호"
 type="tel"
 >
 
-
 <input
 id="buyerAddress"
 class="input"
 placeholder="배송 주소"
 >
-
 
 <div
 style="
@@ -960,7 +805,6 @@ style="font-size:22px;"
 
 </div>
 
-
 <button
 class="btn"
 onclick="createOrder()"
@@ -968,16 +812,9 @@ onclick="createOrder()"
 결제하기
 </button>
 
-
 </div>
 
 </div>
-
-
-
-<!-- ==================================
-     결제 로딩
-================================== -->
 
 <div
 id="paymentLoading"
@@ -999,12 +836,6 @@ class="payment-loading"
 
 </div>
 
-
-
-<!-- ==================================
-     관리자 로그인
-================================== -->
-
 <div
 id="adminLoginModal"
 class="modal-bg"
@@ -1019,11 +850,9 @@ onclick="closeModal('adminLoginModal')"
 ×
 </button>
 
-
 <h2>
 관리자 로그인
 </h2>
-
 
 <input
 id="adminPassword"
@@ -1032,7 +861,6 @@ class="input"
 placeholder="관리자 비밀번호"
 >
 
-
 <button
 class="btn"
 onclick="loginAdmin()"
@@ -1040,16 +868,9 @@ onclick="loginAdmin()"
 로그인
 </button>
 
-
 </div>
 
 </div>
-
-
-
-<!-- ==================================
-     관리자
-================================== -->
 
 <div
 id="adminModal"
@@ -1065,28 +886,20 @@ onclick="closeModal('adminModal')"
 ×
 </button>
 
-
 <h2>
 CARD POCKET 관리자
 </h2>
-
-
-
-<!-- 상품 관리 -->
 
 <h3 style="margin-top:25px;">
 상품 관리
 </h3>
 
-
 <div class="admin-form">
-
 
 <input
 id="adminName"
 placeholder="상품명"
 >
-
 
 <input
 id="adminPrice"
@@ -1094,18 +907,15 @@ type="number"
 placeholder="가격"
 >
 
-
 <input
 id="adminCategory"
 placeholder="카테고리"
 >
 
-
 <input
 id="adminImage"
 placeholder="이미지 URL (선택)"
 >
-
 
 <input
 id="adminImageFile"
@@ -1115,19 +925,16 @@ accept="image/*"
 onchange="previewImage()"
 >
 
-
 <img
 id="imagePreview"
 class="preview"
 >
-
 
 <textarea
 id="adminDescription"
 rows="5"
 placeholder="상품 설명"
 ></textarea>
-
 
 <button
 id="saveProductButton"
@@ -1136,7 +943,6 @@ onclick="saveProduct()"
 >
 상품 등록
 </button>
-
 
 <button
 id="cancelEditButton"
@@ -1147,23 +953,16 @@ style="display:none"
 수정 취소
 </button>
 
-
 </div>
-
 
 <div
 id="adminProductList"
 >
 </div>
 
-
-
-<!-- 주문 관리 -->
-
 <h3 style="margin-top:40px;">
 주문 관리
 </h3>
-
 
 <button
 class="btn"
@@ -1171,7 +970,6 @@ onclick="loadOrders()"
 >
 주문 새로고침
 </button>
-
 
 <div
 id="orderList"
@@ -1185,15 +983,11 @@ style="color:#888;text-align:center;padding:30px"
 
 </div>
 
-
 </div>
 
 </div>
-
-
 
 <script>
-
 
 /* ==========================================
    SUPABASE
@@ -1202,10 +996,8 @@ style="color:#888;text-align:center;padding:30px"
 const SUPABASE_URL =
 "https://liyjjunpwexsqvmrdeas.supabase.co";
 
-
 const SUPABASE_KEY =
 "sb_publishable_9NwuhkCzUm9xwgr_OrdeDA_4rpIsND5";
-
 
 const supabaseClient =
 window.supabase.createClient(
@@ -1214,18 +1006,11 @@ SUPABASE_KEY
 );
 
 
-
 /* ==========================================
    TOSS PAYMENTS
 ========================================== */
 
 let tossPayments = null;
-
-
-/*
-   Vercel / 서버에서
-   TOSS_CLIENT_KEY를 받아옵니다.
-*/
 
 async function initTossPayments(){
 
@@ -1233,7 +1018,6 @@ try{
 
 const response =
 await fetch("/api/toss-config");
-
 
 if(!response.ok){
 
@@ -1243,10 +1027,8 @@ throw new Error(
 
 }
 
-
 const config =
 await response.json();
-
 
 if(!config.clientKey){
 
@@ -1256,15 +1038,12 @@ throw new Error(
 
 }
 
-
 tossPayments =
 TossPayments(
 config.clientKey
 );
 
-
 return true;
-
 
 }catch(error){
 
@@ -1276,9 +1055,6 @@ error
 return false;
 
 }
-
-}
-
 
 
 /* ==========================================
@@ -1298,7 +1074,6 @@ let editingProductId = null;
 let editingOldImage = null;
 
 
-
 /* ==========================================
    시작
 ========================================== */
@@ -1315,7 +1090,6 @@ await initTossPayments();
 
 }
 );
-
 
 
 /* ==========================================
@@ -1339,11 +1113,9 @@ ascending:false
 }
 );
 
-
 if(error){
 
 console.error(error);
-
 
 document.getElementById(
 "productList"
@@ -1365,17 +1137,14 @@ return;
 
 }
 
-
 products =
 data || [];
-
 
 renderFilters();
 
 renderProducts();
 
 }
-
 
 
 /* ==========================================
@@ -1388,7 +1157,6 @@ const container =
 document.getElementById(
 "filters"
 );
-
 
 const categories = [
 
@@ -1406,9 +1174,7 @@ product => product.category
 
 ];
 
-
 container.innerHTML = "";
-
 
 categories.forEach(
 category => {
@@ -1418,10 +1184,8 @@ document.createElement(
 "button"
 );
 
-
 button.textContent =
 category;
-
 
 if(
 category === currentCategory
@@ -1432,7 +1196,6 @@ button.classList.add(
 );
 
 }
-
 
 button.onclick =
 function(){
@@ -1446,7 +1209,6 @@ renderProducts();
 
 };
 
-
 container.appendChild(
 button
 );
@@ -1454,7 +1216,6 @@ button
 });
 
 }
-
 
 
 /* ==========================================
@@ -1468,17 +1229,14 @@ document.getElementById(
 "productList"
 );
 
-
 const searchInput =
 document.getElementById(
 "searchInput"
 );
 
-
 const keyword =
 (searchInput?.value || "")
 .toLowerCase();
-
 
 const filtered =
 products.filter(
@@ -1490,17 +1248,14 @@ const search =
 .toLowerCase()
 .includes(keyword);
 
-
 const category =
 
 currentCategory === "전체" ||
 product.category === currentCategory;
 
-
 return search && category;
 
 });
-
 
 if(
 filtered.length === 0
@@ -1520,7 +1275,6 @@ return;
 
 }
 
-
 list.innerHTML =
 
 filtered.map(
@@ -1532,11 +1286,9 @@ product.image_url ||
 
 "https://placehold.co/600x600?text=CARD+POCKET";
 
-
 return `
 
 <div class="product">
-
 
 <img
 
@@ -1552,9 +1304,7 @@ onerror="this.src='https://placehold.co/600x600?text=NO+IMAGE'"
 
 >
 
-
 <div class="product-info">
-
 
 <div class="product-category">
 
@@ -1564,7 +1314,6 @@ product.category || ""
 
 </div>
 
-
 <div class="product-name">
 
 ${escapeHtml(
@@ -1572,7 +1321,6 @@ product.name || ""
 )}
 
 </div>
-
 
 <div class="product-price">
 
@@ -1582,7 +1330,6 @@ product.price || 0
 
 </div>
 
-
 <button
 onclick="openProduct(${product.id})"
 >
@@ -1590,7 +1337,6 @@ onclick="openProduct(${product.id})"
 상품 보기
 
 </button>
-
 
 </div>
 
@@ -1601,7 +1347,6 @@ onclick="openProduct(${product.id})"
 }).join("");
 
 }
-
 
 
 /* ==========================================
@@ -1615,15 +1360,12 @@ products.find(
 p => Number(p.id) === Number(id)
 );
 
-
 if(!product){
 return;
 }
 
-
 selectedProduct =
 product;
-
 
 document.getElementById(
 "detailImage"
@@ -1633,13 +1375,11 @@ product.image_url ||
 
 "https://placehold.co/600x600?text=CARD+POCKET";
 
-
 document.getElementById(
 "detailName"
 ).textContent =
 
 product.name || "";
-
 
 document.getElementById(
 "detailPrice"
@@ -1651,13 +1391,11 @@ product.price || 0
 +
 "원";
 
-
 document.getElementById(
 "detailDescription"
 ).textContent =
 
 product.description || "";
-
 
 document.getElementById(
 "productModal"
@@ -1665,7 +1403,6 @@ document.getElementById(
 "flex";
 
 }
-
 
 
 /* ==========================================
@@ -1678,18 +1415,15 @@ if(!selectedProduct){
 return;
 }
 
-
 addToCart(
 selectedProduct
 );
-
 
 closeModal(
 "productModal"
 );
 
 }
-
 
 
 /* ==========================================
@@ -1707,7 +1441,6 @@ localStorage.getItem(
 )
 ) || [];
 
-
 if(!Array.isArray(cart)){
 cart = [];
 }
@@ -1718,11 +1451,9 @@ cart = [];
 
 }
 
-
 updateCartCount();
 
 }
-
 
 
 /* ==========================================
@@ -1739,11 +1470,9 @@ JSON.stringify(cart)
 
 );
 
-
 updateCartCount();
 
 }
-
 
 
 /* ==========================================
@@ -1759,7 +1488,6 @@ item =>
 Number(item.id) ===
 Number(product.id)
 );
-
 
 if(existing){
 
@@ -1789,16 +1517,13 @@ quantity:
 
 }
 
-
 saveCart();
-
 
 alert(
 "장바구니에 담았습니다."
 );
 
 }
-
 
 
 /* ==========================================
@@ -1821,14 +1546,12 @@ item.quantity || 0
 
 );
 
-
 document.getElementById(
 "cartCount"
 ).textContent =
 count;
 
 }
-
 
 
 /* ==========================================
@@ -1839,14 +1562,12 @@ function openCart(){
 
 renderCart();
 
-
 document.getElementById(
 "cartModal"
 ).style.display =
 "flex";
 
 }
-
 
 
 /* ==========================================
@@ -1859,7 +1580,6 @@ const container =
 document.getElementById(
 "cartItems"
 );
-
 
 if(
 cart.length === 0
@@ -1875,20 +1595,16 @@ container.innerHTML = `
 
 `;
 
-
 document.getElementById(
 "cartTotal"
 ).textContent =
 "0원";
 
-
 return;
 
 }
 
-
 let total = 0;
-
 
 container.innerHTML =
 
@@ -1900,14 +1616,11 @@ total +=
 Number(item.price) *
 Number(item.quantity);
 
-
 return `
 
 <div class="cart-item">
 
-
 <div class="cart-item-info">
-
 
 <div class="cart-item-name">
 
@@ -1916,7 +1629,6 @@ item.name
 )}
 
 </div>
-
 
 <div class="cart-item-price">
 
@@ -1928,9 +1640,7 @@ ${item.quantity}
 
 </div>
 
-
 </div>
-
 
 <button
 
@@ -1944,13 +1654,11 @@ onclick="removeCartItem(${index})"
 
 </button>
 
-
 </div>
 
 `;
 
 }).join("");
-
 
 document.getElementById(
 "cartTotal"
@@ -1961,7 +1669,6 @@ total.toLocaleString()
 "원";
 
 }
-
 
 
 /* ==========================================
@@ -1975,14 +1682,11 @@ index,
 1
 );
 
-
 saveCart();
-
 
 renderCart();
 
 }
-
 
 
 /* ==========================================
@@ -2003,7 +1707,6 @@ return;
 
 }
 
-
 const total =
 cart.reduce(
 (sum,item) =>
@@ -2013,7 +1716,6 @@ Number(item.quantity),
 0
 );
 
-
 document.getElementById(
 "checkoutTotal"
 ).textContent =
@@ -2022,11 +1724,9 @@ total.toLocaleString()
 +
 "원";
 
-
 closeModal(
 "cartModal"
 );
-
 
 document.getElementById(
 "checkoutModal"
@@ -2034,7 +1734,6 @@ document.getElementById(
 "flex";
 
 }
-
 
 
 /* ==========================================
@@ -2048,18 +1747,15 @@ document.getElementById(
 "buyerName"
 ).value.trim();
 
-
 const phone =
 document.getElementById(
 "buyerPhone"
 ).value.trim();
 
-
 const address =
 document.getElementById(
 "buyerAddress"
 ).value.trim();
-
 
 if(!name){
 
@@ -2071,7 +1767,6 @@ return;
 
 }
 
-
 if(!phone){
 
 alert(
@@ -2082,7 +1777,6 @@ return;
 
 }
 
-
 if(!address){
 
 alert(
@@ -2092,7 +1786,6 @@ alert(
 return;
 
 }
-
 
 if(cart.length === 0){
 
@@ -2122,7 +1815,6 @@ Number(item.quantity),
 
 );
 
-
 if(total <= 0){
 
 alert(
@@ -2140,7 +1832,6 @@ return;
 
 const now =
 new Date();
-
 
 const orderNumber =
 
@@ -2180,7 +1871,6 @@ crypto
 .toUpperCase();
 
 
-
 /* ==================================
    주문 저장
 ================================== */
@@ -2216,11 +1906,9 @@ status:
 
 }]);
 
-
 if(error){
 
 console.error(error);
-
 
 alert(
 
@@ -2235,7 +1923,6 @@ return;
 }
 
 
-
 /* ==================================
    토스 초기화
 ================================== */
@@ -2244,7 +1931,6 @@ if(!tossPayments){
 
 const initialized =
 await initTossPayments();
-
 
 if(!initialized){
 
@@ -2270,7 +1956,6 @@ const firstProductName =
 cart[0]?.name ||
 "CARD POCKET 상품";
 
-
 const orderName =
 cart.length > 1
 
@@ -2281,7 +1966,6 @@ cart.length > 1
 :
 
 firstProductName;
-
 
 
 /* ==================================
@@ -2298,10 +1982,21 @@ try{
 
 
 /* ==================================
+   토스 결제 객체 생성
+================================== */
+
+const payment =
+tossPayments.payment({
+customerKey:
+`CARDPOCKET-${orderNumber}`
+});
+
+
+/* ==================================
    토스 결제창
 ================================== */
 
-await tossPayments.requestPayment({
+await payment.requestPayment({
 
 method:
 "CARD",
@@ -2378,7 +2073,6 @@ document.getElementById(
 }
 
 
-
 /* ==========================================
    관리자 로그인
 ========================================== */
@@ -2389,14 +2083,12 @@ document.getElementById(
 "adminPassword"
 ).value = "";
 
-
 document.getElementById(
 "adminLoginModal"
 ).style.display =
 "flex";
 
 }
-
 
 
 /* ==========================================
@@ -2411,7 +2103,6 @@ document.getElementById(
 "adminPassword"
 ).value;
 
-
 if(
 password === "cardpocket"
 ){
@@ -2419,7 +2110,6 @@ password === "cardpocket"
 closeModal(
 "adminLoginModal"
 );
-
 
 openAdmin();
 
@@ -2434,7 +2124,6 @@ alert(
 }
 
 
-
 /* ==========================================
    관리자 열기
 ========================================== */
@@ -2443,20 +2132,16 @@ function openAdmin(){
 
 resetAdminForm();
 
-
 document.getElementById(
 "adminModal"
 ).style.display =
 "flex";
 
-
 renderAdminProducts();
-
 
 loadOrders();
 
 }
-
 
 
 /* ==========================================
@@ -2471,13 +2156,11 @@ document.getElementById(
 "adminImageFile"
 ).files[0];
 
-
 const preview =
 
 document.getElementById(
 "imagePreview"
 );
-
 
 if(!file){
 
@@ -2488,10 +2171,8 @@ return;
 
 }
 
-
 const reader =
 new FileReader();
-
 
 reader.onload =
 function(event){
@@ -2504,13 +2185,11 @@ preview.style.display =
 
 };
 
-
 reader.readAsDataURL(
 file
 );
 
 }
-
 
 
 /* ==========================================
@@ -2523,14 +2202,12 @@ if(!file){
 return null;
 }
 
-
 const extension =
 
 file.name
 .split(".")
 .pop()
 .toLowerCase();
-
 
 const fileName =
 
@@ -2548,7 +2225,6 @@ Math.random()
 "." +
 
 extension;
-
 
 const {
 error
@@ -2575,7 +2251,6 @@ false
 
 );
 
-
 if(error){
 
 throw new Error(
@@ -2588,7 +2263,6 @@ error.message
 
 }
 
-
 const {
 data
 } =
@@ -2600,11 +2274,9 @@ supabaseClient
 fileName
 );
 
-
 return data.publicUrl;
 
 }
-
 
 
 /* ==========================================
@@ -2617,15 +2289,12 @@ if(!url){
 return null;
 }
 
-
 const marker =
 
 "/storage/v1/object/public/product-images/";
 
-
 const index =
 url.indexOf(marker);
-
 
 if(
 index === -1
@@ -2634,7 +2303,6 @@ index === -1
 return null;
 
 }
-
 
 return decodeURIComponent(
 
@@ -2650,7 +2318,6 @@ marker.length
 }
 
 
-
 /* ==========================================
    Storage 이미지 삭제
 ========================================== */
@@ -2660,11 +2327,9 @@ async function deleteStorageImage(url){
 const path =
 getStoragePathFromUrl(url);
 
-
 if(!path){
 return;
 }
-
 
 await supabaseClient
 .storage
@@ -2672,7 +2337,6 @@ await supabaseClient
 .remove([path]);
 
 }
-
 
 
 /* ==========================================
@@ -2687,7 +2351,6 @@ document.getElementById(
 "adminName"
 ).value.trim();
 
-
 const price =
 
 Number(
@@ -2698,13 +2361,11 @@ document.getElementById(
 
 );
 
-
 const category =
 
 document.getElementById(
 "adminCategory"
 ).value.trim();
-
 
 const imageUrl =
 
@@ -2712,21 +2373,17 @@ document.getElementById(
 "adminImage"
 ).value.trim();
 
-
 const file =
 
 document.getElementById(
 "adminImageFile"
 ).files[0];
 
-
 const description =
 
 document.getElementById(
 "adminDescription"
 ).value.trim();
-
-
 
 if(!name){
 
@@ -2738,7 +2395,6 @@ return;
 
 }
 
-
 if(!price || price <= 0){
 
 alert(
@@ -2749,11 +2405,8 @@ return;
 
 }
 
-
-
 let finalImage =
 imageUrl;
-
 
 
 /* 파일 업로드 */
@@ -2778,7 +2431,6 @@ return;
 }
 
 }
-
 
 
 /* ==================================
@@ -2818,7 +2470,6 @@ description
 editingProductId
 );
 
-
 if(error){
 
 alert(
@@ -2852,33 +2503,25 @@ editingOldImage
 
 }
 
-
 alert(
 "상품이 수정되었습니다."
 );
 
-
 editingProductId =
 null;
-
 
 editingOldImage =
 null;
 
-
 resetAdminForm();
-
 
 await loadProducts();
 
-
 renderAdminProducts();
-
 
 return;
 
 }
-
 
 
 /* ==================================
@@ -2910,7 +2553,6 @@ description
 
 }]);
 
-
 if(error){
 
 alert(
@@ -2925,22 +2567,17 @@ return;
 
 }
 
-
 alert(
 "상품이 등록되었습니다."
 );
 
-
 resetAdminForm();
 
-
 await loadProducts();
-
 
 renderAdminProducts();
 
 }
-
 
 
 /* ==========================================
@@ -2955,19 +2592,15 @@ products.find(
 p => Number(p.id) === Number(id)
 );
 
-
 if(!product){
 return;
 }
 
-
 editingProductId =
 id;
 
-
 editingOldImage =
 product.image_url || null;
-
 
 document.getElementById(
 "adminName"
@@ -2975,13 +2608,11 @@ document.getElementById(
 
 product.name || "";
 
-
 document.getElementById(
 "adminPrice"
 ).value =
 
 product.price || "";
-
 
 document.getElementById(
 "adminCategory"
@@ -2989,13 +2620,11 @@ document.getElementById(
 
 product.category || "";
 
-
 document.getElementById(
 "adminImage"
 ).value =
 
 product.image_url || "";
-
 
 document.getElementById(
 "adminDescription"
@@ -3003,18 +2632,15 @@ document.getElementById(
 
 product.description || "";
 
-
 document.getElementById(
 "adminImageFile"
 ).value = "";
-
 
 const preview =
 
 document.getElementById(
 "imagePreview"
 );
-
 
 if(
 product.image_url
@@ -3033,12 +2659,10 @@ preview.style.display =
 
 }
 
-
 document.getElementById(
 "saveProductButton"
 ).textContent =
 "상품 수정";
-
 
 document.getElementById(
 "cancelEditButton"
@@ -3046,7 +2670,6 @@ document.getElementById(
 "block";
 
 }
-
 
 
 /* ==========================================
@@ -3058,15 +2681,12 @@ function cancelEdit(){
 editingProductId =
 null;
 
-
 editingOldImage =
 null;
-
 
 resetAdminForm();
 
 }
-
 
 
 /* ==========================================
@@ -3079,43 +2699,35 @@ document.getElementById(
 "adminName"
 ).value = "";
 
-
 document.getElementById(
 "adminPrice"
 ).value = "";
-
 
 document.getElementById(
 "adminCategory"
 ).value = "";
 
-
 document.getElementById(
 "adminImage"
 ).value = "";
-
 
 document.getElementById(
 "adminImageFile"
 ).value = "";
 
-
 document.getElementById(
 "adminDescription"
 ).value = "";
-
 
 document.getElementById(
 "imagePreview"
 ).style.display =
 "none";
 
-
 document.getElementById(
 "saveProductButton"
 ).textContent =
 "상품 등록";
-
 
 document.getElementById(
 "cancelEditButton"
@@ -3123,7 +2735,6 @@ document.getElementById(
 "none";
 
 }
-
 
 
 /* ==========================================
@@ -3137,7 +2748,6 @@ const container =
 document.getElementById(
 "adminProductList"
 );
-
 
 if(
 products.length === 0
@@ -3155,7 +2765,6 @@ return;
 
 }
 
-
 container.innerHTML =
 
 products.map(
@@ -3167,14 +2776,11 @@ product.image_url ||
 
 "https://placehold.co/100x100?text=NO+IMAGE";
 
-
 return `
 
 <div class="admin-product">
 
-
 <div class="admin-product-left">
-
 
 <img
 
@@ -3186,7 +2792,6 @@ onerror="this.src='https://placehold.co/100x100?text=NO+IMAGE'"
 
 >
 
-
 <div>
 
 <strong>
@@ -3197,9 +2802,7 @@ product.name
 
 </strong>
 
-
 <br>
-
 
 <small>
 
@@ -3211,13 +2814,9 @@ product.price || 0
 
 </div>
 
-
 </div>
 
-
-
 <div class="admin-buttons">
-
 
 <button
 
@@ -3231,7 +2830,6 @@ onclick="editProduct(${product.id})"
 
 </button>
 
-
 <button
 
 class="delete-btn"
@@ -3244,9 +2842,7 @@ onclick="deleteProduct(${product.id})"
 
 </button>
 
-
 </div>
-
 
 </div>
 
@@ -3255,7 +2851,6 @@ onclick="deleteProduct(${product.id})"
 }).join("");
 
 }
-
 
 
 /* ==========================================
@@ -3270,11 +2865,9 @@ products.find(
 p => Number(p.id) === Number(id)
 );
 
-
 if(!product){
 return;
 }
-
 
 const confirmed =
 
@@ -3286,11 +2879,9 @@ product.name
 
 );
 
-
 if(!confirmed){
 return;
 }
-
 
 const {
 error
@@ -3303,7 +2894,6 @@ await supabaseClient
 "id",
 id
 );
-
 
 if(error){
 
@@ -3332,19 +2922,15 @@ product.image_url
 
 }
 
-
 alert(
 "상품이 삭제되었습니다."
 );
 
-
 await loadProducts();
-
 
 renderAdminProducts();
 
 }
-
 
 
 /* ==========================================
@@ -3359,7 +2945,6 @@ document.getElementById(
 "orderList"
 );
 
-
 container.innerHTML = `
 
 <div
@@ -3371,7 +2956,6 @@ style="color:#888;text-align:center;padding:30px"
 </div>
 
 `;
-
 
 const {
 data,
@@ -3387,7 +2971,6 @@ await supabaseClient
 ascending:false
 }
 );
-
 
 if(error){
 
@@ -3413,7 +2996,6 @@ return;
 
 }
 
-
 if(
 !data ||
 data.length === 0
@@ -3435,15 +3017,12 @@ return;
 
 }
 
-
 container.innerHTML =
 
 data.map(
 order => {
 
-
 let items = [];
-
 
 try{
 
@@ -3467,7 +3046,6 @@ items = [];
 
 }
 
-
 const itemText =
 
 (items || [])
@@ -3482,7 +3060,6 @@ item =>
 "<br>"
 );
 
-
 const date =
 
 new Date(
@@ -3491,14 +3068,11 @@ order.created_at
 "ko-KR"
 );
 
-
 return `
 
 <div class="order">
 
-
 <div class="order-header">
-
 
 <div class="order-number">
 
@@ -3508,7 +3082,6 @@ order.order_number
 
 </div>
 
-
 <div class="order-date">
 
 ${escapeHtml(
@@ -3517,13 +3090,9 @@ date
 
 </div>
 
-
 </div>
 
-
-
 <div class="order-info">
-
 
 <strong>
 주문자
@@ -3537,7 +3106,6 @@ order.buyer_name
 
 <br>
 
-
 <strong>
 전화번호
 </strong>
@@ -3550,7 +3118,6 @@ order.buyer_phone
 
 <br>
 
-
 <strong>
 주소
 </strong>
@@ -3561,28 +3128,19 @@ ${escapeHtml(
 order.buyer_address
 )}
 
-
 </div>
 
-
-
 <div class="order-items">
-
 
 <strong>
 상품
 </strong>
 
-
 <br><br>
-
 
 ${itemText}
 
-
 </div>
-
-
 
 <div class="order-total">
 
@@ -3596,8 +3154,6 @@ order.total_price
 
 </div>
 
-
-
 <select
 
 class="order-select"
@@ -3605,7 +3161,6 @@ class="order-select"
 onchange="changeOrderStatus(${order.id},this.value)"
 
 >
-
 
 <option
 
@@ -3619,7 +3174,6 @@ ${order.status === "결제대기" ? "selected" : ""}
 
 </option>
 
-
 <option
 
 value="결제완료"
@@ -3631,7 +3185,6 @@ ${order.status === "결제완료" ? "selected" : ""}
 결제완료
 
 </option>
-
 
 <option
 
@@ -3645,7 +3198,6 @@ ${order.status === "배송준비" ? "selected" : ""}
 
 </option>
 
-
 <option
 
 value="배송중"
@@ -3657,7 +3209,6 @@ ${order.status === "배송중" ? "selected" : ""}
 배송중
 
 </option>
-
 
 <option
 
@@ -3671,7 +3222,6 @@ ${order.status === "배송완료" ? "selected" : ""}
 
 </option>
 
-
 <option
 
 value="주문취소"
@@ -3684,9 +3234,7 @@ ${order.status === "주문취소" ? "selected" : ""}
 
 </option>
 
-
 </select>
-
 
 </div>
 
@@ -3695,7 +3243,6 @@ ${order.status === "주문취소" ? "selected" : ""}
 }).join("");
 
 }
-
 
 
 /* ==========================================
@@ -3724,7 +3271,6 @@ status
 id
 );
 
-
 if(error){
 
 alert(
@@ -3739,13 +3285,11 @@ return;
 
 }
 
-
 alert(
 "주문 상태가 변경되었습니다."
 );
 
 }
-
 
 
 /* ==========================================
@@ -3760,7 +3304,6 @@ document.getElementById(
 id
 );
 
-
 if(modal){
 
 modal.style.display =
@@ -3769,7 +3312,6 @@ modal.style.display =
 }
 
 }
-
 
 
 /* ==========================================
@@ -3784,7 +3326,6 @@ document.getElementById(
 id
 );
 
-
 if(section){
 
 section.scrollIntoView({
@@ -3794,7 +3335,6 @@ behavior:"smooth"
 }
 
 }
-
 
 
 /* ==========================================
@@ -3838,4 +3378,3 @@ value ?? ""
 
 </body>
 </html>
-```
