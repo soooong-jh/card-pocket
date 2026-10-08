@@ -262,10 +262,6 @@ border-radius:6px;
 background:#777;
 }
 
-.btn-red{
-background:#d00000;
-}
-
 .input{
 width:100%;
 padding:13px;
@@ -433,7 +429,7 @@ display:none;
 position:fixed;
 inset:0;
 z-index:1000;
-background:rgba(0,0,0,.65);
+background:rgba(0,0,0,.7);
 align-items:center;
 justify-content:center;
 }
@@ -444,7 +440,7 @@ padding:35px;
 border-radius:12px;
 text-align:center;
 width:90%;
-max-width:350px;
+max-width:380px;
 }
 
 .payment-loading-box h3{
@@ -454,12 +450,7 @@ margin-bottom:10px;
 .payment-loading-box p{
 color:#777;
 font-size:14px;
-line-height:1.6;
-}
-
-.notice{
-line-height:1.8;
-color:#555;
+line-height:1.7;
 }
 
 .footer{
@@ -552,6 +543,7 @@ onclick="openCart()"
 
 </header>
 
+
 <main id="home">
 
 <section class="hero">
@@ -566,6 +558,7 @@ CARD POCKET
 </p>
 
 </section>
+
 
 <div class="container">
 
@@ -600,13 +593,16 @@ class="products"
 
 </section>
 
+
 <section id="about">
 
 <h2 class="section-title">
 ABOUT
 </h2>
 
-<div class="notice">
+<div
+style="line-height:1.8;color:#555;"
+>
 
 CARD POCKET은 정품 트레이딩 카드를 활용하여 제작한
 수제 카드 마그넷을 판매합니다.
@@ -620,13 +616,16 @@ CARD POCKET은 정품 트레이딩 카드를 활용하여 제작한
 
 </section>
 
+
 <section id="notice">
 
 <h2 class="section-title">
 NOTICE
 </h2>
 
-<div class="notice">
+<div
+style="line-height:1.8;color:#555;"
+>
 
 • 상품에 따라 카드의 상태가 다를 수 있습니다.<br>
 • 수작업으로 제작되기 때문에 제품마다
@@ -641,6 +640,7 @@ NOTICE
 </div>
 
 </main>
+
 
 <footer class="footer">
 
@@ -825,7 +825,7 @@ onclick="createOrder()"
 </div>
 
 
-<!-- 결제 로딩 -->
+<!-- 결제 준비 -->
 
 <div
 id="paymentLoading"
@@ -834,13 +834,13 @@ class="payment-loading"
 
 <div class="payment-loading-box">
 
-<h3>
+<h3 id="paymentLoadingTitle">
 결제 준비 중
 </h3>
 
-<p>
-잠시만 기다려주세요.<br>
-결제창을 준비하고 있습니다.
+<p id="paymentLoadingText">
+토스 결제창을 준비하고 있습니다.<br>
+잠시만 기다려주세요.
 </p>
 
 </div>
@@ -972,10 +972,7 @@ style="display:none"
 
 </div>
 
-<div
-id="adminProductList"
->
-</div>
+<div id="adminProductList"></div>
 
 <h3 style="margin-top:40px;">
 주문 관리
@@ -988,17 +985,7 @@ onclick="loadOrders()"
 주문 새로고침
 </button>
 
-<div
-id="orderList"
->
-
-<div
-style="color:#888;text-align:center;padding:30px"
->
-주문을 불러오려면 새로고침을 눌러주세요.
-</div>
-
-</div>
+<div id="orderList"></div>
 
 </div>
 
@@ -1007,9 +994,9 @@ style="color:#888;text-align:center;padding:30px"
 
 <script>
 
-/* ==========================================
+/* ==================================================
    SUPABASE
-========================================== */
+================================================== */
 
 const SUPABASE_URL =
 "https://liyjjunpwexsqvmrdeas.supabase.co";
@@ -1024,86 +1011,152 @@ SUPABASE_KEY
 );
 
 
-/* ==========================================
-   TOSS PAYMENTS
-========================================== */
+/* ==================================================
+   TOSS
+================================================== */
 
 let tossPayments = null;
+
+let tossClientKey = null;
+
+
+/* ==================================================
+   Toss 초기화
+================================================== */
 
 async function initTossPayments(){
 
 try{
 
+console.log(
+"[TOSS 1] 설정 요청 시작"
+);
+
 const response =
-await fetch("/api/toss-config");
+await fetch(
+"/api/toss-config",
+{
+method:"GET",
+cache:"no-store"
+}
+);
+
+
+console.log(
+"[TOSS 2] 설정 응답:",
+response.status
+);
+
 
 if(!response.ok){
 
 throw new Error(
-"토스 설정을 불러오지 못했습니다. HTTP " +
+"/api/toss-config 응답 오류: HTTP " +
 response.status
 );
 
 }
 
+
 const config =
 await response.json();
 
+
 console.log(
-"토스 클라이언트 키:",
-config.clientKey
+"[TOSS 3] 받은 설정:",
+config
 );
 
-if(!config.clientKey){
+
+if(
+!config ||
+!config.clientKey
+){
 
 throw new Error(
-"토스 클라이언트 키가 없습니다."
+"TOSS_CLIENT_KEY가 없습니다."
 );
 
 }
 
 
+tossClientKey =
+String(
+config.clientKey
+);
+
+
+console.log(
+"[TOSS 4] clientKey 앞부분:",
+tossClientKey.substring(
+0,
+20
+)
+);
+
+
 /*
-  중요:
-  반드시 test_ck_ 또는 live_ck_로
-  시작하는 클라이언트 키여야 합니다.
+  API 개별 연동 키인지 검사
 */
 
 if(
-!config.clientKey.startsWith("test_ck_") &&
-!config.clientKey.startsWith("live_ck_")
+!tossClientKey.startsWith("test_ck_") &&
+!tossClientKey.startsWith("live_ck_")
 ){
 
 throw new Error(
 
-"잘못된 Toss 클라이언트 키입니다.\n\n" +
+"현재 TOSS_CLIENT_KEY가 잘못되었습니다.\n\n" +
 
-"현재 키 시작값: " +
+"현재 시작값:\n" +
 
-config.clientKey.substring(
+tossClientKey.substring(
 0,
-15
+25
 ) +
 
 "\n\n" +
 
-"test_ck_ 또는 live_ck_로 시작하는\n" +
+"반드시 test_ck_ 또는 live_ck_로\n" +
 
-"API 개별 연동 키를 사용해야 합니다."
+"시작해야 합니다."
 
 );
 
 }
 
 
-tossPayments =
-TossPayments(
-config.clientKey
+console.log(
+"[TOSS 5] 클라이언트 키 형식 정상"
 );
 
-console.log(
-"Toss 초기화 성공"
+
+/*
+  TossPayments 생성
+*/
+
+tossPayments =
+TossPayments(
+tossClientKey
 );
+
+
+console.log(
+"[TOSS 6] TossPayments 생성 성공",
+tossPayments
+);
+
+
+if(
+!tossPayments
+){
+
+throw new Error(
+"TossPayments 객체 생성 실패"
+);
+
+}
+
 
 return true;
 
@@ -1111,7 +1164,7 @@ return true;
 }catch(error){
 
 console.error(
-"Toss 초기화 실패:",
+"[TOSS INIT ERROR]",
 error
 );
 
@@ -1122,9 +1175,9 @@ return false;
 }
 
 
-/* ==========================================
+/* ==================================================
    전역 변수
-========================================== */
+================================================== */
 
 let products = [];
 
@@ -1139,9 +1192,9 @@ let editingProductId = null;
 let editingOldImage = null;
 
 
-/* ==========================================
+/* ==================================================
    시작
-========================================== */
+================================================== */
 
 document.addEventListener(
 "DOMContentLoaded",
@@ -1157,9 +1210,9 @@ await initTossPayments();
 );
 
 
-/* ==========================================
+/* ==================================================
    상품 불러오기
-========================================== */
+================================================== */
 
 async function loadProducts(){
 
@@ -1168,19 +1221,7 @@ document.getElementById(
 "productList"
 );
 
-list.innerHTML = `
-
-<div class="empty">
-상품을 불러오는 중...
-</div>
-
-`;
-
 try{
-
-console.log(
-"상품 불러오기 시작"
-);
 
 const result =
 await Promise.race([
@@ -1196,31 +1237,31 @@ ascending:false
 ),
 
 new Promise(
-(_,reject) =>
+(_,reject)=>
 
 setTimeout(
-() => reject(
+()=>
+
+reject(
 new Error(
 "Supabase 응답 시간이 초과되었습니다."
 )
 ),
+
 10000
+
 )
 
 )
 
 ]);
 
+
 const {
 data,
 error
 } = result;
 
-console.log(
-"Supabase 결과:",
-data,
-error
-);
 
 if(error){
 
@@ -1237,8 +1278,6 @@ list.innerHTML = `
 
 <br><br>
 
-오류:<br>
-
 ${escapeHtml(
 error.message
 )}
@@ -1251,6 +1290,7 @@ return;
 
 }
 
+
 products =
 data || [];
 
@@ -1258,10 +1298,10 @@ renderFilters();
 
 renderProducts();
 
+
 }catch(error){
 
 console.error(
-"상품 불러오기 실패:",
 error
 );
 
@@ -1286,9 +1326,9 @@ error.message
 }
 
 
-/* ==========================================
-   카테고리
-========================================== */
+/* ==================================================
+   필터
+================================================== */
 
 function renderFilters(){
 
@@ -1305,7 +1345,8 @@ const categories = [
 
 products
 .map(
-product => product.category
+product =>
+product.category
 )
 .filter(Boolean)
 
@@ -1313,7 +1354,9 @@ product => product.category
 
 ];
 
+
 container.innerHTML = "";
+
 
 categories.forEach(
 category => {
@@ -1326,6 +1369,7 @@ document.createElement(
 button.textContent =
 category;
 
+
 if(
 category === currentCategory
 ){
@@ -1335,6 +1379,7 @@ button.classList.add(
 );
 
 }
+
 
 button.onclick =
 function(){
@@ -1348,6 +1393,7 @@ renderProducts();
 
 };
 
+
 container.appendChild(
 button
 );
@@ -1357,9 +1403,9 @@ button
 }
 
 
-/* ==========================================
+/* ==================================================
    상품 표시
-========================================== */
+================================================== */
 
 function renderProducts(){
 
@@ -1368,14 +1414,14 @@ document.getElementById(
 "productList"
 );
 
-const searchInput =
+const keyword =
+(
 document.getElementById(
 "searchInput"
-);
-
-const keyword =
-(searchInput?.value || "")
+)?.value || ""
+)
 .toLowerCase();
+
 
 const filtered =
 products.filter(
@@ -1383,14 +1429,20 @@ product => {
 
 const search =
 
-(product.name || "")
+(
+product.name || ""
+)
 .toLowerCase()
-.includes(keyword);
+.includes(
+keyword
+);
+
 
 const category =
 
 currentCategory === "전체" ||
 product.category === currentCategory;
+
 
 return search && category;
 
@@ -1426,6 +1478,7 @@ const image =
 product.image_url ||
 
 "https://placehold.co/600x600?text=CARD+POCKET";
+
 
 return `
 
@@ -1474,9 +1527,7 @@ product.price || 0
 <button
 onclick="openProduct(${product.id})"
 >
-
 상품 보기
-
 </button>
 
 </div>
@@ -1490,23 +1541,27 @@ onclick="openProduct(${product.id})"
 }
 
 
-/* ==========================================
+/* ==================================================
    상품 상세
-========================================== */
+================================================== */
 
 function openProduct(id){
 
 const product =
 products.find(
-p => Number(p.id) === Number(id)
+p =>
+Number(p.id) ===
+Number(id)
 );
 
 if(!product){
 return;
 }
 
+
 selectedProduct =
 product;
+
 
 document.getElementById(
 "detailImage"
@@ -1516,11 +1571,12 @@ product.image_url ||
 
 "https://placehold.co/600x600?text=CARD+POCKET";
 
+
 document.getElementById(
 "detailName"
 ).textContent =
-
 product.name || "";
+
 
 document.getElementById(
 "detailPrice"
@@ -1528,15 +1584,17 @@ document.getElementById(
 
 Number(
 product.price || 0
-).toLocaleString()
+)
+.toLocaleString()
 +
 "원";
+
 
 document.getElementById(
 "detailDescription"
 ).textContent =
-
 product.description || "";
+
 
 document.getElementById(
 "productModal"
@@ -1545,10 +1603,6 @@ document.getElementById(
 
 }
 
-
-/* ==========================================
-   상세 → 장바구니
-========================================== */
 
 function addDetailToCart(){
 
@@ -1567,9 +1621,9 @@ closeModal(
 }
 
 
-/* ==========================================
+/* ==================================================
    장바구니
-========================================== */
+================================================== */
 
 function loadCart(){
 
@@ -1582,8 +1636,12 @@ localStorage.getItem(
 )
 ) || [];
 
-if(!Array.isArray(cart)){
+if(
+!Array.isArray(cart)
+){
+
 cart = [];
+
 }
 
 }catch(error){
@@ -1600,11 +1658,8 @@ updateCartCount();
 function saveCart(){
 
 localStorage.setItem(
-
 "CARD_POCKET_CART",
-
 JSON.stringify(cart)
-
 );
 
 updateCartCount();
@@ -1615,17 +1670,19 @@ updateCartCount();
 function addToCart(product){
 
 const existing =
-
 cart.find(
 item =>
 Number(item.id) ===
 Number(product.id)
 );
 
+
 if(existing){
 
 existing.quantity =
-Number(existing.quantity) + 1;
+Number(
+existing.quantity
+) + 1;
 
 }else{
 
@@ -1638,7 +1695,9 @@ name:
 product.name,
 
 price:
-Number(product.price),
+Number(
+product.price
+),
 
 image_url:
 product.image_url,
@@ -1649,6 +1708,7 @@ quantity:
 });
 
 }
+
 
 saveCart();
 
@@ -1662,18 +1722,13 @@ alert(
 function updateCartCount(){
 
 const count =
-
 cart.reduce(
-
 (sum,item) =>
-
 sum +
 Number(
 item.quantity || 0
 ),
-
 0
-
 );
 
 document.getElementById(
@@ -1703,6 +1758,7 @@ document.getElementById(
 "cartItems"
 );
 
+
 if(
 cart.length === 0
 ){
@@ -1726,7 +1782,9 @@ return;
 
 }
 
+
 let total = 0;
+
 
 container.innerHTML =
 
@@ -1737,6 +1795,7 @@ total +=
 
 Number(item.price) *
 Number(item.quantity);
+
 
 return `
 
@@ -1756,9 +1815,7 @@ item.name
 
 ${Number(
 item.price
-).toLocaleString()}원
-×
-${item.quantity}
+).toLocaleString()}원 × ${item.quantity}
 
 </div>
 
@@ -1768,9 +1825,7 @@ ${item.quantity}
 class="delete-btn"
 onclick="removeCartItem(${index})"
 >
-
 삭제
-
 </button>
 
 </div>
@@ -1778,6 +1833,7 @@ onclick="removeCartItem(${index})"
 `;
 
 }).join("");
+
 
 document.getElementById(
 "cartTotal"
@@ -1804,9 +1860,9 @@ renderCart();
 }
 
 
-/* ==========================================
-   주문
-========================================== */
+/* ==================================================
+   주문 화면
+================================================== */
 
 function openCheckout(){
 
@@ -1822,6 +1878,7 @@ return;
 
 }
 
+
 const total =
 cart.reduce(
 (sum,item) =>
@@ -1831,6 +1888,7 @@ Number(item.quantity),
 0
 );
 
+
 document.getElementById(
 "checkoutTotal"
 ).textContent =
@@ -1839,9 +1897,11 @@ total.toLocaleString()
 +
 "원";
 
+
 closeModal(
 "cartModal"
 );
+
 
 document.getElementById(
 "checkoutModal"
@@ -1851,9 +1911,48 @@ document.getElementById(
 }
 
 
-/* ==========================================
-   주문 생성
-========================================== */
+/* ==================================================
+   결제 준비 화면
+================================================== */
+
+function showPaymentLoading(
+title,
+text
+){
+
+document.getElementById(
+"paymentLoadingTitle"
+).textContent =
+title;
+
+
+document.getElementById(
+"paymentLoadingText"
+).innerHTML =
+text;
+
+
+document.getElementById(
+"paymentLoading"
+).style.display =
+"flex";
+
+}
+
+
+function hidePaymentLoading(){
+
+document.getElementById(
+"paymentLoading"
+).style.display =
+"none";
+
+}
+
+
+/* ==================================================
+   주문 생성 + Toss 결제
+================================================== */
 
 async function createOrder(){
 
@@ -1883,6 +1982,7 @@ return;
 
 }
 
+
 if(!phone){
 
 alert(
@@ -1893,6 +1993,7 @@ return;
 
 }
 
+
 if(!address){
 
 alert(
@@ -1902,6 +2003,7 @@ alert(
 return;
 
 }
+
 
 if(
 cart.length === 0
@@ -1918,22 +2020,21 @@ return;
 
 const total =
 cart.reduce(
-
 (sum,item) =>
-
 sum +
 Number(item.price) *
 Number(item.quantity),
-
 0
-
 );
 
 
-if(total <= 0){
+if(
+!Number.isFinite(total) ||
+total <= 0
+){
 
 alert(
-"결제 금액을 확인해주세요."
+"결제 금액이 올바르지 않습니다."
 );
 
 return;
@@ -1941,10 +2042,13 @@ return;
 }
 
 
-/* 주문번호 */
+/* --------------------------------
+   주문번호
+-------------------------------- */
 
 const now =
 new Date();
+
 
 const orderNumber =
 
@@ -1954,23 +2058,38 @@ now.getFullYear() +
 
 String(
 now.getMonth()+1
-).padStart(2,"0") +
+).padStart(
+2,
+"0"
+) +
 
 String(
 now.getDate()
-).padStart(2,"0") +
+).padStart(
+2,
+"0"
+) +
 
 String(
 now.getHours()
-).padStart(2,"0") +
+).padStart(
+2,
+"0"
+) +
 
 String(
 now.getMinutes()
-).padStart(2,"0") +
+).padStart(
+2,
+"0"
+) +
 
 String(
 now.getSeconds()
-).padStart(2,"0") +
+).padStart(
+2,
+"0"
+) +
 
 "-" +
 
@@ -1987,7 +2106,17 @@ crypto
 .toUpperCase();
 
 
-/* 주문 저장 */
+/* --------------------------------
+   주문 DB 저장
+-------------------------------- */
+
+showPaymentLoading(
+"주문 저장 중",
+"주문 정보를 저장하고 있습니다."
+);
+
+
+try{
 
 const {
 error
@@ -2023,6 +2152,8 @@ status:
 
 if(error){
 
+hidePaymentLoading();
+
 console.error(
 "주문 저장 오류:",
 error
@@ -2041,20 +2172,35 @@ return;
 }
 
 
-/* Toss 초기화 */
+/* --------------------------------
+   Toss가 없으면 다시 초기화
+-------------------------------- */
 
-if(!tossPayments){
+if(
+!tossPayments
+){
+
+showPaymentLoading(
+"결제 준비 중",
+"Toss 결제 시스템을 연결하고 있습니다."
+);
+
 
 const initialized =
 await initTossPayments();
 
+
 if(!initialized){
+
+hidePaymentLoading();
 
 alert(
 
-"토스 결제 설정을 불러오지 못했습니다.\n\n" +
+"토스 결제 시스템을 초기화하지 못했습니다.\n\n" +
 
-"Vercel의 TOSS_CLIENT_KEY를 확인해주세요."
+"Vercel의 TOSS_CLIENT_KEY가\n" +
+
+"test_ck_ 또는 live_ck_인지 확인해주세요."
 
 );
 
@@ -2065,13 +2211,17 @@ return;
 }
 
 
-/* 주문명 */
+/* --------------------------------
+   주문명
+-------------------------------- */
 
 const firstProductName =
 cart[0]?.name ||
 "CARD POCKET 상품";
 
+
 const orderName =
+
 cart.length > 1
 
 ?
@@ -2083,55 +2233,139 @@ cart.length > 1
 firstProductName;
 
 
-/* 로딩 표시 */
+/* --------------------------------
+   고객 키
+-------------------------------- */
 
-document.getElementById(
-"paymentLoading"
-).style.display =
-"flex";
+const customerKey =
+`CARDPOCKET-${orderNumber}`;
+
+
+console.log(
+"=============================="
+);
+
+console.log(
+"[TOSS PAYMENT START]"
+);
+
+console.log(
+"orderNumber:",
+orderNumber
+);
+
+console.log(
+"orderName:",
+orderName
+);
+
+console.log(
+"total:",
+total
+);
+
+console.log(
+"customerKey:",
+customerKey
+);
+
+console.log(
+"origin:",
+window.location.origin
+);
+
+console.log(
+"successUrl:",
+`${window.location.origin}/success.html`
+);
+
+console.log(
+"failUrl:",
+`${window.location.origin}/fail.html`
+);
+
+console.log(
+"tossPayments:",
+tossPayments
+);
+
+console.log(
+"=============================="
+);
+
+
+/* --------------------------------
+   결제 객체
+-------------------------------- */
+
+showPaymentLoading(
+"결제 준비 중",
+"Toss 결제창을 준비하고 있습니다.<br>잠시만 기다려주세요."
+);
+
+
+let payment;
 
 
 try{
 
 console.log(
-"Toss 결제 시작"
-);
-
-console.log(
-"orderId:",
-orderNumber
-);
-
-console.log(
-"amount:",
-total
+"[TOSS STEP 1] payment 객체 생성 시작"
 );
 
 
-/* ==================================
-   Toss V2 Standard
-================================== */
-
-const payment =
+payment =
 tossPayments.payment({
 
 customerKey:
-`CARDPOCKET-${orderNumber}`
+customerKey
 
 });
 
 
 console.log(
-"payment 객체 생성 완료:",
+"[TOSS STEP 2] payment 객체 생성 완료:",
 payment
 );
 
 
-/* ==================================
-   결제창 호출
-================================== */
+if(
+!payment
+){
 
-await payment.requestPayment({
+throw new Error(
+"payment 객체가 생성되지 않았습니다."
+);
+
+}
+
+
+if(
+typeof payment.requestPayment !==
+"function"
+){
+
+throw new Error(
+
+"requestPayment 함수를 찾을 수 없습니다.\n\n" +
+
+"현재 Toss SDK가 올바르게 초기화되지 않았을 가능성이 있습니다."
+
+);
+
+}
+
+
+console.log(
+"[TOSS STEP 3] requestPayment 함수 확인 완료"
+);
+
+
+/* --------------------------------
+   결제 요청
+-------------------------------- */
+
+const paymentOptions = {
 
 method:
 "CARD",
@@ -2167,62 +2401,216 @@ successUrl:
 failUrl:
 `${window.location.origin}/fail.html`
 
-});
+};
 
 
-}catch(error){
-
-console.error(
-"Toss Payment Error:",
-error
+console.log(
+"[TOSS STEP 4] 결제 옵션:",
+paymentOptions
 );
 
 
-/* ==================================
-   실제 오류 표시
-================================== */
+console.log(
+"[TOSS STEP 5] requestPayment 실행"
+);
 
-const errorCode =
-error?.code ||
-"NO_CODE";
 
-const errorMessage =
-error?.message ||
-error?.toString() ||
-"오류 메시지가 없습니다.";
+hidePaymentLoading();
+
+
+await payment.requestPayment(
+paymentOptions
+);
+
+
+console.log(
+"[TOSS STEP 6] requestPayment 종료"
+);
+
+
+}catch(paymentError){
+
+hidePaymentLoading();
+
+
+console.error(
+"================================"
+);
+
+console.error(
+"[TOSS PAYMENT ERROR]"
+);
+
+console.error(
+"error:",
+paymentError
+);
+
+console.error(
+"typeof:",
+typeof paymentError
+);
+
+console.error(
+"code:",
+paymentError?.code
+);
+
+console.error(
+"message:",
+paymentError?.message
+);
+
+console.error(
+"name:",
+paymentError?.name
+);
+
+console.error(
+"stack:",
+paymentError?.stack
+);
+
+console.error(
+"JSON:",
+safeStringify(
+paymentError
+)
+);
+
+console.error(
+"================================"
+);
+
+
+/*
+  UNKNOWN 방지용 상세 오류
+*/
+
+let errorCode =
+paymentError?.code ||
+paymentError?.errorCode ||
+"UNKNOWN";
+
+
+let errorMessage =
+paymentError?.message ||
+paymentError?.errorMessage ||
+"알 수 없는 오류";
+
+
+let errorName =
+paymentError?.name ||
+"";
+
+
+let fullError =
+safeStringify(
+paymentError
+);
+
 
 alert(
 
-"결제 오류\n\n" +
+"토스 결제 오류\n\n" +
 
-"코드: " +
-
+"오류 코드: " +
 errorCode +
 
 "\n\n" +
 
-"내용:\n" +
+"오류 이름: " +
+errorName +
 
-errorMessage
+"\n\n" +
+
+"오류 내용:\n" +
+errorMessage +
+
+"\n\n" +
+
+"상세 정보:\n" +
+fullError
 
 );
 
+}
 
-}finally{
+}catch(error){
 
-document.getElementById(
-"paymentLoading"
-).style.display =
-"none";
+hidePaymentLoading();
+
+console.error(
+"주문 처리 전체 오류:",
+error
+);
+
+alert(
+
+"주문 처리 중 오류가 발생했습니다.\n\n" +
+
+(error?.message ||
+error?.toString() ||
+"알 수 없는 오류")
+
+);
 
 }
 
 }
 
 
-/* ==========================================
+/* ==================================================
+   객체 안전하게 문자열 변환
+================================================== */
+
+function safeStringify(value){
+
+try{
+
+if(
+value === null ||
+value === undefined
+){
+
+return String(value);
+
+}
+
+
+if(
+typeof value === "string"
+){
+
+return value;
+
+}
+
+
+const result =
+JSON.stringify(
+value,
+Object.getOwnPropertyNames(value),
+2
+);
+
+
+return result ||
+String(value);
+
+
+}catch(error){
+
+return String(value);
+
+}
+
+}
+
+
+/* ==================================================
    관리자
-========================================== */
+================================================== */
 
 function openAdminLogin(){
 
@@ -2241,10 +2629,10 @@ document.getElementById(
 function loginAdmin(){
 
 const password =
-
 document.getElementById(
 "adminPassword"
 ).value;
+
 
 if(
 password === "cardpocket"
@@ -2283,23 +2671,22 @@ loadOrders();
 }
 
 
-/* ==========================================
-   이미지
-========================================== */
+/* ==================================================
+   이미지 미리보기
+================================================== */
 
 function previewImage(){
 
 const file =
-
 document.getElementById(
 "adminImageFile"
 ).files[0];
 
 const preview =
-
 document.getElementById(
 "imagePreview"
 );
+
 
 if(!file){
 
@@ -2310,8 +2697,10 @@ return;
 
 }
 
+
 const reader =
 new FileReader();
+
 
 reader.onload =
 function(event){
@@ -2324,6 +2713,7 @@ preview.style.display =
 
 };
 
+
 reader.readAsDataURL(
 file
 );
@@ -2331,18 +2721,23 @@ file
 }
 
 
+/* ==================================================
+   이미지 업로드
+================================================== */
+
 async function uploadProductImage(file){
 
 if(!file){
 return null;
 }
 
-const extension =
 
+const extension =
 file.name
 .split(".")
 .pop()
 .toLowerCase();
+
 
 const fileName =
 
@@ -2350,9 +2745,13 @@ Date.now() +
 "-" +
 Math.random()
 .toString(36)
-.substring(2,10) +
+.substring(
+2,
+10
+) +
 "." +
 extension;
+
 
 const {
 error
@@ -2373,6 +2772,7 @@ upsert:false
 
 );
 
+
 if(error){
 
 throw new Error(
@@ -2381,6 +2781,7 @@ error.message
 );
 
 }
+
 
 const {
 data
@@ -2393,10 +2794,15 @@ supabaseClient
 fileName
 );
 
+
 return data.publicUrl;
 
 }
 
+
+/* ==================================================
+   Storage 경로
+================================================== */
 
 function getStoragePathFromUrl(url){
 
@@ -2404,15 +2810,19 @@ if(!url){
 return null;
 }
 
+
 const marker =
 "/storage/v1/object/public/product-images/";
+
 
 const index =
 url.indexOf(marker);
 
+
 if(index === -1){
 return null;
 }
+
 
 return decodeURIComponent(
 
@@ -2430,9 +2840,11 @@ async function deleteStorageImage(url){
 const path =
 getStoragePathFromUrl(url);
 
+
 if(!path){
 return;
 }
+
 
 await supabaseClient
 .storage
@@ -2442,9 +2854,9 @@ await supabaseClient
 }
 
 
-/* ==========================================
+/* ==================================================
    상품 저장
-========================================== */
+================================================== */
 
 async function saveProduct(){
 
@@ -2453,6 +2865,7 @@ document.getElementById(
 "adminName"
 ).value.trim();
 
+
 const price =
 Number(
 document.getElementById(
@@ -2460,20 +2873,24 @@ document.getElementById(
 ).value
 );
 
+
 const category =
 document.getElementById(
 "adminCategory"
 ).value.trim();
+
 
 const imageUrl =
 document.getElementById(
 "adminImage"
 ).value.trim();
 
+
 const file =
 document.getElementById(
 "adminImageFile"
 ).files[0];
+
 
 const description =
 document.getElementById(
@@ -2491,7 +2908,11 @@ return;
 
 }
 
-if(!price || price <= 0){
+
+if(
+!price ||
+price <= 0
+){
 
 alert(
 "가격을 입력해주세요."
@@ -2500,6 +2921,7 @@ alert(
 return;
 
 }
+
 
 let finalImage =
 imageUrl;
@@ -2560,6 +2982,7 @@ description
 editingProductId
 );
 
+
 if(error){
 
 alert(
@@ -2570,6 +2993,7 @@ error.message
 return;
 
 }
+
 
 if(
 file &&
@@ -2583,15 +3007,18 @@ editingOldImage
 
 }
 
+
 alert(
 "상품이 수정되었습니다."
 );
+
 
 editingProductId =
 null;
 
 editingOldImage =
 null;
+
 
 resetAdminForm();
 
@@ -2643,9 +3070,11 @@ return;
 
 }
 
+
 alert(
 "상품이 등록되었습니다."
 );
+
 
 resetAdminForm();
 
@@ -2656,9 +3085,9 @@ renderAdminProducts();
 }
 
 
-/* ==========================================
+/* ==================================================
    상품 수정
-========================================== */
+================================================== */
 
 function editProduct(id){
 
@@ -2669,9 +3098,11 @@ Number(p.id) ===
 Number(id)
 );
 
+
 if(!product){
 return;
 }
+
 
 editingProductId =
 id;
@@ -2679,41 +3110,51 @@ id;
 editingOldImage =
 product.image_url || null;
 
+
 document.getElementById(
 "adminName"
 ).value =
 product.name || "";
+
 
 document.getElementById(
 "adminPrice"
 ).value =
 product.price || "";
 
+
 document.getElementById(
 "adminCategory"
 ).value =
 product.category || "";
+
 
 document.getElementById(
 "adminImage"
 ).value =
 product.image_url || "";
 
+
 document.getElementById(
 "adminImageFile"
 ).value = "";
+
 
 document.getElementById(
 "adminDescription"
 ).value =
 product.description || "";
 
+
 const preview =
 document.getElementById(
 "imagePreview"
 );
 
-if(product.image_url){
+
+if(
+product.image_url
+){
 
 preview.src =
 product.image_url;
@@ -2728,10 +3169,12 @@ preview.style.display =
 
 }
 
+
 document.getElementById(
 "saveProductButton"
 ).textContent =
 "상품 수정";
+
 
 document.getElementById(
 "cancelEditButton"
@@ -2798,9 +3241,9 @@ document.getElementById(
 }
 
 
-/* ==========================================
+/* ==================================================
    관리자 상품 목록
-========================================== */
+================================================== */
 
 function renderAdminProducts(){
 
@@ -2808,6 +3251,7 @@ const container =
 document.getElementById(
 "adminProductList"
 );
+
 
 if(
 products.length === 0
@@ -2827,6 +3271,7 @@ return;
 
 }
 
+
 container.innerHTML =
 
 products.map(
@@ -2835,6 +3280,7 @@ product => {
 const image =
 product.image_url ||
 "https://placehold.co/100x100?text=NO+IMAGE";
+
 
 return `
 
@@ -2857,7 +3303,9 @@ ${escapeHtml(product.name)}
 <br>
 
 <small>
-${Number(product.price || 0).toLocaleString()}원
+${Number(
+product.price || 0
+).toLocaleString()}원
 </small>
 
 </div>
@@ -2891,9 +3339,9 @@ onclick="deleteProduct(${product.id})"
 }
 
 
-/* ==========================================
+/* ==================================================
    상품 삭제
-========================================== */
+================================================== */
 
 async function deleteProduct(id){
 
@@ -2904,9 +3352,11 @@ Number(p.id) ===
 Number(id)
 );
 
+
 if(!product){
 return;
 }
+
 
 if(
 !confirm(
@@ -2918,6 +3368,7 @@ product.name
 return;
 
 }
+
 
 const {
 error
@@ -2931,6 +3382,7 @@ await supabaseClient
 id
 );
 
+
 if(error){
 
 alert(
@@ -2942,7 +3394,10 @@ return;
 
 }
 
-if(product.image_url){
+
+if(
+product.image_url
+){
 
 await deleteStorageImage(
 product.image_url
@@ -2950,9 +3405,11 @@ product.image_url
 
 }
 
+
 alert(
 "상품이 삭제되었습니다."
 );
+
 
 await loadProducts();
 
@@ -2961,9 +3418,9 @@ renderAdminProducts();
 }
 
 
-/* ==========================================
-   주문
-========================================== */
+/* ==================================================
+   주문 관리
+================================================== */
 
 async function loadOrders(){
 
@@ -2971,6 +3428,7 @@ const container =
 document.getElementById(
 "orderList"
 );
+
 
 container.innerHTML = `
 
@@ -2983,6 +3441,7 @@ style="color:#888;text-align:center;padding:30px"
 </div>
 
 `;
+
 
 const {
 data,
@@ -2999,17 +3458,22 @@ ascending:false
 }
 );
 
+
 if(error){
 
 container.innerHTML = `
 
-<div style="color:#d00;padding:20px">
+<div
+style="color:#d00;padding:20px"
+>
 
 주문을 불러오지 못했습니다.
 
 <br><br>
 
-${escapeHtml(error.message)}
+${escapeHtml(
+error.message
+)}
 
 </div>
 
@@ -3018,6 +3482,7 @@ ${escapeHtml(error.message)}
 return;
 
 }
+
 
 if(
 !data ||
@@ -3040,6 +3505,7 @@ return;
 
 }
 
+
 container.innerHTML =
 
 data.map(
@@ -3047,13 +3513,20 @@ order => {
 
 let items = [];
 
+
 try{
 
 items =
 typeof order.items === "string"
+
 ?
-JSON.parse(order.items)
+
+JSON.parse(
+order.items
+)
+
 :
+
 order.items;
 
 }catch(error){
@@ -3062,23 +3535,29 @@ items = [];
 
 }
 
+
 const itemText =
 
 (items || [])
 .map(
 item =>
+
 `${escapeHtml(item.name)}
 × ${item.quantity}`
+
 )
 .join("<br>");
+
 
 const date =
 
 new Date(
 order.created_at
-).toLocaleString(
+)
+.toLocaleString(
 "ko-KR"
 );
+
 
 return `
 
@@ -3088,13 +3567,17 @@ return `
 
 <div class="order-number">
 
-${escapeHtml(order.order_number)}
+${escapeHtml(
+order.order_number
+)}
 
 </div>
 
 <div class="order-date">
 
-${escapeHtml(date)}
+${escapeHtml(
+date
+)}
 
 </div>
 
@@ -3103,17 +3586,23 @@ ${escapeHtml(date)}
 <div class="order-info">
 
 <strong>주문자</strong> :
-${escapeHtml(order.buyer_name)}
+${escapeHtml(
+order.buyer_name
+)}
 
 <br>
 
 <strong>전화번호</strong> :
-${escapeHtml(order.buyer_phone)}
+${escapeHtml(
+order.buyer_phone
+)}
 
 <br>
 
 <strong>주소</strong> :
-${escapeHtml(order.buyer_address)}
+${escapeHtml(
+order.buyer_address
+)}
 
 </div>
 
@@ -3130,7 +3619,9 @@ ${itemText}
 <div class="order-total">
 
 총
-${Number(order.total_price).toLocaleString()}
+${Number(
+order.total_price
+).toLocaleString()}
 원
 
 </div>
@@ -3212,6 +3703,7 @@ status:status
 id
 );
 
+
 if(error){
 
 alert(
@@ -3223,6 +3715,7 @@ return;
 
 }
 
+
 alert(
 "주문 상태가 변경되었습니다."
 );
@@ -3230,14 +3723,15 @@ alert(
 }
 
 
-/* ==========================================
+/* ==================================================
    공통
-========================================== */
+================================================== */
 
 function closeModal(id){
 
 const modal =
 document.getElementById(id);
+
 
 if(modal){
 
@@ -3253,6 +3747,7 @@ function scrollToSection(id){
 
 const section =
 document.getElementById(id);
+
 
 if(section){
 
