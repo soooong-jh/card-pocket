@@ -1,62 +1,345 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>결제 완료 - CARD POCKET</title>
-<style>
-body{font-family:Arial,"Noto Sans KR",sans-serif;background:#f7f7f7;margin:0;color:#111;display:flex;align-items:center;justify-content:center;min-height:100vh}
-.box{background:#fff;width:min(92%,520px);padding:40px 28px;border-radius:16px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.08)}
-h1{margin:0 0 14px;font-size:28px}.message{color:#666;line-height:1.7;margin-bottom:25px}.order{background:#f7f7f7;border-radius:10px;padding:16px;margin-bottom:25px}.btn{display:inline-block;background:#111;color:#fff;text-decoration:none;padding:13px 22px;border-radius:8px}
-</style>
-</head>
-<body>
-<div class="box">
-<h1 id="title">결제 승인 중...</h1>
-<div class="message" id="message">잠시만 기다려주세요.</div>
-<div class="order" id="orderBox" style="display:none"></div>
-<a class="btn" href="/">CARD POCKET으로 돌아가기</a>
-</div>
-<script>
-(async function(){
-  const params = new URLSearchParams(location.search);
-  const paymentKey = params.get('paymentKey');
-  const orderId = params.get('orderId');
-  const amount = params.get('amount');
-  const title = document.getElementById('title');
-  const message = document.getElementById('message');
-  const orderBox = document.getElementById('orderBox');
+  <meta charset="UTF-8">
 
-  if(!paymentKey || !orderId || !amount){
-    title.textContent = '결제 정보 오류';
-    message.textContent = '결제 승인에 필요한 정보가 없습니다.';
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>CARD POCKET - 결제 완료</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family:
+        Arial,
+        "Noto Sans KR",
+        sans-serif;
+      background: #f7f7f7;
+      color: #222;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .box {
+      background: white;
+      border-radius: 18px;
+      padding: 40px 25px;
+      text-align: center;
+      box-shadow:
+        0 5px 25px rgba(0,0,0,0.08);
+    }
+
+    .icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 25px;
+      border-radius: 50%;
+      background: #111;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+    }
+
+    h1 {
+      margin: 0 0 15px;
+      font-size: 28px;
+    }
+
+    .message {
+      color: #666;
+      line-height: 1.7;
+      margin-bottom: 25px;
+    }
+
+    .order-box {
+      background: #f7f7f7;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 25px;
+      text-align: left;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .row:last-child {
+      margin-bottom: 0;
+    }
+
+    .label {
+      color: #888;
+    }
+
+    .value {
+      font-weight: 600;
+      text-align: right;
+      word-break: break-all;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      background: #111;
+      color: white;
+      padding: 16px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .loading {
+      color: #777;
+    }
+
+    .error {
+      color: #d32f2f;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="box" id="content">
+
+    <div class="loading">
+      결제 확인 중입니다...
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+async function confirmPayment() {
+
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+  const paymentKey =
+    params.get("paymentKey");
+
+  const orderId =
+    params.get("orderId");
+
+  const amount =
+    params.get("amount");
+
+  const content =
+    document.getElementById("content");
+
+  /*
+    결제 정보가 없는 경우
+  */
+
+  if (!paymentKey || !orderId || !amount) {
+
+    content.innerHTML = `
+      <div class="icon">!</div>
+
+      <h1>결제 확인 실패</h1>
+
+      <p class="error">
+        결제 정보를 확인할 수 없습니다.<br>
+        주문 내역을 확인해주세요.
+      </p>
+
+      <button onclick="location.href='/'">
+        쇼핑몰로 돌아가기
+      </button>
+    `;
+
     return;
   }
 
-  try{
-    const response = await fetch('/api/toss-confirm', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({paymentKey, orderId, amount:Number(amount)})
-    });
+  try {
 
-    const data = await response.json();
+    /*
+      서버에서 토스 결제 승인
+    */
 
-    if(!response.ok || !data.success){
-      throw new Error(data.message || '결제 승인에 실패했습니다.');
+    const response =
+      await fetch("/api/toss-confirm", {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+
+        body: JSON.stringify({
+          paymentKey,
+          orderId,
+          amount: Number(amount)
+        })
+      });
+
+    const data =
+      await response.json();
+
+    /*
+      승인 실패
+    */
+
+    if (!response.ok || !data.success) {
+
+      throw new Error(
+        data.message ||
+        "결제 승인에 실패했습니다."
+      );
     }
 
-    title.textContent = '결제가 완료되었습니다!';
-    message.textContent = '주문이 정상적으로 결제되었습니다.';
-    orderBox.style.display = 'block';
-    orderBox.innerHTML = '<strong>주문번호</strong><br>' + orderId + '<br><br><strong>결제금액</strong><br>' + Number(amount).toLocaleString() + '원';
-    localStorage.removeItem('CARD_POCKET_CART');
-  }catch(error){
-    console.error(error);
-    title.textContent = '결제 승인 실패';
-    message.textContent = error.message || '결제 승인 중 오류가 발생했습니다.';
+    /*
+      승인 성공
+    */
+
+    const formattedAmount =
+      Number(amount).toLocaleString("ko-KR");
+
+    content.innerHTML = `
+
+      <div class="icon">
+        ✓
+      </div>
+
+      <h1>
+        결제가 완료되었습니다
+      </h1>
+
+      <p class="message">
+        CARD POCKET을 이용해주셔서 감사합니다.<br>
+        주문이 정상적으로 접수되었습니다.
+      </p>
+
+      <div class="order-box">
+
+        <div class="row">
+          <span class="label">
+            주문번호
+          </span>
+
+          <span class="value">
+            ${escapeHtml(orderId)}
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">
+            결제금액
+          </span>
+
+          <span class="value">
+            ${formattedAmount}원
+          </span>
+        </div>
+
+        <div class="row">
+          <span class="label">
+            결제상태
+          </span>
+
+          <span class="value">
+            결제완료
+          </span>
+        </div>
+
+      </div>
+
+      <button
+        onclick="location.href='/'"
+      >
+        쇼핑몰로 돌아가기
+      </button>
+
+    `;
+
+  } catch (error) {
+
+    console.error(
+      "결제 승인 오류:",
+      error
+    );
+
+    content.innerHTML = `
+
+      <div class="icon">
+        !
+      </div>
+
+      <h1>
+        결제 처리에 문제가 있습니다
+      </h1>
+
+      <p class="error">
+        ${escapeHtml(
+          error.message ||
+          "결제 승인 중 오류가 발생했습니다."
+        )}
+      </p>
+
+      <p class="message">
+        결제가 실제로 완료되었을 가능성이 있으니
+        같은 결제를 다시 시도하지 말고
+        주문 상태를 확인해주세요.
+      </p>
+
+      <button
+        onclick="location.href='/'"
+      >
+        쇼핑몰로 돌아가기
+      </button>
+
+    `;
   }
-})();
+}
+
+
+/*
+  HTML 특수문자 처리
+*/
+
+function escapeHtml(value) {
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+confirmPayment();
+
 </script>
+
 </body>
 </html>
