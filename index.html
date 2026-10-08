@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CARD POCKET | 카드포켓</title>
+
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,"Noto Sans KR",sans-serif;color:#171717;background:#fff}
+button,input,textarea,select{font:inherit}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1180px;margin:auto;padding:0 24px}
+
+header{height:72px;border-bottom:1px solid #eee;position:sticky;top:0;background:#fff;z-index:30}
+.head{height:100%;display:flex;align-items:center;justify-content:space-between}
+.logo{font-weight:800;letter-spacing:2px;font-size:21px;cursor:pointer}
+.nav{display:flex;gap:27px;font-size:12px}
+.head button{border:0;background:none;cursor:pointer;font-size:18px}
+
+.hero{min-height:530px;display:grid;grid-template-columns:1fr 1fr;gap:45px;align-items:center}
+.eyebrow{font-size:10px;letter-spacing:3px;color:#999}
+.hero h1{font-size:58px;line-height:1.02;letter-spacing:-3px;margin:16px 0}
+.hero p{color:#777;line-height:1.8}
+.btn{background:#111;color:#fff;border:0;padding:14px 22px;cursor:pointer;font-size:12px}
+.hero-img{height:420px;background:#f5f5f5;display:flex;align-items:center;justify-content:center}
+.sample{width:210px;height:300px;background:#fff;border:8px solid #222;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#aaa;box-shadow:0 20px 50px #ccc}
+
+section{padding:75px 0}
+.title{display:flex;justify-content:space-between;align-items:end;margin-bottom:25px}
+.title h2{font-size:26px;margin:0}
+.small{font-size:11px;color:#888}
+.cats{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:25px}
+.cat{border:1px solid #ddd;background:#fff;padding:9px 13px;font-size:11px;cursor:pointer}
+.cat.on{background:#111;color:#fff;border-color:#111}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.card{cursor:pointer}
+.pic{aspect-ratio:1;background:#f5f5f5;overflow:hidden}
+.pic img{width:100%;height:100%;object-fit:cover}
+.placeholder{height:100%;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:11px}
+.meta{padding:12px 2px}
+.tag{font-size:10px;color:#999}
+.pname{font-size:13px;margin:6px 0}
+.price{font-size:14px;font-weight:bold}
+.about{background:#f7f7f7}
+.about p{max-width:650px;color:#666;line-height:1.9}
+.notice li{list-style:none;border-bottom:1px solid #eee;padding:16px 0;font-size:12px}
+footer{border-top:1px solid #eee;padding:35px 0;color:#999;font-size:10px;line-height:1.8}
+
+.modalbg{display:none;position:fixed;inset:0;background:#0008;z-index:100;align-items:center;justify-content:center;padding:18px}
+.modal{background:#fff;width:min(900px,100%);max-height:92vh;overflow:auto;padding:28px;position:relative}
+.x{position:absolute;right:17px;top:12px;border:0;background:none;font-size:26px;cursor:pointer}
+.detail{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+.detail .big{width:100%;background:#f5f5f5}
+.muted{font-size:12px;color:#777;line-height:1.8}
+.line{border-bottom:1px solid #eee;padding:14px 0}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.field{width:100%;padding:11px;border:1px solid #ddd}
+.full{grid-column:1/-1}
+.adminrow{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding:13px 0;font-size:12px;gap:10px}
+.danger{border:1px solid #ddd;background:#fff;padding:7px 10px;cursor:pointer}
+.cartrow{display:flex;gap:13px;padding:14px 0;border-bottom:1px solid #eee;align-items:center}
+.thumb{width:65px;height:65px;background:#f5f5f5;object-fit:cover}
+.right{margin-left:auto}
+.empty{text-align:center;padding:45px;color:#999}
+.search{width:100%;padding:14px;border:1px solid #ddd;margin:15px 0}
+.checkout-section{margin:24px 0}
+.checkout-section h3{font-size:15px}
+.checkout-section input{margin-bottom:10px}
+@media(max-width:800px){
+.nav{display:none}
+.hero{grid-template-columns:1fr;padding:45px 0}
+.hero h1{font-size:43px}
+.hero-img{height:320px}
+.grid{grid-template-columns:repeat(2,1fr);gap:14px}
+.detail{grid-template-columns:1fr}
+.formgrid{grid-template-columns:1fr}
+.full{grid-column:auto}
+.wrap{padding:0 17px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="wrap head">
+<a class="logo" href="#home">CARD POCKET</a>
+<nav class="nav">
+<a href="#home">HOME</a>
+<a href="#products">PRODUCT</a>
+<a href="#about">ABOUT</a>
+<a href="#notice">NOTICE</a>
+</nav>
+<div>
+<button onclick="openSearch()">⌕</button>
+<button onclick="openCart()">🛒 <sup id="cc">0</sup></button>
+</div>
+</div>
+</header>
+
+<main id="home">
+<div class="wrap">
+<section class="hero">
+<div>
+<div class="eyebrow">CARD COLLECTION · MAGNET</div>
+<h1>YOUR CARD,<br>YOUR SPACE.</h1>
+<p>좋아하는 카드를 일상 공간에 더 가까이.<br>
+CARD POCKET의 카드 마그넷 컬렉션을 만나보세요.</p>
+<a class="btn" href="#products">SHOP NOW</a>
+</div>
+<div class="hero-img">
+<div class="sample">CARD<br>POCKET</div>
+</div>
+</section>
+
+<section id="products">
+<div class="title">
+<h2>PRODUCT</h2>
+<span class="small" id="count"></span>
+</div>
+<div class="cats" id="cats"></div>
+<div class="grid" id="grid"></div>
+</section>
+</div>
+
+<section class="about" id="about">
+<div class="wrap">
+<h2>CARD POCKET</h2>
+<p>카드 한 장을 수집하는 즐거움에서 시작해,
+좋아하는 카드를 일상 속 공간에 두는 방법을 제안합니다.</p>
+</div>
+</section>
+
+<div class="wrap">
+<section id="notice">
+<div class="title"><h2>NOTICE</h2></div>
+<ul>
+<li>상품 사진과 실제 상품은 모니터 환경에 따라 색상이 다를 수 있습니다.</li>
+<li>배송·교환·환불 조건은 실제 운영 정책에 맞게 수정해주세요.</li>
+<li>실제 판매 전 사업자 정보와 이용약관·개인정보처리방침을 입력해주세요.</li>
+</ul>
+</section>
+</div>
+</main>
+
+<footer>
+<div class="wrap">
+CARD POCKET · 실제 운영 시 사업자 정보 입력 · 본 파일은 쇼핑몰 구축용 프로토타입입니다.
+</div>
+</footer>
+
+<div class="modalbg" id="mb">
+<div class="modal" id="modal"></div>
+</div>
+
+<script>
+const PKEY="CP_PRODUCTS_V3";
+const CKEY="CP_CART_V3";
+
+const seed=[
+{id:1,name:"CHARIZARD CARD MAGNET",price:15000,cat:"CARD MAGNET",img:"",desc:"정품 카드를 활용한 카드 마그넷입니다."},
+{id:2,name:"PIKACHU CARD MAGNET",price:12000,cat:"CARD MAGNET",img:"",desc:"좋아하는 카드를 일상 공간에 장식해보세요."},
+{id:3,name:"VINTAGE CARD MAGNET",price:18000,cat:"VINTAGE",img:"",desc:"빈티지 카드 컬렉션을 위한 제품입니다."}
+];
+
+let products=JSON.parse(localStorage.getItem(PKEY)||"null")||seed;
+let cart=JSON.parse(localStorage.getItem(CKEY)||"[]");
+let filter="ALL";
+
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+}[c]));
+
+const won=n=>Number(n).toLocaleString("ko-KR")+"원";
+
+function save(){
+localStorage.setItem(PKEY,JSON.stringify(products));
+localStorage.setItem(CKEY,JSON.stringify(cart));
+}
+
+function render(){
+renderCats();
+
+let arr=filter==="ALL"
+?products
+:products.filter(p=>p.cat===filter);
+
+document.getElementById("count").textContent=arr.length+" PRODUCTS";
+
+document.getElementById("grid").innerHTML=arr.map(p=>`
+<article class="card" onclick="detail(${p.id})">
+<div class="pic">
+${p.img
+?`<img src="${esc(p.img)}" alt="${esc(p.name)}">`
+:`<div class="placeholder">PRODUCT IMAGE</div>`}
+</div>
+<div class="meta">
+<div class="tag">${esc(p.cat)}</div>
+<div class="pname">${esc(p.name)}</div>
+<div class="price">${won(p.price)}</div>
+</div>
+</article>
+`).join("")||'<div class="empty" style="grid-column:1/-1">등록된 상품이 없습니다.</div>';
+
+document.getElementById("cc").textContent=cart.length;
+}
+
+function renderCats(){
+let a=["ALL",...new Set(products.map(p=>p.cat))];
+
+document.getElementById("cats").innerHTML=a.map(x=>`
+<button class="cat ${x===filter?"on":""}"
+onclick="setFilter('${esc(x)}')">${esc(x)}</button>
+`).join("");
+}
+
+function setFilter(value){
+filter=value;
+render();
+}
+
+function modal(content){
+document.getElementById("modal").innerHTML=content;
+document.getElementById("mb").style.display="flex";
+}
+
+function closeM(){
+document.getElementById("mb").style.display="none";
+}
+
+document.getElementById("mb").onclick=e=>{
+if(e.target.id==="mb")closeM();
+};
+
+function detail(id){
+let p=products.find(x=>x.id===id);
+if(!p)return;
+
+modal(`
+<button class="x" onclick="closeM()">×</button>
+<div class="detail">
+<div class="pic">
+${p.img
+?`<img class="big" src="${esc(p.img)}" alt="${esc(p.name)}">`
+:`<div class="placeholder">PRODUCT IMAGE</div>`}
+</div>
+<div>
+<div class="tag">${esc(p.cat)}</div>
+<h2>${esc(p.name)}</h2>
+<h3>${won(p.price)}</h3>
+<p class="muted">${esc(p.desc)}</p>
+<button class="btn" onclick="add(${p.id})">장바구니 담기</button>
+</div>
+</div>
+`);
+}
+
+function add(id){
+cart.push(id);
+save();
+render();
+closeM();
+alert("장바구니에 담았습니다.");
+}
+
+function openCart(){
+let rows=cart.map((id,i)=>{
+let p=products.find(x=>x.id===id);
+if(!p)return "";
+
+return `
+<div class="cartrow">
+${p.img
+?`<img class="thumb" src="${esc(p.img)}">`
+:`<div class="thumb"></div>`}
+<div>${esc(p.name)}<br><b>${won(p.price)}</b></div>
+<button class="danger right" onclick="delCart(${i})">삭제</button>
+</div>`;
+}).join("");
+
+let total=cart.reduce((s,id)=>{
+let p=products.find(x=>x.id===id);
+return s+(p?p.price:0);
+},0);
+
+modal(`
+<button class="x" onclick="closeM()">×</button>
+<h2>SHOPPING CART</h2>
+${rows||'<div class="empty">장바구니가 비어 있습니다.</div>'}
+${rows?`
+<h3 style="text-align:right">TOTAL ${won(total)}</h3>
+<button class="btn" style="width:100%" onclick="openCheckout()">CHECKOUT</button>
+`:""}
+`);
+}
+
+function delCart(i){
+cart.splice(i,1);
+save();
+openCart();
+render();
+}
+
+function openSearch(){
+modal(`
+<button class="x" onclick="closeM()">×</button>
+<h2>SEARCH</h2>
+<input class="search" autofocus placeholder="상품명 검색" oninput="doSearch(this.value)">
+`);
+}
+
+function doSearch(q){
+let a=products.filter(p=>
+(p.name+" "+p.cat).toLowerCase().includes(q.toLowerCase())
+);
+
+document.getElementById("grid").innerHTML=a.map(p=>`
+<article class="card" onclick="closeM();detail(${p.id})">
+<div class="pic">
+${p.img
+?`<img src="${esc(p.img)}" alt="${esc(p.name)}">`
+:`<div class="placeholder">PRODUCT IMAGE</div>`}
+</div>
+<div class="meta">
+<div class="tag">${esc(p.cat)}</div>
+<div class="pname">${esc(p.name)}</div>
+<div class="price">${won(p.price)}</div>
+</div>
+</article>
+`).join("")||'<div class="empty" style="grid-column:1/-1">검색 결과가 없습니다.</div>';
+}
+
+/* 결제 정보 입력 화면 */
+function openCheckout(){
+let total=cart.reduce((sum,id)=>{
+let p=products.find(x=>x.id===id);
+return sum+(p?p.price:0);
+},0);
+
+modal(`
+<button class="x" onclick="closeM()">×</button>
+<h2>ORDER / PAYMENT</h2>
+<p class="muted">주문 정보를 입력해주세요. 현재는 테스트용 화면입니다.</p>
+
+<div class="checkout-section">
+<h3>주문자 정보</h3>
+<input class="field" id="buyerName" placeholder="이름">
+<br><br>
+<input class="field" id="buyerPhone" placeholder="휴대폰 번호">
+</div>
+
+<div class="checkout-section">
+<h3>배송지</h3>
+<input class="field" id="buyerZip" placeholder="우편번호">
+<br><br>
+<input class="field" id="buyerAddress" placeholder="주소">
+<br><br>
+<input class="field" id="buyerAddress2" placeholder="상세주소">
+</div>
+
+<div class="checkout-section">
+<h3>결제수단</h3>
+<select class="field" id="paymentMethod">
+<option value="신용카드">신용카드</option>
+<option value="카카오페이">카카오페이</option>
+<option value="네이버페이">네이버페이</option>
+<option value="무통장입금">무통장입금</option>
+</select>
+</div>
+
+<div class="line">
+<strong>결제 예정 금액</strong>
+<strong style="float:right">${won(total)}</strong>
+</div>
+
+<br>
+<button class="btn" style="width:100%" onclick="testPayment()">결제하기</button>
+`);
+}
+
+function testPayment(){
+const name=document.getElementById("buyerName").value.trim();
+const phone=document.getElementById("buyerPhone").value.trim();
+const address=document.getElementById("buyerAddress").value.trim();
+
+if(!name||!phone||!address){
+alert("이름, 휴대폰 번호, 주소를 입력해주세요.");
+return;
+}
+
+alert("테스트 화면입니다. 실제 결제는 진행되지 않았습니다.");
+}
+
+/* 관리자 상품 관리 */
+function admin(){
+modal(`
+<button class="x" onclick="closeM()">×</button>
+<h2>상품 관리</h2>
+<p class="muted">
+상품명, 가격, 카테고리, 이미지 URL, 설명을 입력하세요.<br>
+상품 정보는 현재 사용 중인 브라우저에 저장됩니다.
+</p>
+
+<div class="formgrid">
+<input class="field" id="productName" placeholder="상품명">
+<input class="field" id="productPrice" type="number" placeholder="가격">
+<input class="field" id="productCategory" value="CARD MAGNET" placeholder="카테고리">
+<input class="field" id="productImage" placeholder="이미지 URL">
+<textarea class="field full" id="productDesc" placeholder="상품 설명"></textarea>
+<button class="btn full" onclick="addProduct()">상품 추가</button>
+</div>
+
+<div style="margin-top:25px">
+${products.map(p=>`
+<div class="adminrow">
+<span>${esc(p.name)} · ${won(p.price)}</span>
+<button class="danger" onclick="removeProduct(${p.id})">삭제</button>
+</div>
+`).join("")}
+</div>
+`);
+}
+
+function addProduct(){
+const name=document.getElementById("productName").value.trim();
+const price=Number(document.getElementById("productPrice").value);
+const cat=document.getElementById("productCategory").value.trim()||"CARD MAGNET";
+const img=document.getElementById("productImage").value.trim();
+const desc=document.getElementById("productDesc").value.trim();
+
+if(!name||!price||price<0){
+alert("상품명과 올바른 가격을 입력해주세요.");
+return;
+}
+
+products.push({
+id:Date.now(),
+name:name,
+price:price,
+cat:cat,
+img:img,
+desc:desc
+});
+
+save();
+render();
+admin();
+}
+
+function removeProduct(id){
+if(confirm("이 상품을 삭제할까요?")){
+products=products.filter(p=>p.id!==id);
+cart=cart.filter(cartId=>products.some(p=>p.id===cartId));
+save();
+render();
+admin();
+}
+}
+
+/* 로고를 더블클릭하면 관리자 로그인 */
+document.querySelector(".logo").addEventListener("dblclick",()=>{
+if(prompt("관리자 비밀번호")==="cardpocket"){
+admin();
+}else{
+alert("비밀번호가 틀렸습니다.");
+}
+});
+
+render();
+</script>
+
+</body>
+</html>
