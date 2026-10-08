@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -490,6 +491,40 @@ margin-top:10px;
 
 
 /* ================================
+   결제 상태
+================================ */
+
+.payment-loading{
+display:none;
+position:fixed;
+inset:0;
+z-index:1000;
+background:rgba(0,0,0,.65);
+align-items:center;
+justify-content:center;
+}
+
+.payment-loading-box{
+background:#fff;
+padding:35px;
+border-radius:12px;
+text-align:center;
+width:90%;
+max-width:350px;
+}
+
+.payment-loading-box h3{
+margin-bottom:10px;
+}
+
+.payment-loading-box p{
+color:#777;
+font-size:14px;
+line-height:1.6;
+}
+
+
+/* ================================
    기타
 ================================ */
 
@@ -891,6 +926,7 @@ placeholder="이름"
 id="buyerPhone"
 class="input"
 placeholder="전화번호"
+type="tel"
 >
 
 
@@ -901,6 +937,30 @@ placeholder="배송 주소"
 >
 
 
+<div
+style="
+margin-top:20px;
+padding:15px;
+background:#f7f7f7;
+border-radius:8px;
+line-height:1.7;
+"
+>
+
+<div>
+결제 금액
+</div>
+
+<strong
+id="checkoutTotal"
+style="font-size:22px;"
+>
+0원
+</strong>
+
+</div>
+
+
 <button
 class="btn"
 onclick="createOrder()"
@@ -908,6 +968,32 @@ onclick="createOrder()"
 결제하기
 </button>
 
+
+</div>
+
+</div>
+
+
+
+<!-- ==================================
+     결제 로딩
+================================== -->
+
+<div
+id="paymentLoading"
+class="payment-loading"
+>
+
+<div class="payment-loading-box">
+
+<h3>
+결제 준비 중
+</h3>
+
+<p>
+잠시만 기다려주세요.<br>
+결제창을 준비하고 있습니다.
+</p>
 
 </div>
 
@@ -1127,44 +1213,71 @@ SUPABASE_URL,
 SUPABASE_KEY
 );
 
+
+
 /* ==========================================
    TOSS PAYMENTS
 ========================================== */
 
 let tossPayments = null;
-let tossWidgets = null;
+
+
+/*
+   Vercel / 서버에서
+   TOSS_CLIENT_KEY를 받아옵니다.
+*/
 
 async function initTossPayments(){
 
 try{
 
-const response = await fetch("/api/toss-config");
+const response =
+await fetch("/api/toss-config");
+
 
 if(!response.ok){
-throw new Error("토스 설정을 불러오지 못했습니다.");
+
+throw new Error(
+"토스 설정을 불러오지 못했습니다."
+);
+
 }
 
-const config = await response.json();
+
+const config =
+await response.json();
+
 
 if(!config.clientKey){
-throw new Error("TOSS_CLIENT_KEY가 설정되지 않았습니다.");
+
+throw new Error(
+"TOSS_CLIENT_KEY가 설정되지 않았습니다."
+);
+
 }
 
-tossPayments = TossPayments(config.clientKey);
 
-tossWidgets = tossPayments.widgets({
-customerKey: "ANONYMOUS"
-});
+tossPayments =
+TossPayments(
+config.clientKey
+);
+
+
+return true;
+
 
 }catch(error){
 
-console.error(error);
+console.error(
+"Toss 초기화 실패:",
+error
+);
+
+return false;
 
 }
 
 }
-
-initTossPayments();
 
 
 
@@ -1198,6 +1311,8 @@ loadCart();
 
 await loadProducts();
 
+await initTossPayments();
+
 }
 );
 
@@ -1212,7 +1327,9 @@ async function loadProducts(){
 const {
 data,
 error
-} = await supabaseClient
+} =
+
+await supabaseClient
 .from("products")
 .select("*")
 .order(
@@ -1249,7 +1366,8 @@ return;
 }
 
 
-products = data || [];
+products =
+data || [];
 
 
 renderFilters();
@@ -1316,7 +1434,8 @@ button.classList.add(
 }
 
 
-button.onclick = function(){
+button.onclick =
+function(){
 
 currentCategory =
 category;
@@ -1350,10 +1469,14 @@ document.getElementById(
 );
 
 
-const keyword =
+const searchInput =
 document.getElementById(
 "searchInput"
-).value
+);
+
+
+const keyword =
+(searchInput?.value || "")
 .toLowerCase();
 
 
@@ -1421,7 +1544,11 @@ class="product-image"
 
 src="${escapeHtml(image)}"
 
+alt="${escapeHtml(product.name || "")}"
+
 onclick="openProduct(${product.id})"
+
+onerror="this.src='https://placehold.co/600x600?text=NO+IMAGE'"
 
 >
 
@@ -1485,7 +1612,7 @@ function openProduct(id){
 
 const product =
 products.find(
-p => p.id === id
+p => Number(p.id) === Number(id)
 );
 
 
@@ -1573,13 +1700,17 @@ function loadCart(){
 
 try{
 
-cart = JSON.parse(
-
+cart =
+JSON.parse(
 localStorage.getItem(
 "CARD_POCKET_CART"
 )
-
 ) || [];
+
+
+if(!Array.isArray(cart)){
+cart = [];
+}
 
 }catch(error){
 
@@ -1624,13 +1755,16 @@ function addToCart(product){
 const existing =
 
 cart.find(
-item => item.id === product.id
+item =>
+Number(item.id) ===
+Number(product.id)
 );
 
 
 if(existing){
 
-existing.quantity++;
+existing.quantity =
+Number(existing.quantity) + 1;
 
 }else{
 
@@ -1680,7 +1814,7 @@ cart.reduce(
 (sum,item) =>
 
 sum + Number(
-item.quantity
+item.quantity || 0
 ),
 
 0
@@ -1763,8 +1897,8 @@ cart.map(
 
 total +=
 
-item.price *
-item.quantity;
+Number(item.price) *
+Number(item.quantity);
 
 
 return `
@@ -1852,12 +1986,10 @@ renderCart();
 
 
 /* ==========================================
-   ★ 주문하기 화면 열기
+   주문하기 화면 열기
 ========================================== */
 
 function openCheckout(){
-
-/* 장바구니 확인 */
 
 if(
 cart.length === 0
@@ -1872,14 +2004,29 @@ return;
 }
 
 
-/* 장바구니 닫기 */
+const total =
+cart.reduce(
+(sum,item) =>
+sum +
+Number(item.price) *
+Number(item.quantity),
+0
+);
+
+
+document.getElementById(
+"checkoutTotal"
+).textContent =
+
+total.toLocaleString()
++
+"원";
+
 
 closeModal(
 "cartModal"
 );
 
-
-/* 주문창 열기 */
 
 document.getElementById(
 "checkoutModal"
@@ -1891,128 +2038,346 @@ document.getElementById(
 
 
 /* ==========================================
-   주문 생성
+   주문 생성 + 토스 결제
 ========================================== */
 
 async function createOrder(){
 
 const name =
-document.getElementById("buyerName").value.trim();
+document.getElementById(
+"buyerName"
+).value.trim();
+
 
 const phone =
-document.getElementById("buyerPhone").value.trim();
+document.getElementById(
+"buyerPhone"
+).value.trim();
+
 
 const address =
-document.getElementById("buyerAddress").value.trim();
+document.getElementById(
+"buyerAddress"
+).value.trim();
+
 
 if(!name){
-alert("이름을 입력해주세요.");
-return;
-}
 
-if(!phone){
-alert("전화번호를 입력해주세요.");
-return;
-}
-
-if(!address){
-alert("배송 주소를 입력해주세요.");
-return;
-}
-
-if(cart.length === 0){
-alert("장바구니가 비어있습니다.");
-return;
-}
-
-const total = cart.reduce(
-(sum,item) => sum + Number(item.price) * Number(item.quantity),
-0
+alert(
+"이름을 입력해주세요."
 );
 
-const now = new Date();
+return;
+
+}
+
+
+if(!phone){
+
+alert(
+"전화번호를 입력해주세요."
+);
+
+return;
+
+}
+
+
+if(!address){
+
+alert(
+"배송 주소를 입력해주세요."
+);
+
+return;
+
+}
+
+
+if(cart.length === 0){
+
+alert(
+"장바구니가 비어있습니다."
+);
+
+return;
+
+}
+
+
+/* ==================================
+   총 결제금액 계산
+================================== */
+
+const total =
+cart.reduce(
+
+(sum,item) =>
+
+sum +
+Number(item.price) *
+Number(item.quantity),
+
+0
+
+);
+
+
+if(total <= 0){
+
+alert(
+"결제 금액을 확인해주세요."
+);
+
+return;
+
+}
+
+
+/* ==================================
+   주문번호 생성
+================================== */
+
+const now =
+new Date();
+
 
 const orderNumber =
-"CP" +
-now.getFullYear() +
-String(now.getMonth()+1).padStart(2,"0") +
-String(now.getDate()).padStart(2,"0") +
-String(now.getHours()).padStart(2,"0") +
-String(now.getMinutes()).padStart(2,"0") +
-String(now.getSeconds()).padStart(2,"0") +
-"-" +
-crypto.randomUUID().replace(/-/g,"").substring(0,8).toUpperCase();
 
-/* 결제 전에 주문을 먼저 저장합니다. */
-const { error } = await supabaseClient
+"CP" +
+
+now.getFullYear() +
+
+String(
+now.getMonth()+1
+).padStart(2,"0") +
+
+String(
+now.getDate()
+).padStart(2,"0") +
+
+String(
+now.getHours()
+).padStart(2,"0") +
+
+String(
+now.getMinutes()
+).padStart(2,"0") +
+
+String(
+now.getSeconds()
+).padStart(2,"0") +
+
+"-" +
+
+crypto
+.randomUUID()
+.replace(/-/g,"")
+.substring(
+0,
+8
+)
+.toUpperCase();
+
+
+
+/* ==================================
+   주문 저장
+================================== */
+
+const {
+error
+} =
+
+await supabaseClient
 .from("orders")
 .insert([{
-order_number: orderNumber,
-buyer_name: name,
-buyer_phone: phone,
-buyer_address: address,
-items: cart,
-total_price: total,
-status: "결제대기"
+
+order_number:
+orderNumber,
+
+buyer_name:
+name,
+
+buyer_phone:
+phone,
+
+buyer_address:
+address,
+
+items:
+cart,
+
+total_price:
+total,
+
+status:
+"결제대기"
+
 }]);
 
+
 if(error){
+
 console.error(error);
-alert("주문 저장 실패\n\n" + error.message);
+
+
+alert(
+
+"주문 저장 실패\n\n" +
+
+error.message
+
+);
+
 return;
+
 }
 
-if(!tossWidgets){
+
+
+/* ==================================
+   토스 초기화
+================================== */
+
+if(!tossPayments){
+
+const initialized =
 await initTossPayments();
-}
 
-if(!tossWidgets){
-alert("토스 결제 설정을 불러오지 못했습니다.\nVercel 환경변수를 확인해주세요.");
+
+if(!initialized){
+
+alert(
+
+"토스 결제 설정을 불러오지 못했습니다.\n\n" +
+"Vercel의 TOSS_CLIENT_KEY 환경변수를 확인해주세요."
+
+);
+
 return;
+
 }
+
+}
+
+
+/* ==================================
+   주문명
+================================== */
+
+const firstProductName =
+cart[0]?.name ||
+"CARD POCKET 상품";
+
+
+const orderName =
+cart.length > 1
+
+?
+
+`${firstProductName} 외 ${cart.length - 1}건`
+
+:
+
+firstProductName;
+
+
+
+/* ==================================
+   로딩 표시
+================================== */
+
+document.getElementById(
+"paymentLoading"
+).style.display =
+"flex";
+
 
 try{
 
-const firstProductName = cart[0]?.name || "CARD POCKET 상품";
-const orderName = cart.length > 1
-? `${firstProductName} 외 ${cart.length - 1}건`
-: firstProductName;
 
-await tossWidgets.setAmount({
-value: total,
-currency: "KRW"
+/* ==================================
+   토스 결제창
+================================== */
+
+await tossPayments.requestPayment({
+
+method:
+"CARD",
+
+amount: {
+
+currency:
+"KRW",
+
+value:
+total
+
+},
+
+orderId:
+orderNumber,
+
+orderName:
+orderName,
+
+customerName:
+name,
+
+customerMobilePhone:
+phone.replace(/\D/g,""),
+
+successUrl:
+`${window.location.origin}/success.html`,
+
+failUrl:
+`${window.location.origin}/fail.html`
+
 });
 
-const paymentWindow = await tossWidgets.renderPaymentWindow({
-orderName: orderName
-});
-
-paymentWindow.on("paymentRequest", async (paymentMethod) => {
-
-try{
-
-await tossWidgets.requestPayment({
-orderId: orderNumber,
-orderName: orderName,
-successUrl: `${window.location.origin}/success.html`,
-failUrl: `${window.location.origin}/fail.html`,
-customerName: name,
-customerMobilePhone: phone.replace(/\D/g,"")
-});
-
-}catch(paymentError){
-console.error(paymentError);
-alert(paymentError?.message || "결제를 시작하지 못했습니다.");
-}
-
-});
 
 }catch(error){
-console.error(error);
-alert(error?.message || "토스 결제창을 열지 못했습니다.");
+
+console.error(
+"Toss Payment Error:",
+error
+);
+
+
+/* 결제창을 닫거나 취소한 경우 */
+
+if(
+error?.code === "USER_CANCEL"
+){
+
+alert(
+"결제가 취소되었습니다."
+);
+
+}else{
+
+alert(
+
+error?.message ||
+"결제를 시작하지 못했습니다."
+
+);
+
+}
+
+}finally{
+
+document.getElementById(
+"paymentLoading"
+).style.display =
+"none";
+
 }
 
 }
+
+
 
 /* ==========================================
    관리자 로그인
@@ -2185,7 +2550,6 @@ Math.random()
 extension;
 
 
-
 const {
 error
 } =
@@ -2212,7 +2576,6 @@ false
 );
 
 
-
 if(error){
 
 throw new Error(
@@ -2224,7 +2587,6 @@ error.message
 );
 
 }
-
 
 
 const {
@@ -2366,8 +2728,6 @@ document.getElementById(
 
 
 
-/* 상품명 */
-
 if(!name){
 
 alert(
@@ -2379,9 +2739,7 @@ return;
 }
 
 
-/* 가격 */
-
-if(!price){
+if(!price || price <= 0){
 
 alert(
 "가격을 입력해주세요."
@@ -2392,8 +2750,6 @@ return;
 }
 
 
-
-/* 기본 이미지 */
 
 let finalImage =
 imageUrl;
@@ -2407,7 +2763,6 @@ if(file){
 try{
 
 finalImage =
-
 await uploadProductImage(
 file
 );
@@ -2464,7 +2819,6 @@ editingProductId
 );
 
 
-
 if(error){
 
 alert(
@@ -2478,7 +2832,6 @@ error.message
 return;
 
 }
-
 
 
 /* 기존 이미지 삭제 */
@@ -2498,7 +2851,6 @@ editingOldImage
 );
 
 }
-
 
 
 alert(
@@ -2559,7 +2911,6 @@ description
 }]);
 
 
-
 if(error){
 
 alert(
@@ -2601,7 +2952,7 @@ function editProduct(id){
 const product =
 
 products.find(
-p => p.id === id
+p => Number(p.id) === Number(id)
 );
 
 
@@ -2616,7 +2967,6 @@ id;
 
 editingOldImage =
 product.image_url || null;
-
 
 
 document.getElementById(
@@ -2806,7 +3156,6 @@ return;
 }
 
 
-
 container.innerHTML =
 
 products.map(
@@ -2832,6 +3181,8 @@ return `
 class="admin-product-thumb"
 
 src="${escapeHtml(image)}"
+
+onerror="this.src='https://placehold.co/100x100?text=NO+IMAGE'"
 
 >
 
@@ -2916,7 +3267,7 @@ async function deleteProduct(id){
 const product =
 
 products.find(
-p => p.id === id
+p => Number(p.id) === Number(id)
 );
 
 
@@ -2941,7 +3292,6 @@ return;
 }
 
 
-
 const {
 error
 } =
@@ -2953,7 +3303,6 @@ await supabaseClient
 "id",
 id
 );
-
 
 
 if(error){
@@ -2969,7 +3318,6 @@ error.message
 return;
 
 }
-
 
 
 /* Storage 이미지 삭제 */
@@ -3025,7 +3373,6 @@ style="color:#888;text-align:center;padding:30px"
 `;
 
 
-
 const {
 data,
 error
@@ -3040,7 +3387,6 @@ await supabaseClient
 ascending:false
 }
 );
-
 
 
 if(error){
@@ -3068,7 +3414,6 @@ return;
 }
 
 
-
 if(
 !data ||
 data.length === 0
@@ -3089,7 +3434,6 @@ style="color:#888;text-align:center;padding:30px"
 return;
 
 }
-
 
 
 container.innerHTML =
@@ -3124,7 +3468,6 @@ items = [];
 }
 
 
-
 const itemText =
 
 (items || [])
@@ -3140,7 +3483,6 @@ item =>
 );
 
 
-
 const date =
 
 new Date(
@@ -3148,7 +3490,6 @@ order.created_at
 ).toLocaleString(
 "ko-KR"
 );
-
 
 
 return `
@@ -3384,7 +3725,6 @@ id
 );
 
 
-
 if(error){
 
 alert(
@@ -3498,3 +3838,4 @@ value ?? ""
 
 </body>
 </html>
+```
