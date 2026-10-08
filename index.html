@@ -3,6 +3,7 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>CARD POCKET</title>
@@ -11,6 +12,10 @@
 <script src="https://js.tosspayments.com/v2/standard"></script>
 
 <style>
+
+/* ================================
+   기본
+================================ */
 
 *{
 box-sizing:border-box;
@@ -32,6 +37,11 @@ font-family:inherit;
 img{
 display:block;
 }
+
+
+/* ================================
+   헤더
+================================ */
 
 .header{
 position:sticky;
@@ -77,6 +87,11 @@ padding:10px 16px;
 border-radius:6px;
 }
 
+
+/* ================================
+   히어로
+================================ */
+
 .hero{
 max-width:1200px;
 margin:30px auto;
@@ -96,6 +111,11 @@ color:#ccc;
 line-height:1.7;
 }
 
+
+/* ================================
+   컨테이너
+================================ */
+
 .container{
 max-width:1200px;
 margin:auto;
@@ -106,6 +126,11 @@ padding:0 20px 60px;
 font-size:28px;
 margin:40px 0 20px;
 }
+
+
+/* ================================
+   검색
+================================ */
 
 .search{
 width:100%;
@@ -134,6 +159,11 @@ border-radius:20px;
 background:#111;
 color:#fff;
 }
+
+
+/* ================================
+   상품
+================================ */
 
 .products{
 display:grid;
@@ -193,6 +223,11 @@ padding:70px 20px;
 color:#888;
 }
 
+
+/* ================================
+   모달
+================================ */
+
 .modal-bg{
 position:fixed;
 inset:0;
@@ -248,6 +283,11 @@ color:#555;
 line-height:1.7;
 }
 
+
+/* ================================
+   버튼
+================================ */
+
 .btn{
 width:100%;
 padding:13px;
@@ -262,6 +302,15 @@ border-radius:6px;
 background:#777;
 }
 
+.btn-red{
+background:#d00000;
+}
+
+
+/* ================================
+   입력
+================================ */
+
 .input{
 width:100%;
 padding:13px;
@@ -269,6 +318,11 @@ border:1px solid #ddd;
 border-radius:6px;
 margin-top:10px;
 }
+
+
+/* ================================
+   장바구니
+================================ */
 
 .cart-item{
 display:flex;
@@ -298,6 +352,11 @@ font-size:22px;
 font-weight:bold;
 margin-top:20px;
 }
+
+
+/* ================================
+   관리자
+================================ */
 
 .admin-form{
 display:grid;
@@ -373,6 +432,11 @@ background:#111;
 background:#d00000;
 }
 
+
+/* ================================
+   주문
+================================ */
+
 .order{
 border:1px solid #eee;
 border-radius:10px;
@@ -424,33 +488,14 @@ border-radius:6px;
 margin-top:10px;
 }
 
-.payment-loading{
-display:none;
-position:fixed;
-inset:0;
-z-index:1000;
-background:rgba(0,0,0,.7);
-align-items:center;
-justify-content:center;
-}
 
-.payment-loading-box{
-background:#fff;
-padding:35px;
-border-radius:12px;
-text-align:center;
-width:90%;
-max-width:380px;
-}
+/* ================================
+   기타
+================================ */
 
-.payment-loading-box h3{
-margin-bottom:10px;
-}
-
-.payment-loading-box p{
-color:#777;
-font-size:14px;
-line-height:1.7;
+.notice{
+line-height:1.8;
+color:#555;
 }
 
 .footer{
@@ -460,6 +505,11 @@ text-align:center;
 padding:50px 20px;
 margin-top:50px;
 }
+
+
+/* ================================
+   모바일
+================================ */
 
 @media(max-width:900px){
 
@@ -499,7 +549,13 @@ padding:0 15px 40px;
 
 </head>
 
+
 <body>
+
+
+<!-- ==================================
+     HEADER
+================================== -->
 
 <header class="header">
 
@@ -511,6 +567,7 @@ ondblclick="openAdminLogin()"
 >
 CARD POCKET
 </div>
+
 
 <nav class="nav">
 
@@ -532,6 +589,7 @@ NOTICE
 
 </nav>
 
+
 <button
 class="cart-button"
 onclick="openCart()"
@@ -544,7 +602,13 @@ onclick="openCart()"
 </header>
 
 
+
+<!-- ==================================
+     MAIN
+================================== -->
+
 <main id="home">
+
 
 <section class="hero">
 
@@ -553,20 +617,28 @@ CARD POCKET
 </h1>
 
 <p>
+
 특별한 포켓몬 카드를 일상 속에서 즐기는 방법.<br>
+
 정품 트레이딩 카드를 활용한 수제 카드 마그넷입니다.
+
 </p>
 
 </section>
 
 
+
 <div class="container">
+
+
+<!-- 상품 -->
 
 <section id="products">
 
 <h2 class="section-title">
 PRODUCT
 </h2>
+
 
 <input
 id="searchInput"
@@ -575,10 +647,12 @@ placeholder="상품명을 검색해보세요."
 oninput="renderProducts()"
 >
 
+
 <div
 id="filters"
 class="filters"
 ></div>
+
 
 <div
 id="productList"
@@ -594,15 +668,17 @@ class="products"
 </section>
 
 
+
+<!-- ABOUT -->
+
 <section id="about">
 
 <h2 class="section-title">
 ABOUT
 </h2>
 
-<div
-style="line-height:1.8;color:#555;"
->
+
+<div class="notice">
 
 CARD POCKET은 정품 트레이딩 카드를 활용하여 제작한
 수제 카드 마그넷을 판매합니다.
@@ -617,19 +693,23 @@ CARD POCKET은 정품 트레이딩 카드를 활용하여 제작한
 </section>
 
 
+
+<!-- NOTICE -->
+
 <section id="notice">
 
 <h2 class="section-title">
 NOTICE
 </h2>
 
-<div
-style="line-height:1.8;color:#555;"
->
+
+<div class="notice">
 
 • 상품에 따라 카드의 상태가 다를 수 있습니다.<br>
+
 • 수작업으로 제작되기 때문에 제품마다
 약간의 차이가 있을 수 있습니다.<br>
+
 • 실제 상품의 색상은 모니터 환경에 따라
 다르게 보일 수 있습니다.
 
@@ -637,10 +717,16 @@ style="line-height:1.8;color:#555;"
 
 </section>
 
+
 </div>
 
 </main>
 
+
+
+<!-- ==================================
+     FOOTER
+================================== -->
 
 <footer class="footer">
 
@@ -655,7 +741,10 @@ Handmade Card Magnet Shop
 </footer>
 
 
-<!-- 상품 상세 -->
+
+<!-- ==================================
+     상품 상세
+================================== -->
 
 <div
 id="productModal"
@@ -671,23 +760,28 @@ onclick="closeModal('productModal')"
 ×
 </button>
 
+
 <img
 id="detailImage"
 >
 
+
 <h2
 id="detailName"
 ></h2>
+
 
 <div
 id="detailPrice"
 class="modal-price"
 ></div>
 
+
 <div
 id="detailDescription"
 class="modal-description"
 ></div>
+
 
 <button
 class="btn"
@@ -696,12 +790,16 @@ onclick="addDetailToCart()"
 장바구니 담기
 </button>
 
-</div>
 
 </div>
 
+</div>
 
-<!-- 장바구니 -->
+
+
+<!-- ==================================
+     장바구니
+================================== -->
 
 <div
 id="cartModal"
@@ -717,11 +815,14 @@ onclick="closeModal('cartModal')"
 ×
 </button>
 
+
 <h2>
 장바구니
 </h2>
 
+
 <div id="cartItems"></div>
+
 
 <div class="cart-total">
 
@@ -733,6 +834,7 @@ onclick="closeModal('cartModal')"
 
 </div>
 
+
 <button
 class="btn"
 onclick="openCheckout()"
@@ -740,12 +842,16 @@ onclick="openCheckout()"
 주문하기
 </button>
 
-</div>
 
 </div>
 
+</div>
 
-<!-- 주문 -->
+
+
+<!-- ==================================
+     주문
+================================== -->
 
 <div
 id="checkoutModal"
@@ -761,9 +867,11 @@ onclick="closeModal('checkoutModal')"
 ×
 </button>
 
+
 <h2>
 주문하기
 </h2>
+
 
 <p
 style="color:#777;margin-bottom:10px;line-height:1.6"
@@ -771,18 +879,20 @@ style="color:#777;margin-bottom:10px;line-height:1.6"
 배송받으실 정보를 입력해주세요.
 </p>
 
+
 <input
 id="buyerName"
 class="input"
 placeholder="이름"
 >
 
+
 <input
 id="buyerPhone"
 class="input"
 placeholder="전화번호"
-type="tel"
 >
+
 
 <input
 id="buyerAddress"
@@ -790,28 +900,6 @@ class="input"
 placeholder="배송 주소"
 >
 
-<div
-style="
-margin-top:20px;
-padding:15px;
-background:#f7f7f7;
-border-radius:8px;
-line-height:1.7;
-"
->
-
-<div>
-결제 금액
-</div>
-
-<strong
-id="checkoutTotal"
-style="font-size:22px;"
->
-0원
-</strong>
-
-</div>
 
 <button
 class="btn"
@@ -820,35 +908,16 @@ onclick="createOrder()"
 결제하기
 </button>
 
-</div>
-
-</div>
-
-
-<!-- 결제 준비 -->
-
-<div
-id="paymentLoading"
-class="payment-loading"
->
-
-<div class="payment-loading-box">
-
-<h3 id="paymentLoadingTitle">
-결제 준비 중
-</h3>
-
-<p id="paymentLoadingText">
-토스 결제창을 준비하고 있습니다.<br>
-잠시만 기다려주세요.
-</p>
 
 </div>
 
 </div>
 
 
-<!-- 관리자 로그인 -->
+
+<!-- ==================================
+     관리자 로그인
+================================== -->
 
 <div
 id="adminLoginModal"
@@ -864,9 +933,11 @@ onclick="closeModal('adminLoginModal')"
 ×
 </button>
 
+
 <h2>
 관리자 로그인
 </h2>
+
 
 <input
 id="adminPassword"
@@ -875,6 +946,7 @@ class="input"
 placeholder="관리자 비밀번호"
 >
 
+
 <button
 class="btn"
 onclick="loginAdmin()"
@@ -882,12 +954,16 @@ onclick="loginAdmin()"
 로그인
 </button>
 
-</div>
 
 </div>
 
+</div>
 
-<!-- 관리자 -->
+
+
+<!-- ==================================
+     관리자
+================================== -->
 
 <div
 id="adminModal"
@@ -903,20 +979,28 @@ onclick="closeModal('adminModal')"
 ×
 </button>
 
+
 <h2>
 CARD POCKET 관리자
 </h2>
+
+
+
+<!-- 상품 관리 -->
 
 <h3 style="margin-top:25px;">
 상품 관리
 </h3>
 
+
 <div class="admin-form">
+
 
 <input
 id="adminName"
 placeholder="상품명"
 >
+
 
 <input
 id="adminPrice"
@@ -924,15 +1008,18 @@ type="number"
 placeholder="가격"
 >
 
+
 <input
 id="adminCategory"
 placeholder="카테고리"
 >
 
+
 <input
 id="adminImage"
 placeholder="이미지 URL (선택)"
 >
+
 
 <input
 id="adminImageFile"
@@ -942,16 +1029,19 @@ accept="image/*"
 onchange="previewImage()"
 >
 
+
 <img
 id="imagePreview"
 class="preview"
 >
+
 
 <textarea
 id="adminDescription"
 rows="5"
 placeholder="상품 설명"
 ></textarea>
+
 
 <button
 id="saveProductButton"
@@ -960,6 +1050,7 @@ onclick="saveProduct()"
 >
 상품 등록
 </button>
+
 
 <button
 id="cancelEditButton"
@@ -970,13 +1061,23 @@ style="display:none"
 수정 취소
 </button>
 
+
 </div>
 
-<div id="adminProductList"></div>
+
+<div
+id="adminProductList"
+>
+</div>
+
+
+
+<!-- 주문 관리 -->
 
 <h3 style="margin-top:40px;">
 주문 관리
 </h3>
+
 
 <button
 class="btn"
@@ -985,24 +1086,40 @@ onclick="loadOrders()"
 주문 새로고침
 </button>
 
-<div id="orderList"></div>
+
+<div
+id="orderList"
+>
+
+<div
+style="color:#888;text-align:center;padding:30px"
+>
+주문을 불러오려면 새로고침을 눌러주세요.
+</div>
+
+</div>
+
 
 </div>
 
 </div>
+
 
 
 <script>
 
-/* ==================================================
+
+/* ==========================================
    SUPABASE
-================================================== */
+========================================== */
 
 const SUPABASE_URL =
 "https://liyjjunpwexsqvmrdeas.supabase.co";
 
+
 const SUPABASE_KEY =
 "sb_publishable_9NwuhkCzUm9xwgr_OrdeDA_4rpIsND5";
+
 
 const supabaseClient =
 window.supabase.createClient(
@@ -1011,162 +1128,64 @@ SUPABASE_KEY
 );
 
 
-/* ==================================================
-   TOSS
-================================================== */
+/* ==========================================
+   TOSS PAYMENTS
+========================================== */
 
 let tossPayments = null;
-
 let tossClientKey = null;
-
-
-/* ==================================================
-   Toss 초기화
-================================================== */
 
 async function initTossPayments(){
 
 try{
 
-console.log(
-"[TOSS 1] 설정 요청 시작"
-);
-
-const response =
-await fetch(
-"/api/toss-config",
-{
+const response = await fetch("/api/toss-config", {
 method:"GET",
 cache:"no-store"
-}
-);
-
-
-console.log(
-"[TOSS 2] 설정 응답:",
-response.status
-);
-
+});
 
 if(!response.ok){
-
 throw new Error(
-"/api/toss-config 응답 오류: HTTP " +
+"토스 클라이언트 키를 불러오지 못했습니다. HTTP " +
 response.status
 );
-
 }
 
+const config = await response.json();
 
-const config =
-await response.json();
-
-
-console.log(
-"[TOSS 3] 받은 설정:",
-config
-);
-
-
-if(
-!config ||
-!config.clientKey
-){
-
-throw new Error(
-"TOSS_CLIENT_KEY가 없습니다."
-);
-
+if(!config || !config.clientKey){
+throw new Error("TOSS_CLIENT_KEY가 없습니다.");
 }
 
-
-tossClientKey =
-String(
-config.clientKey
-);
-
-
-console.log(
-"[TOSS 4] clientKey 앞부분:",
-tossClientKey.substring(
-0,
-20
-)
-);
-
-
-/*
-  API 개별 연동 키인지 검사
-*/
+tossClientKey = String(config.clientKey).trim();
 
 if(
 !tossClientKey.startsWith("test_ck_") &&
 !tossClientKey.startsWith("live_ck_")
 ){
-
 throw new Error(
-
-"현재 TOSS_CLIENT_KEY가 잘못되었습니다.\n\n" +
-
-"현재 시작값:\n" +
-
-tossClientKey.substring(
-0,
-25
-) +
-
-"\n\n" +
-
-"반드시 test_ck_ 또는 live_ck_로\n" +
-
-"시작해야 합니다."
-
+"TOSS_CLIENT_KEY는 test_ck_ 또는 live_ck_로 시작해야 합니다.\n\n현재 키 시작값: " +
+ tossClientKey.substring(0, 12)
 );
-
 }
 
-
-console.log(
-"[TOSS 5] 클라이언트 키 형식 정상"
-);
-
-
-/*
-  TossPayments 생성
-*/
-
-tossPayments =
-TossPayments(
-tossClientKey
-);
-
-
-console.log(
-"[TOSS 6] TossPayments 생성 성공",
-tossPayments
-);
-
+tossPayments = TossPayments(tossClientKey);
 
 if(
-!tossPayments
+!tossPayments ||
+typeof tossPayments.payment !== "function"
 ){
-
 throw new Error(
-"TossPayments 객체 생성 실패"
+"토스 결제 SDK 초기화에 실패했습니다."
 );
-
 }
 
-
+console.log("Toss Payments 준비 완료");
 return true;
-
 
 }catch(error){
 
-console.error(
-"[TOSS INIT ERROR]",
-error
-);
+console.error("Toss Payments 초기화 오류:", error);
 
 return false;
 
@@ -1175,9 +1194,10 @@ return false;
 }
 
 
-/* ==================================================
+
+/* ==========================================
    전역 변수
-================================================== */
+========================================== */
 
 let products = [];
 
@@ -1192,9 +1212,10 @@ let editingProductId = null;
 let editingOldImage = null;
 
 
-/* ==================================================
+
+/* ==========================================
    시작
-================================================== */
+========================================== */
 
 document.addEventListener(
 "DOMContentLoaded",
@@ -1202,31 +1223,25 @@ async function(){
 
 loadCart();
 
-await loadProducts();
-
 await initTossPayments();
+
+await loadProducts();
 
 }
 );
 
 
-/* ==================================================
+
+/* ==========================================
    상품 불러오기
-================================================== */
+========================================== */
 
 async function loadProducts(){
 
-const list =
-document.getElementById(
-"productList"
-);
-
-try{
-
-const result =
-await Promise.race([
-
-supabaseClient
+const {
+data,
+error
+} = await supabaseClient
 .from("products")
 .select("*")
 .order(
@@ -1234,43 +1249,17 @@ supabaseClient
 {
 ascending:false
 }
-),
-
-new Promise(
-(_,reject)=>
-
-setTimeout(
-()=>
-
-reject(
-new Error(
-"Supabase 응답 시간이 초과되었습니다."
-)
-),
-
-10000
-
-)
-
-)
-
-]);
-
-
-const {
-data,
-error
-} = result;
+);
 
 
 if(error){
 
-console.error(
-"상품 조회 오류:",
-error
-);
+console.error(error);
 
-list.innerHTML = `
+
+document.getElementById(
+"productList"
+).innerHTML = `
 
 <div class="empty">
 
@@ -1278,9 +1267,7 @@ list.innerHTML = `
 
 <br><br>
 
-${escapeHtml(
-error.message
-)}
+${escapeHtml(error.message)}
 
 </div>
 
@@ -1291,44 +1278,20 @@ return;
 }
 
 
-products =
-data || [];
+products = data || [];
+
 
 renderFilters();
 
 renderProducts();
 
-
-}catch(error){
-
-console.error(
-error
-);
-
-list.innerHTML = `
-
-<div class="empty">
-
-상품을 불러오지 못했습니다.
-
-<br><br>
-
-${escapeHtml(
-error.message
-)}
-
-</div>
-
-`;
-
-}
-
 }
 
 
-/* ==================================================
-   필터
-================================================== */
+
+/* ==========================================
+   카테고리
+========================================== */
 
 function renderFilters(){
 
@@ -1336,6 +1299,7 @@ const container =
 document.getElementById(
 "filters"
 );
+
 
 const categories = [
 
@@ -1345,8 +1309,7 @@ const categories = [
 
 products
 .map(
-product =>
-product.category
+product => product.category
 )
 .filter(Boolean)
 
@@ -1366,6 +1329,7 @@ document.createElement(
 "button"
 );
 
+
 button.textContent =
 category;
 
@@ -1381,8 +1345,7 @@ button.classList.add(
 }
 
 
-button.onclick =
-function(){
+button.onclick = function(){
 
 currentCategory =
 category;
@@ -1403,9 +1366,10 @@ button
 }
 
 
-/* ==================================================
+
+/* ==========================================
    상품 표시
-================================================== */
+========================================== */
 
 function renderProducts(){
 
@@ -1414,12 +1378,11 @@ document.getElementById(
 "productList"
 );
 
+
 const keyword =
-(
 document.getElementById(
 "searchInput"
-)?.value || ""
-)
+).value
 .toLowerCase();
 
 
@@ -1429,13 +1392,9 @@ product => {
 
 const search =
 
-(
-product.name || ""
-)
+(product.name || "")
 .toLowerCase()
-.includes(
-keyword
-);
+.includes(keyword);
 
 
 const category =
@@ -1484,21 +1443,20 @@ return `
 
 <div class="product">
 
+
 <img
 
 class="product-image"
 
 src="${escapeHtml(image)}"
 
-alt="${escapeHtml(product.name || "")}"
-
 onclick="openProduct(${product.id})"
-
-onerror="this.src='https://placehold.co/600x600?text=NO+IMAGE'"
 
 >
 
+
 <div class="product-info">
+
 
 <div class="product-category">
 
@@ -1508,6 +1466,7 @@ product.category || ""
 
 </div>
 
+
 <div class="product-name">
 
 ${escapeHtml(
@@ -1515,6 +1474,7 @@ product.name || ""
 )}
 
 </div>
+
 
 <div class="product-price">
 
@@ -1524,11 +1484,15 @@ product.price || 0
 
 </div>
 
+
 <button
 onclick="openProduct(${product.id})"
 >
+
 상품 보기
+
 </button>
+
 
 </div>
 
@@ -1541,18 +1505,18 @@ onclick="openProduct(${product.id})"
 }
 
 
-/* ==================================================
+
+/* ==========================================
    상품 상세
-================================================== */
+========================================== */
 
 function openProduct(id){
 
 const product =
 products.find(
-p =>
-Number(p.id) ===
-Number(id)
+p => p.id === id
 );
+
 
 if(!product){
 return;
@@ -1575,6 +1539,7 @@ product.image_url ||
 document.getElementById(
 "detailName"
 ).textContent =
+
 product.name || "";
 
 
@@ -1584,8 +1549,7 @@ document.getElementById(
 
 Number(
 product.price || 0
-)
-.toLocaleString()
+).toLocaleString()
 +
 "원";
 
@@ -1593,6 +1557,7 @@ product.price || 0
 document.getElementById(
 "detailDescription"
 ).textContent =
+
 product.description || "";
 
 
@@ -1604,15 +1569,22 @@ document.getElementById(
 }
 
 
+
+/* ==========================================
+   상세 → 장바구니
+========================================== */
+
 function addDetailToCart(){
 
 if(!selectedProduct){
 return;
 }
 
+
 addToCart(
 selectedProduct
 );
+
 
 closeModal(
 "productModal"
@@ -1621,28 +1593,22 @@ closeModal(
 }
 
 
-/* ==================================================
-   장바구니
-================================================== */
+
+/* ==========================================
+   장바구니 불러오기
+========================================== */
 
 function loadCart(){
 
 try{
 
-cart =
-JSON.parse(
+cart = JSON.parse(
+
 localStorage.getItem(
 "CARD_POCKET_CART"
 )
+
 ) || [];
-
-if(
-!Array.isArray(cart)
-){
-
-cart = [];
-
-}
 
 }catch(error){
 
@@ -1650,39 +1616,50 @@ cart = [];
 
 }
 
+
 updateCartCount();
 
 }
 
+
+
+/* ==========================================
+   장바구니 저장
+========================================== */
 
 function saveCart(){
 
 localStorage.setItem(
+
 "CARD_POCKET_CART",
+
 JSON.stringify(cart)
+
 );
+
 
 updateCartCount();
 
 }
 
 
+
+/* ==========================================
+   장바구니 추가
+========================================== */
+
 function addToCart(product){
 
 const existing =
+
 cart.find(
-item =>
-Number(item.id) ===
-Number(product.id)
+item => item.id === product.id
 );
 
 
 if(existing){
 
-existing.quantity =
-Number(
-existing.quantity
-) + 1;
+existing.quantity++;
 
 }else{
 
@@ -1695,9 +1672,7 @@ name:
 product.name,
 
 price:
-Number(
-product.price
-),
+Number(product.price),
 
 image_url:
 product.image_url,
@@ -1712,6 +1687,7 @@ quantity:
 
 saveCart();
 
+
 alert(
 "장바구니에 담았습니다."
 );
@@ -1719,17 +1695,27 @@ alert(
 }
 
 
+
+/* ==========================================
+   장바구니 수량
+========================================== */
+
 function updateCartCount(){
 
 const count =
+
 cart.reduce(
+
 (sum,item) =>
-sum +
-Number(
-item.quantity || 0
+
+sum + Number(
+item.quantity
 ),
+
 0
+
 );
+
 
 document.getElementById(
 "cartCount"
@@ -1739,9 +1725,15 @@ count;
 }
 
 
+
+/* ==========================================
+   장바구니 열기
+========================================== */
+
 function openCart(){
 
 renderCart();
+
 
 document.getElementById(
 "cartModal"
@@ -1750,6 +1742,11 @@ document.getElementById(
 
 }
 
+
+
+/* ==========================================
+   장바구니 표시
+========================================== */
 
 function renderCart(){
 
@@ -1773,10 +1770,12 @@ container.innerHTML = `
 
 `;
 
+
 document.getElementById(
 "cartTotal"
 ).textContent =
 "0원";
+
 
 return;
 
@@ -1793,15 +1792,17 @@ cart.map(
 
 total +=
 
-Number(item.price) *
-Number(item.quantity);
+item.price *
+item.quantity;
 
 
 return `
 
 <div class="cart-item">
 
+
 <div class="cart-item-info">
+
 
 <div class="cart-item-name">
 
@@ -1811,22 +1812,33 @@ item.name
 
 </div>
 
+
 <div class="cart-item-price">
 
 ${Number(
 item.price
-).toLocaleString()}원 × ${item.quantity}
+).toLocaleString()}원
+×
+${item.quantity}
 
 </div>
 
+
 </div>
+
 
 <button
+
 class="delete-btn"
+
 onclick="removeCartItem(${index})"
+
 >
+
 삭제
+
 </button>
+
 
 </div>
 
@@ -1846,6 +1858,11 @@ total.toLocaleString()
 }
 
 
+
+/* ==========================================
+   장바구니 상품 삭제
+========================================== */
+
 function removeCartItem(index){
 
 cart.splice(
@@ -1853,18 +1870,23 @@ index,
 1
 );
 
+
 saveCart();
+
 
 renderCart();
 
 }
 
 
-/* ==================================================
-   주문 화면
-================================================== */
+
+/* ==========================================
+   ★ 주문하기 화면 열기
+========================================== */
 
 function openCheckout(){
+
+/* 장바구니 확인 */
 
 if(
 cart.length === 0
@@ -1879,29 +1901,14 @@ return;
 }
 
 
-const total =
-cart.reduce(
-(sum,item) =>
-sum +
-Number(item.price) *
-Number(item.quantity),
-0
-);
-
-
-document.getElementById(
-"checkoutTotal"
-).textContent =
-
-total.toLocaleString()
-+
-"원";
-
+/* 장바구니 닫기 */
 
 closeModal(
 "cartModal"
 );
 
+
+/* 주문창 열기 */
 
 document.getElementById(
 "checkoutModal"
@@ -1911,260 +1918,116 @@ document.getElementById(
 }
 
 
-/* ==================================================
-   결제 준비 화면
-================================================== */
 
-function showPaymentLoading(
-title,
-text
-){
-
-document.getElementById(
-"paymentLoadingTitle"
-).textContent =
-title;
-
-
-document.getElementById(
-"paymentLoadingText"
-).innerHTML =
-text;
-
-
-document.getElementById(
-"paymentLoading"
-).style.display =
-"flex";
-
-}
-
-
-function hidePaymentLoading(){
-
-document.getElementById(
-"paymentLoading"
-).style.display =
-"none";
-
-}
-
-
-/* ==================================================
-   주문 생성 + Toss 결제
-================================================== */
+/* ==========================================
+   주문 생성
+========================================== */
 
 async function createOrder(){
 
 const name =
-document.getElementById(
-"buyerName"
-).value.trim();
+document.getElementById("buyerName").value.trim();
 
 const phone =
-document.getElementById(
-"buyerPhone"
-).value.trim();
+document.getElementById("buyerPhone").value.trim();
 
 const address =
-document.getElementById(
-"buyerAddress"
-).value.trim();
+document.getElementById("buyerAddress").value.trim();
 
 
 if(!name){
-
-alert(
-"이름을 입력해주세요."
-);
-
+alert("이름을 입력해주세요.");
 return;
-
 }
-
 
 if(!phone){
-
-alert(
-"전화번호를 입력해주세요."
-);
-
+alert("전화번호를 입력해주세요.");
 return;
-
 }
-
 
 if(!address){
-
-alert(
-"배송 주소를 입력해주세요."
-);
-
+alert("배송 주소를 입력해주세요.");
 return;
+}
 
+if(cart.length === 0){
+alert("장바구니가 비어있습니다.");
+return;
 }
 
 
-if(
-cart.length === 0
-){
-
-alert(
-"장바구니가 비어있습니다."
-);
-
-return;
-
-}
-
-
-const total =
-cart.reduce(
+const total = cart.reduce(
 (sum,item) =>
-sum +
-Number(item.price) *
-Number(item.quantity),
+  sum + Number(item.price) * Number(item.quantity),
 0
 );
 
-
-if(
-!Number.isFinite(total) ||
-total <= 0
-){
-
-alert(
-"결제 금액이 올바르지 않습니다."
-);
-
+if(!Number.isInteger(total) || total <= 0){
+alert("결제 금액이 올바르지 않습니다.");
 return;
+}
+
+
+/* ==================================
+   토스 SDK 확인
+================================== */
+
+if(!tossPayments){
+
+const ready = await initTossPayments();
+
+if(!ready){
+alert(
+"토스 결제를 준비하지 못했습니다.\n\n" +
+"Vercel의 TOSS_CLIENT_KEY가 test_ck_ 또는 live_ck_로 시작하는지 확인해주세요."
+);
+return;
+}
 
 }
 
 
-/* --------------------------------
-   주문번호
--------------------------------- */
+/* ==================================
+   주문번호 생성
+================================== */
 
-const now =
-new Date();
-
+const now = new Date();
 
 const orderNumber =
-
 "CP" +
-
 now.getFullYear() +
-
-String(
-now.getMonth()+1
-).padStart(
-2,
-"0"
-) +
-
-String(
-now.getDate()
-).padStart(
-2,
-"0"
-) +
-
-String(
-now.getHours()
-).padStart(
-2,
-"0"
-) +
-
-String(
-now.getMinutes()
-).padStart(
-2,
-"0"
-) +
-
-String(
-now.getSeconds()
-).padStart(
-2,
-"0"
-) +
-
+String(now.getMonth()+1).padStart(2,"0") +
+String(now.getDate()).padStart(2,"0") +
+String(now.getHours()).padStart(2,"0") +
+String(now.getMinutes()).padStart(2,"0") +
+String(now.getSeconds()).padStart(2,"0") +
 "-" +
-
-crypto
-.randomUUID()
-.replace(
-/-/g,
-""
-)
-.substring(
-0,
-8
-)
-.toUpperCase();
+Math.random().toString(36).substring(2,7).toUpperCase();
 
 
-/* --------------------------------
+/* ==================================
    주문 DB 저장
--------------------------------- */
+================================== */
 
-showPaymentLoading(
-"주문 저장 중",
-"주문 정보를 저장하고 있습니다."
-);
-
-
-try{
-
-const {
-error
-} =
-
-await supabaseClient
+const { error } = await supabaseClient
 .from("orders")
 .insert([{
-
-order_number:
-orderNumber,
-
-buyer_name:
-name,
-
-buyer_phone:
-phone,
-
-buyer_address:
-address,
-
-items:
-cart,
-
-total_price:
-total,
-
-status:
-"결제대기"
-
+order_number: orderNumber,
+buyer_name: name,
+buyer_phone: phone,
+buyer_address: address,
+items: cart,
+total_price: total,
+status: "결제대기"
 }]);
-
 
 if(error){
 
-hidePaymentLoading();
-
-console.error(
-"주문 저장 오류:",
-error
-);
+console.error("주문 저장 실패:", error);
 
 alert(
-
 "주문 저장 실패\n\n" +
-
 error.message
-
 );
 
 return;
@@ -2172,451 +2035,92 @@ return;
 }
 
 
-/* --------------------------------
-   Toss가 없으면 다시 초기화
--------------------------------- */
-
-if(
-!tossPayments
-){
-
-showPaymentLoading(
-"결제 준비 중",
-"Toss 결제 시스템을 연결하고 있습니다."
-);
-
-
-const initialized =
-await initTossPayments();
-
-
-if(!initialized){
-
-hidePaymentLoading();
-
-alert(
-
-"토스 결제 시스템을 초기화하지 못했습니다.\n\n" +
-
-"Vercel의 TOSS_CLIENT_KEY가\n" +
-
-"test_ck_ 또는 live_ck_인지 확인해주세요."
-
-);
-
-return;
-
-}
-
-}
-
-
-/* --------------------------------
-   주문명
--------------------------------- */
-
-const firstProductName =
-cart[0]?.name ||
-"CARD POCKET 상품";
-
-
-const orderName =
-
-cart.length > 1
-
-?
-
-`${firstProductName} 외 ${cart.length - 1}건`
-
-:
-
-firstProductName;
-
-
-/* --------------------------------
-   고객 키
--------------------------------- */
-
-const customerKey =
-`CARDPOCKET-${orderNumber}`;
-
-
-console.log(
-"=============================="
-);
-
-console.log(
-"[TOSS PAYMENT START]"
-);
-
-console.log(
-"orderNumber:",
-orderNumber
-);
-
-console.log(
-"orderName:",
-orderName
-);
-
-console.log(
-"total:",
-total
-);
-
-console.log(
-"customerKey:",
-customerKey
-);
-
-console.log(
-"origin:",
-window.location.origin
-);
-
-console.log(
-"successUrl:",
-`${window.location.origin}/success.html`
-);
-
-console.log(
-"failUrl:",
-`${window.location.origin}/fail.html`
-);
-
-console.log(
-"tossPayments:",
-tossPayments
-);
-
-console.log(
-"=============================="
-);
-
-
-/* --------------------------------
-   결제 객체
--------------------------------- */
-
-showPaymentLoading(
-"결제 준비 중",
-"Toss 결제창을 준비하고 있습니다.<br>잠시만 기다려주세요."
-);
-
-
-let payment;
-
+/* ==================================
+   토스 결제창 실행
+================================== */
 
 try{
 
-console.log(
-"[TOSS STEP 1] payment 객체 생성 시작"
-);
+const customerKey = crypto.randomUUID();
 
-
-payment =
-tossPayments.payment({
-
-customerKey:
-customerKey
-
+const payment = tossPayments.payment({
+customerKey: customerKey
 });
 
-
-console.log(
-"[TOSS STEP 2] payment 객체 생성 완료:",
-payment
-);
-
-
-if(
-!payment
-){
-
-throw new Error(
-"payment 객체가 생성되지 않았습니다."
-);
-
+if(!payment || typeof payment.requestPayment !== "function"){
+throw new Error("토스 결제 요청 함수를 불러오지 못했습니다.");
 }
 
+const orderName =
+cart.length === 1
+? String(cart[0].name || "CARD POCKET 상품")
+: String(cart[0].name || "CARD POCKET 상품") + " 외 " + (cart.length - 1) + "건";
 
-if(
-typeof payment.requestPayment !==
-"function"
-){
+const cleanPhone = phone.replace(/\D/g, "");
 
-throw new Error(
-
-"requestPayment 함수를 찾을 수 없습니다.\n\n" +
-
-"현재 Toss SDK가 올바르게 초기화되지 않았을 가능성이 있습니다."
-
-);
-
-}
-
-
-console.log(
-"[TOSS STEP 3] requestPayment 함수 확인 완료"
-);
-
-
-/* --------------------------------
-   결제 요청
--------------------------------- */
-
-const paymentOptions = {
-
-method:
-"CARD",
-
-amount:{
-
-currency:
-"KRW",
-
-value:
-total
-
+await payment.requestPayment({
+method: "CARD",
+amount: {
+currency: "KRW",
+value: total
 },
-
-orderId:
-orderNumber,
-
-orderName:
-orderName,
-
-customerName:
-name,
-
-customerMobilePhone:
-phone.replace(
-/\D/g,
-""
-),
-
-successUrl:
-`${window.location.origin}/success.html`,
-
-failUrl:
-`${window.location.origin}/fail.html`
-
-};
-
-
-console.log(
-"[TOSS STEP 4] 결제 옵션:",
-paymentOptions
-);
-
-
-console.log(
-"[TOSS STEP 5] requestPayment 실행"
-);
-
-
-hidePaymentLoading();
-
-
-await payment.requestPayment(
-paymentOptions
-);
-
-
-console.log(
-"[TOSS STEP 6] requestPayment 종료"
-);
-
+orderId: orderNumber,
+orderName: orderName.substring(0, 100),
+customerName: name.substring(0, 100),
+customerMobilePhone: cleanPhone,
+successUrl: `${window.location.origin}/success.html`,
+failUrl: `${window.location.origin}/fail.html`
+});
 
 }catch(paymentError){
 
-hidePaymentLoading();
+console.error("Toss payment error:", paymentError);
 
-
-console.error(
-"================================"
-);
-
-console.error(
-"[TOSS PAYMENT ERROR]"
-);
-
-console.error(
-"error:",
-paymentError
-);
-
-console.error(
-"typeof:",
-typeof paymentError
-);
-
-console.error(
-"code:",
-paymentError?.code
-);
-
-console.error(
-"message:",
-paymentError?.message
-);
-
-console.error(
-"name:",
-paymentError?.name
-);
-
-console.error(
-"stack:",
-paymentError?.stack
-);
-
-console.error(
-"JSON:",
-safeStringify(
-paymentError
-)
-);
-
-console.error(
-"================================"
-);
-
-
-/*
-  UNKNOWN 방지용 상세 오류
-*/
-
-let errorCode =
+const errorCode =
 paymentError?.code ||
 paymentError?.errorCode ||
 "UNKNOWN";
 
+const errorName =
+paymentError?.name ||
+"Error";
 
-let errorMessage =
+const errorMessage =
 paymentError?.message ||
 paymentError?.errorMessage ||
-"알 수 없는 오류";
+"알 수 없는 에러가 발생했습니다.";
 
-
-let errorName =
-paymentError?.name ||
-"";
-
-
-let fullError =
-safeStringify(
-paymentError
-);
-
-
-alert(
-
-"토스 결제 오류\n\n" +
-
-"오류 코드: " +
-errorCode +
-
-"\n\n" +
-
-"오류 이름: " +
-errorName +
-
-"\n\n" +
-
-"오류 내용:\n" +
-errorMessage +
-
-"\n\n" +
-
-"상세 정보:\n" +
-fullError
-
-);
-
-}
-
-}catch(error){
-
-hidePaymentLoading();
-
-console.error(
-"주문 처리 전체 오류:",
-error
-);
-
-alert(
-
-"주문 처리 중 오류가 발생했습니다.\n\n" +
-
-(error?.message ||
-error?.toString() ||
-"알 수 없는 오류")
-
-);
-
-}
-
-}
-
-
-/* ==================================================
-   객체 안전하게 문자열 변환
-================================================== */
-
-function safeStringify(value){
+let detail = "";
 
 try{
-
-if(
-value === null ||
-value === undefined
-){
-
-return String(value);
-
+detail = JSON.stringify(paymentError, Object.getOwnPropertyNames(paymentError), 2);
+}catch(e){
+detail = String(paymentError);
 }
 
-
-if(
-typeof value === "string"
-){
-
-return value;
-
-}
-
-
-const result =
-JSON.stringify(
-value,
-Object.getOwnPropertyNames(value),
-2
+alert(
+"토스 결제 오류\n\n" +
+"오류 코드: " + errorCode + "\n\n" +
+"오류 이름: " + errorName + "\n\n" +
+"오류 내용:\n" + errorMessage + "\n\n" +
+"상세 정보:\n" + detail
 );
 
-
-return result ||
-String(value);
-
-
-}catch(error){
-
-return String(value);
-
 }
 
 }
 
 
-/* ==================================================
-   관리자
-================================================== */
+/* ==========================================
+   관리자 로그인
+========================================== */
 
 function openAdminLogin(){
 
 document.getElementById(
 "adminPassword"
 ).value = "";
+
 
 document.getElementById(
 "adminLoginModal"
@@ -2626,9 +2130,15 @@ document.getElementById(
 }
 
 
+
+/* ==========================================
+   관리자 로그인 확인
+========================================== */
+
 function loginAdmin(){
 
 const password =
+
 document.getElementById(
 "adminPassword"
 ).value;
@@ -2641,6 +2151,7 @@ password === "cardpocket"
 closeModal(
 "adminLoginModal"
 );
+
 
 openAdmin();
 
@@ -2655,34 +2166,46 @@ alert(
 }
 
 
+
+/* ==========================================
+   관리자 열기
+========================================== */
+
 function openAdmin(){
 
 resetAdminForm();
+
 
 document.getElementById(
 "adminModal"
 ).style.display =
 "flex";
 
+
 renderAdminProducts();
+
 
 loadOrders();
 
 }
 
 
-/* ==================================================
+
+/* ==========================================
    이미지 미리보기
-================================================== */
+========================================== */
 
 function previewImage(){
 
 const file =
+
 document.getElementById(
 "adminImageFile"
 ).files[0];
 
+
 const preview =
+
 document.getElementById(
 "imagePreview"
 );
@@ -2721,9 +2244,10 @@ file
 }
 
 
-/* ==================================================
+
+/* ==========================================
    이미지 업로드
-================================================== */
+========================================== */
 
 async function uploadProductImage(file){
 
@@ -2733,6 +2257,7 @@ return null;
 
 
 const extension =
+
 file.name
 .split(".")
 .pop()
@@ -2742,15 +2267,20 @@ file.name
 const fileName =
 
 Date.now() +
+
 "-" +
+
 Math.random()
 .toString(36)
 .substring(
 2,
 10
 ) +
+
 "." +
+
 extension;
+
 
 
 const {
@@ -2763,24 +2293,35 @@ await supabaseClient
 .upload(
 
 fileName,
+
 file,
 
 {
-cacheControl:"3600",
-upsert:false
+
+cacheControl:
+"3600",
+
+upsert:
+false
+
 }
 
 );
+
 
 
 if(error){
 
 throw new Error(
+
 "사진 업로드 실패: " +
+
 error.message
+
 );
 
 }
+
 
 
 const {
@@ -2800,9 +2341,10 @@ return data.publicUrl;
 }
 
 
-/* ==================================================
-   Storage 경로
-================================================== */
+
+/* ==========================================
+   Storage 경로 추출
+========================================== */
 
 function getStoragePathFromUrl(url){
 
@@ -2812,6 +2354,7 @@ return null;
 
 
 const marker =
+
 "/storage/v1/object/public/product-images/";
 
 
@@ -2819,21 +2362,33 @@ const index =
 url.indexOf(marker);
 
 
-if(index === -1){
+if(
+index === -1
+){
+
 return null;
+
 }
 
 
 return decodeURIComponent(
 
 url.substring(
-index + marker.length
+
+index +
+marker.length
+
 )
 
 );
 
 }
 
+
+
+/* ==========================================
+   Storage 이미지 삭제
+========================================== */
 
 async function deleteStorageImage(url){
 
@@ -2854,49 +2409,61 @@ await supabaseClient
 }
 
 
-/* ==================================================
+
+/* ==========================================
    상품 저장
-================================================== */
+========================================== */
 
 async function saveProduct(){
 
 const name =
+
 document.getElementById(
 "adminName"
 ).value.trim();
 
 
 const price =
+
 Number(
+
 document.getElementById(
 "adminPrice"
 ).value
+
 );
 
 
 const category =
+
 document.getElementById(
 "adminCategory"
 ).value.trim();
 
 
 const imageUrl =
+
 document.getElementById(
 "adminImage"
 ).value.trim();
 
 
 const file =
+
 document.getElementById(
 "adminImageFile"
 ).files[0];
 
 
 const description =
+
 document.getElementById(
 "adminDescription"
 ).value.trim();
 
+
+
+/* 상품명 */
 
 if(!name){
 
@@ -2909,10 +2476,9 @@ return;
 }
 
 
-if(
-!price ||
-price <= 0
-){
+/* 가격 */
+
+if(!price){
 
 alert(
 "가격을 입력해주세요."
@@ -2923,15 +2489,22 @@ return;
 }
 
 
+
+/* 기본 이미지 */
+
 let finalImage =
 imageUrl;
 
+
+
+/* 파일 업로드 */
 
 if(file){
 
 try{
 
 finalImage =
+
 await uploadProductImage(
 file
 );
@@ -2949,9 +2522,14 @@ return;
 }
 
 
-/* 수정 */
 
-if(editingProductId){
+/* ==================================
+   기존 상품 수정
+================================== */
+
+if(
+editingProductId
+){
 
 const {
 error
@@ -2983,11 +2561,15 @@ editingProductId
 );
 
 
+
 if(error){
 
 alert(
+
 "상품 수정 실패\n\n" +
+
 error.message
+
 );
 
 return;
@@ -2995,10 +2577,17 @@ return;
 }
 
 
+
+/* 기존 이미지 삭제 */
+
 if(
+
 file &&
+
 editingOldImage &&
+
 editingOldImage !== finalImage
+
 ){
 
 await deleteStorageImage(
@@ -3006,6 +2595,7 @@ editingOldImage
 );
 
 }
+
 
 
 alert(
@@ -3016,22 +2606,29 @@ alert(
 editingProductId =
 null;
 
+
 editingOldImage =
 null;
 
 
 resetAdminForm();
 
+
 await loadProducts();
 
+
 renderAdminProducts();
+
 
 return;
 
 }
 
 
-/* 신규 등록 */
+
+/* ==================================
+   신규 상품 등록
+================================== */
 
 const {
 error
@@ -3059,11 +2656,15 @@ description
 }]);
 
 
+
 if(error){
 
 alert(
+
 "상품 등록 실패\n\n" +
+
 error.message
+
 );
 
 return;
@@ -3078,24 +2679,26 @@ alert(
 
 resetAdminForm();
 
+
 await loadProducts();
+
 
 renderAdminProducts();
 
 }
 
 
-/* ==================================================
+
+/* ==========================================
    상품 수정
-================================================== */
+========================================== */
 
 function editProduct(id){
 
 const product =
+
 products.find(
-p =>
-Number(p.id) ===
-Number(id)
+p => p.id === id
 );
 
 
@@ -3107,32 +2710,45 @@ return;
 editingProductId =
 id;
 
+
 editingOldImage =
 product.image_url || null;
+
 
 
 document.getElementById(
 "adminName"
 ).value =
+
 product.name || "";
 
 
 document.getElementById(
 "adminPrice"
 ).value =
+
 product.price || "";
 
 
 document.getElementById(
 "adminCategory"
 ).value =
+
 product.category || "";
 
 
 document.getElementById(
 "adminImage"
 ).value =
+
 product.image_url || "";
+
+
+document.getElementById(
+"adminDescription"
+).value =
+
+product.description || "";
 
 
 document.getElementById(
@@ -3140,13 +2756,8 @@ document.getElementById(
 ).value = "";
 
 
-document.getElementById(
-"adminDescription"
-).value =
-product.description || "";
-
-
 const preview =
+
 document.getElementById(
 "imagePreview"
 );
@@ -3184,18 +2795,30 @@ document.getElementById(
 }
 
 
+
+/* ==========================================
+   수정 취소
+========================================== */
+
 function cancelEdit(){
 
 editingProductId =
 null;
 
+
 editingOldImage =
 null;
+
 
 resetAdminForm();
 
 }
 
+
+
+/* ==========================================
+   관리자 입력창 초기화
+========================================== */
 
 function resetAdminForm(){
 
@@ -3203,35 +2826,43 @@ document.getElementById(
 "adminName"
 ).value = "";
 
+
 document.getElementById(
 "adminPrice"
 ).value = "";
+
 
 document.getElementById(
 "adminCategory"
 ).value = "";
 
+
 document.getElementById(
 "adminImage"
 ).value = "";
+
 
 document.getElementById(
 "adminImageFile"
 ).value = "";
 
+
 document.getElementById(
 "adminDescription"
 ).value = "";
+
 
 document.getElementById(
 "imagePreview"
 ).style.display =
 "none";
 
+
 document.getElementById(
 "saveProductButton"
 ).textContent =
 "상품 등록";
+
 
 document.getElementById(
 "cancelEditButton"
@@ -3241,13 +2872,15 @@ document.getElementById(
 }
 
 
-/* ==================================================
+
+/* ==========================================
    관리자 상품 목록
-================================================== */
+========================================== */
 
 function renderAdminProducts(){
 
 const container =
+
 document.getElementById(
 "adminProductList"
 );
@@ -3257,19 +2890,18 @@ if(
 products.length === 0
 ){
 
-container.innerHTML = `
+container.innerHTML =
 
+`
 <p style="color:#888;margin-top:15px">
-
 등록된 상품이 없습니다.
-
 </p>
-
 `;
 
 return;
 
 }
+
 
 
 container.innerHTML =
@@ -3278,7 +2910,9 @@ products.map(
 product => {
 
 const image =
+
 product.image_url ||
+
 "https://placehold.co/100x100?text=NO+IMAGE";
 
 
@@ -3286,49 +2920,79 @@ return `
 
 <div class="admin-product">
 
+
 <div class="admin-product-left">
 
+
 <img
+
 class="admin-product-thumb"
+
 src="${escapeHtml(image)}"
-onerror="this.src='https://placehold.co/100x100?text=NO+IMAGE'"
+
 >
+
 
 <div>
 
 <strong>
-${escapeHtml(product.name)}
+
+${escapeHtml(
+product.name
+)}
+
 </strong>
+
 
 <br>
 
+
 <small>
+
 ${Number(
 product.price || 0
 ).toLocaleString()}원
+
 </small>
 
 </div>
 
+
 </div>
+
+
 
 <div class="admin-buttons">
 
-<button
-class="edit-btn"
-onclick="editProduct(${product.id})"
->
-수정
-</button>
 
 <button
-class="delete-btn"
-onclick="deleteProduct(${product.id})"
+
+class="edit-btn"
+
+onclick="editProduct(${product.id})"
+
 >
-삭제
+
+수정
+
 </button>
+
+
+<button
+
+class="delete-btn"
+
+onclick="deleteProduct(${product.id})"
+
+>
+
+삭제
+
+</button>
+
 
 </div>
+
 
 </div>
 
@@ -3339,17 +3003,17 @@ onclick="deleteProduct(${product.id})"
 }
 
 
-/* ==================================================
+
+/* ==========================================
    상품 삭제
-================================================== */
+========================================== */
 
 async function deleteProduct(id){
 
 const product =
+
 products.find(
-p =>
-Number(p.id) ===
-Number(id)
+p => p.id === id
 );
 
 
@@ -3358,16 +3022,21 @@ return;
 }
 
 
-if(
-!confirm(
+const confirmed =
+
+confirm(
+
 "정말 이 상품을 삭제할까요?\n\n" +
+
 product.name
-)
-){
 
+);
+
+
+if(!confirmed){
 return;
-
 }
+
 
 
 const {
@@ -3383,17 +3052,24 @@ id
 );
 
 
+
 if(error){
 
 alert(
+
 "상품 삭제 실패\n\n" +
+
 error.message
+
 );
 
 return;
 
 }
 
+
+
+/* Storage 이미지 삭제 */
 
 if(
 product.image_url
@@ -3413,18 +3089,21 @@ alert(
 
 await loadProducts();
 
+
 renderAdminProducts();
 
 }
 
 
-/* ==================================================
-   주문 관리
-================================================== */
+
+/* ==========================================
+   주문 불러오기
+========================================== */
 
 async function loadOrders(){
 
 const container =
+
 document.getElementById(
 "orderList"
 );
@@ -3443,6 +3122,7 @@ style="color:#888;text-align:center;padding:30px"
 `;
 
 
+
 const {
 data,
 error
@@ -3457,6 +3137,7 @@ await supabaseClient
 ascending:false
 }
 );
+
 
 
 if(error){
@@ -3484,6 +3165,7 @@ return;
 }
 
 
+
 if(
 !data ||
 data.length === 0
@@ -3506,10 +3188,12 @@ return;
 }
 
 
+
 container.innerHTML =
 
 data.map(
 order => {
+
 
 let items = [];
 
@@ -3517,6 +3201,7 @@ let items = [];
 try{
 
 items =
+
 typeof order.items === "string"
 
 ?
@@ -3536,6 +3221,7 @@ items = [];
 }
 
 
+
 const itemText =
 
 (items || [])
@@ -3546,24 +3232,29 @@ item =>
 × ${item.quantity}`
 
 )
-.join("<br>");
+.join(
+"<br>"
+);
+
 
 
 const date =
 
 new Date(
 order.created_at
-)
-.toLocaleString(
+).toLocaleString(
 "ko-KR"
 );
+
 
 
 return `
 
 <div class="order">
 
+
 <div class="order-header">
+
 
 <div class="order-number">
 
@@ -3573,6 +3264,7 @@ order.order_number
 
 </div>
 
+
 <div class="order-date">
 
 ${escapeHtml(
@@ -3581,99 +3273,176 @@ date
 
 </div>
 
+
 </div>
+
+
 
 <div class="order-info">
 
-<strong>주문자</strong> :
+
+<strong>
+주문자
+</strong>
+
+:
+
 ${escapeHtml(
 order.buyer_name
 )}
 
 <br>
 
-<strong>전화번호</strong> :
+
+<strong>
+전화번호
+</strong>
+
+:
+
 ${escapeHtml(
 order.buyer_phone
 )}
 
 <br>
 
-<strong>주소</strong> :
+
+<strong>
+주소
+</strong>
+
+:
+
 ${escapeHtml(
 order.buyer_address
 )}
 
+
 </div>
+
+
 
 <div class="order-items">
 
-<strong>상품</strong>
+
+<strong>
+상품
+</strong>
+
 
 <br><br>
 
+
 ${itemText}
 
+
 </div>
+
+
 
 <div class="order-total">
 
 총
+
 ${Number(
 order.total_price
 ).toLocaleString()}
+
 원
 
 </div>
 
+
+
 <select
+
 class="order-select"
+
 onchange="changeOrderStatus(${order.id},this.value)"
+
 >
 
+
 <option
+
 value="결제대기"
+
 ${order.status === "결제대기" ? "selected" : ""}
+
 >
+
 결제대기
+
 </option>
 
+
 <option
+
 value="결제완료"
+
 ${order.status === "결제완료" ? "selected" : ""}
+
 >
+
 결제완료
+
 </option>
 
+
 <option
+
 value="배송준비"
+
 ${order.status === "배송준비" ? "selected" : ""}
+
 >
+
 배송준비
+
 </option>
 
+
 <option
+
 value="배송중"
+
 ${order.status === "배송중" ? "selected" : ""}
+
 >
+
 배송중
+
 </option>
 
+
 <option
+
 value="배송완료"
+
 ${order.status === "배송완료" ? "selected" : ""}
+
 >
+
 배송완료
+
 </option>
 
+
 <option
+
 value="주문취소"
+
 ${order.status === "주문취소" ? "selected" : ""}
+
 >
+
 주문취소
+
 </option>
+
 
 </select>
+
 
 </div>
 
@@ -3683,6 +3452,11 @@ ${order.status === "주문취소" ? "selected" : ""}
 
 }
 
+
+
+/* ==========================================
+   주문 상태 변경
+========================================== */
 
 async function changeOrderStatus(
 id,
@@ -3696,7 +3470,10 @@ error
 await supabaseClient
 .from("orders")
 .update({
-status:status
+
+status:
+status
+
 })
 .eq(
 "id",
@@ -3704,11 +3481,15 @@ id
 );
 
 
+
 if(error){
 
 alert(
+
 "주문 상태 변경 실패\n\n" +
+
 error.message
+
 );
 
 return;
@@ -3723,14 +3504,18 @@ alert(
 }
 
 
-/* ==================================================
-   공통
-================================================== */
+
+/* ==========================================
+   모달 닫기
+========================================== */
 
 function closeModal(id){
 
 const modal =
-document.getElementById(id);
+
+document.getElementById(
+id
+);
 
 
 if(modal){
@@ -3743,10 +3528,18 @@ modal.style.display =
 }
 
 
+
+/* ==========================================
+   메뉴 이동
+========================================== */
+
 function scrollToSection(id){
 
 const section =
-document.getElementById(id);
+
+document.getElementById(
+id
+);
 
 
 if(section){
@@ -3759,6 +3552,11 @@ behavior:"smooth"
 
 }
 
+
+
+/* ==========================================
+   HTML 보안 처리
+========================================== */
 
 function escapeHtml(value){
 
