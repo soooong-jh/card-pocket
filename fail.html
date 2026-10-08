@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>결제 실패 - CARD POCKET</title>
+<style>
+body{font-family:Arial,"Noto Sans KR",sans-serif;background:#f7f7f7;margin:0;color:#111;display:flex;align-items:center;justify-content:center;min-height:100vh}.box{background:#fff;width:min(92%,520px);padding:40px 28px;border-radius:16px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.08)}h1{margin:0 0 14px;font-size:28px}.message{color:#666;line-height:1.7;margin-bottom:25px}.order{background:#f7f7f7;border-radius:10px;padding:16px;margin-bottom:25px}.btn{display:inline-block;background:#111;color:#fff;text-decoration:none;padding:13px 22px;border-radius:8px}
+</style>
+</head>
+<body>
+<div class="box">
+<h1>결제가 취소되었습니다</h1>
+<div class="message" id="message">결제를 완료하지 못했습니다.</div>
+<div class="order" id="orderBox" style="display:none"></div>
+<a class="btn" href="/">CARD POCKET으로 돌아가기</a>
+</div>
+<script>
+const params = new URLSearchParams(location.search);
+const code = params.get('code');
+const message = params.get('message');
+const orderId = params.get('orderId');
+const box = document.getElementById('message');
+const orderBox = document.getElementById('orderBox');
+if(message) box.textContent = decodeURIComponent(message);
+if(code) box.textContent += ' (' + code + ')';
+if(orderId){
+  orderBox.style.display='block';
+  orderBox.innerHTML='<strong>주문번호</strong><br>'+orderId+'<br><br>주문은 결제대기 상태로 남아 있습니다.';
+}
+</script>
+</body>
+</html>

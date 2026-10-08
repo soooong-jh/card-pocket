@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>결제 완료 - CARD POCKET</title>
+<style>
+body{font-family:Arial,"Noto Sans KR",sans-serif;background:#f7f7f7;margin:0;color:#111;display:flex;align-items:center;justify-content:center;min-height:100vh}
+.box{background:#fff;width:min(92%,520px);padding:40px 28px;border-radius:16px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+h1{margin:0 0 14px;font-size:28px}.message{color:#666;line-height:1.7;margin-bottom:25px}.order{background:#f7f7f7;border-radius:10px;padding:16px;margin-bottom:25px}.btn{display:inline-block;background:#111;color:#fff;text-decoration:none;padding:13px 22px;border-radius:8px}
+</style>
+</head>
+<body>
+<div class="box">
+<h1 id="title">결제 승인 중...</h1>
+<div class="message" id="message">잠시만 기다려주세요.</div>
+<div class="order" id="orderBox" style="display:none"></div>
+<a class="btn" href="/">CARD POCKET으로 돌아가기</a>
+</div>
+<script>
+(async function(){
+  const params = new URLSearchParams(location.search);
+  const paymentKey = params.get('paymentKey');
+  const orderId = params.get('orderId');
+  const amount = params.get('amount');
+  const title = document.getElementById('title');
+  const message = document.getElementById('message');
+  const orderBox = document.getElementById('orderBox');
+
+  if(!paymentKey || !orderId || !amount){
+    title.textContent = '결제 정보 오류';
+    message.textContent = '결제 승인에 필요한 정보가 없습니다.';
+    return;
+  }
+
+  try{
+    const response = await fetch('/api/toss-confirm', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({paymentKey, orderId, amount:Number(amount)})
+    });
+
+    const data = await response.json();
+
+    if(!response.ok || !data.success){
+      throw new Error(data.message || '결제 승인에 실패했습니다.');
+    }
+
+    title.textContent = '결제가 완료되었습니다!';
+    message.textContent = '주문이 정상적으로 결제되었습니다.';
+    orderBox.style.display = 'block';
+    orderBox.innerHTML = '<strong>주문번호</strong><br>' + orderId + '<br><br><strong>결제금액</strong><br>' + Number(amount).toLocaleString() + '원';
+    localStorage.removeItem('CARD_POCKET_CART');
+  }catch(error){
+    console.error(error);
+    title.textContent = '결제 승인 실패';
+    message.textContent = error.message || '결제 승인 중 오류가 발생했습니다.';
+  }
+})();
+</script>
+</body>
+</html>

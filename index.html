@@ -1,473 +1,3499 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CARD POCKET | 카드포켓</title>
+
+<title>CARD POCKET</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.tosspayments.com/v2/standard"></script>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,"Noto Sans KR",sans-serif;color:#171717;background:#fff}
-button,input,textarea,select{font:inherit}
-a{text-decoration:none;color:inherit}
-.wrap{max-width:1180px;margin:auto;padding:0 24px}
 
-header{height:72px;border-bottom:1px solid #eee;position:sticky;top:0;background:#fff;z-index:30}
-.head{height:100%;display:flex;align-items:center;justify-content:space-between}
-.logo{font-weight:800;letter-spacing:2px;font-size:21px;cursor:pointer}
-.nav{display:flex;gap:27px;font-size:12px}
-.head button{border:0;background:none;cursor:pointer;font-size:18px}
+/* ================================
+   기본
+================================ */
 
-.hero{min-height:530px;display:grid;grid-template-columns:1fr 1fr;gap:45px;align-items:center}
-.eyebrow{font-size:10px;letter-spacing:3px;color:#999}
-.hero h1{font-size:58px;line-height:1.02;letter-spacing:-3px;margin:16px 0}
-.hero p{color:#777;line-height:1.8}
-.btn{background:#111;color:#fff;border:0;padding:14px 22px;cursor:pointer;font-size:12px}
-.hero-img{height:420px;background:#f5f5f5;display:flex;align-items:center;justify-content:center}
-.sample{width:210px;height:300px;background:#fff;border:8px solid #222;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#aaa;box-shadow:0 20px 50px #ccc}
-
-section{padding:75px 0}
-.title{display:flex;justify-content:space-between;align-items:end;margin-bottom:25px}
-.title h2{font-size:26px;margin:0}
-.small{font-size:11px;color:#888}
-.cats{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:25px}
-.cat{border:1px solid #ddd;background:#fff;padding:9px 13px;font-size:11px;cursor:pointer}
-.cat.on{background:#111;color:#fff;border-color:#111}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
-.card{cursor:pointer}
-.pic{aspect-ratio:1;background:#f5f5f5;overflow:hidden}
-.pic img{width:100%;height:100%;object-fit:cover}
-.placeholder{height:100%;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:11px}
-.meta{padding:12px 2px}
-.tag{font-size:10px;color:#999}
-.pname{font-size:13px;margin:6px 0}
-.price{font-size:14px;font-weight:bold}
-.about{background:#f7f7f7}
-.about p{max-width:650px;color:#666;line-height:1.9}
-.notice li{list-style:none;border-bottom:1px solid #eee;padding:16px 0;font-size:12px}
-footer{border-top:1px solid #eee;padding:35px 0;color:#999;font-size:10px;line-height:1.8}
-
-.modalbg{display:none;position:fixed;inset:0;background:#0008;z-index:100;align-items:center;justify-content:center;padding:18px}
-.modal{background:#fff;width:min(900px,100%);max-height:92vh;overflow:auto;padding:28px;position:relative}
-.x{position:absolute;right:17px;top:12px;border:0;background:none;font-size:26px;cursor:pointer}
-.detail{display:grid;grid-template-columns:1fr 1fr;gap:30px}
-.detail .big{width:100%;background:#f5f5f5}
-.muted{font-size:12px;color:#777;line-height:1.8}
-.line{border-bottom:1px solid #eee;padding:14px 0}
-.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.field{width:100%;padding:11px;border:1px solid #ddd}
-.full{grid-column:1/-1}
-.adminrow{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;padding:13px 0;font-size:12px;gap:10px}
-.danger{border:1px solid #ddd;background:#fff;padding:7px 10px;cursor:pointer}
-.cartrow{display:flex;gap:13px;padding:14px 0;border-bottom:1px solid #eee;align-items:center}
-.thumb{width:65px;height:65px;background:#f5f5f5;object-fit:cover}
-.right{margin-left:auto}
-.empty{text-align:center;padding:45px;color:#999}
-.search{width:100%;padding:14px;border:1px solid #ddd;margin:15px 0}
-.checkout-section{margin:24px 0}
-.checkout-section h3{font-size:15px}
-.checkout-section input{margin-bottom:10px}
-@media(max-width:800px){
-.nav{display:none}
-.hero{grid-template-columns:1fr;padding:45px 0}
-.hero h1{font-size:43px}
-.hero-img{height:320px}
-.grid{grid-template-columns:repeat(2,1fr);gap:14px}
-.detail{grid-template-columns:1fr}
-.formgrid{grid-template-columns:1fr}
-.full{grid-column:auto}
-.wrap{padding:0 17px}
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
 }
+
+body{
+font-family:Arial,"Noto Sans KR",sans-serif;
+background:#f7f7f7;
+color:#111;
+}
+
+button{
+cursor:pointer;
+font-family:inherit;
+}
+
+img{
+display:block;
+}
+
+
+/* ================================
+   헤더
+================================ */
+
+.header{
+position:sticky;
+top:0;
+z-index:100;
+background:#fff;
+border-bottom:1px solid #eee;
+}
+
+.header-inner{
+max-width:1200px;
+height:72px;
+margin:auto;
+padding:0 20px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+}
+
+.logo{
+font-size:24px;
+font-weight:900;
+letter-spacing:2px;
+cursor:pointer;
+}
+
+.nav{
+display:flex;
+gap:25px;
+}
+
+.nav button{
+background:none;
+border:0;
+font-size:14px;
+}
+
+.cart-button{
+background:#111;
+color:#fff;
+border:0;
+padding:10px 16px;
+border-radius:6px;
+}
+
+
+/* ================================
+   히어로
+================================ */
+
+.hero{
+max-width:1200px;
+margin:30px auto;
+padding:70px 30px;
+background:#111;
+color:#fff;
+border-radius:14px;
+}
+
+.hero h1{
+font-size:48px;
+margin-bottom:15px;
+}
+
+.hero p{
+color:#ccc;
+line-height:1.7;
+}
+
+
+/* ================================
+   컨테이너
+================================ */
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:0 20px 60px;
+}
+
+.section-title{
+font-size:28px;
+margin:40px 0 20px;
+}
+
+
+/* ================================
+   검색
+================================ */
+
+.search{
+width:100%;
+padding:14px;
+border:1px solid #ddd;
+border-radius:8px;
+margin-bottom:20px;
+font-size:15px;
+}
+
+.filters{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:25px;
+}
+
+.filters button{
+padding:9px 15px;
+border:1px solid #ddd;
+background:#fff;
+border-radius:20px;
+}
+
+.filters button.active{
+background:#111;
+color:#fff;
+}
+
+
+/* ================================
+   상품
+================================ */
+
+.products{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+}
+
+.product{
+background:#fff;
+border-radius:12px;
+overflow:hidden;
+border:1px solid #eee;
+}
+
+.product-image{
+width:100%;
+aspect-ratio:1/1;
+object-fit:cover;
+background:#eee;
+cursor:pointer;
+}
+
+.product-info{
+padding:15px;
+}
+
+.product-category{
+font-size:12px;
+color:#888;
+margin-bottom:7px;
+}
+
+.product-name{
+font-weight:bold;
+margin-bottom:10px;
+}
+
+.product-price{
+font-size:18px;
+font-weight:800;
+}
+
+.product button{
+width:100%;
+padding:11px;
+margin-top:12px;
+background:#111;
+color:#fff;
+border:0;
+border-radius:6px;
+}
+
+.empty{
+grid-column:1/-1;
+text-align:center;
+padding:70px 20px;
+color:#888;
+}
+
+
+/* ================================
+   모달
+================================ */
+
+.modal-bg{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.6);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:500;
+padding:20px;
+}
+
+.modal{
+background:#fff;
+width:100%;
+max-width:700px;
+max-height:90vh;
+overflow:auto;
+border-radius:12px;
+padding:25px;
+position:relative;
+}
+
+.close{
+position:absolute;
+right:18px;
+top:15px;
+border:0;
+background:none;
+font-size:25px;
+z-index:2;
+}
+
+.modal img{
+width:100%;
+max-height:450px;
+object-fit:contain;
+background:#f5f5f5;
+border-radius:8px;
+}
+
+.modal h2{
+margin:20px 0 10px;
+}
+
+.modal-price{
+font-size:24px;
+font-weight:bold;
+margin-bottom:15px;
+}
+
+.modal-description{
+color:#555;
+line-height:1.7;
+}
+
+
+/* ================================
+   버튼
+================================ */
+
+.btn{
+width:100%;
+padding:13px;
+margin-top:15px;
+background:#111;
+color:#fff;
+border:0;
+border-radius:6px;
+}
+
+.btn-gray{
+background:#777;
+}
+
+.btn-red{
+background:#d00000;
+}
+
+
+/* ================================
+   입력
+================================ */
+
+.input{
+width:100%;
+padding:13px;
+border:1px solid #ddd;
+border-radius:6px;
+margin-top:10px;
+}
+
+
+/* ================================
+   장바구니
+================================ */
+
+.cart-item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 0;
+border-bottom:1px solid #eee;
+gap:10px;
+}
+
+.cart-item-info{
+flex:1;
+}
+
+.cart-item-name{
+font-weight:bold;
+}
+
+.cart-item-price{
+color:#666;
+margin-top:5px;
+}
+
+.cart-total{
+text-align:right;
+font-size:22px;
+font-weight:bold;
+margin-top:20px;
+}
+
+
+/* ================================
+   관리자
+================================ */
+
+.admin-form{
+display:grid;
+gap:12px;
+margin-top:15px;
+}
+
+.admin-form input,
+.admin-form textarea{
+width:100%;
+padding:12px;
+border:1px solid #ddd;
+border-radius:6px;
+}
+
+.file-input{
+padding:10px !important;
+background:#f7f7f7;
+}
+
+.preview{
+width:100%;
+max-height:250px;
+object-fit:contain;
+display:none;
+margin-top:10px;
+background:#f5f5f5;
+border-radius:8px;
+}
+
+.admin-product{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:12px 0;
+border-bottom:1px solid #eee;
+gap:10px;
+}
+
+.admin-product-left{
+display:flex;
+align-items:center;
+gap:12px;
+min-width:0;
+}
+
+.admin-product-thumb{
+width:55px;
+height:55px;
+object-fit:cover;
+border-radius:6px;
+background:#eee;
+}
+
+.admin-buttons{
+display:flex;
+gap:5px;
+}
+
+.edit-btn,
+.delete-btn{
+border:0;
+padding:7px 10px;
+border-radius:5px;
+color:#fff;
+}
+
+.edit-btn{
+background:#111;
+}
+
+.delete-btn{
+background:#d00000;
+}
+
+
+/* ================================
+   주문
+================================ */
+
+.order{
+border:1px solid #eee;
+border-radius:10px;
+padding:15px;
+margin-top:12px;
+background:#fff;
+}
+
+.order-header{
+display:flex;
+justify-content:space-between;
+gap:10px;
+margin-bottom:10px;
+}
+
+.order-number{
+font-weight:bold;
+}
+
+.order-date{
+font-size:12px;
+color:#888;
+}
+
+.order-info{
+line-height:1.7;
+font-size:14px;
+}
+
+.order-items{
+margin-top:10px;
+padding:10px;
+background:#f7f7f7;
+border-radius:6px;
+font-size:14px;
+}
+
+.order-total{
+font-weight:bold;
+font-size:18px;
+margin-top:10px;
+}
+
+.order-select{
+width:100%;
+padding:9px;
+border:1px solid #ddd;
+border-radius:6px;
+margin-top:10px;
+}
+
+
+/* ================================
+   기타
+================================ */
+
+.notice{
+line-height:1.8;
+color:#555;
+}
+
+.footer{
+background:#111;
+color:#fff;
+text-align:center;
+padding:50px 20px;
+margin-top:50px;
+}
+
+
+/* ================================
+   모바일
+================================ */
+
+@media(max-width:900px){
+
+.products{
+grid-template-columns:repeat(3,1fr);
+}
+
+}
+
+@media(max-width:650px){
+
+.nav{
+display:none;
+}
+
+.products{
+grid-template-columns:repeat(2,1fr);
+gap:10px;
+}
+
+.hero{
+margin:15px;
+padding:45px 25px;
+}
+
+.hero h1{
+font-size:34px;
+}
+
+.container{
+padding:0 15px 40px;
+}
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
-<header>
-<div class="wrap head">
-<a class="logo" href="#home">CARD POCKET</a>
+
+<!-- ==================================
+     HEADER
+================================== -->
+
+<header class="header">
+
+<div class="header-inner">
+
+<div
+class="logo"
+ondblclick="openAdminLogin()"
+>
+CARD POCKET
+</div>
+
+
 <nav class="nav">
-<a href="#home">HOME</a>
-<a href="#products">PRODUCT</a>
-<a href="#about">ABOUT</a>
-<a href="#notice">NOTICE</a>
+
+<button onclick="scrollToSection('home')">
+HOME
+</button>
+
+<button onclick="scrollToSection('products')">
+PRODUCT
+</button>
+
+<button onclick="scrollToSection('about')">
+ABOUT
+</button>
+
+<button onclick="scrollToSection('notice')">
+NOTICE
+</button>
+
 </nav>
-<div>
-<button onclick="openSearch()">⌕</button>
-<button onclick="openCart()">🛒 <sup id="cc">0</sup></button>
+
+
+<button
+class="cart-button"
+onclick="openCart()"
+>
+🛒 CART (<span id="cartCount">0</span>)
+</button>
+
 </div>
-</div>
+
 </header>
 
+
+
+<!-- ==================================
+     MAIN
+================================== -->
+
 <main id="home">
-<div class="wrap">
+
+
 <section class="hero">
-<div>
-<div class="eyebrow">CARD COLLECTION · MAGNET</div>
-<h1>YOUR CARD,<br>YOUR SPACE.</h1>
-<p>좋아하는 카드를 일상 공간에 더 가까이.<br>
-CARD POCKET의 카드 마그넷 컬렉션을 만나보세요.</p>
-<a class="btn" href="#products">SHOP NOW</a>
-</div>
-<div class="hero-img">
-<div class="sample">CARD<br>POCKET</div>
-</div>
-</section>
 
-<section id="products">
-<div class="title">
-<h2>PRODUCT</h2>
-<span class="small" id="count"></span>
-</div>
-<div class="cats" id="cats"></div>
-<div class="grid" id="grid"></div>
-</section>
-</div>
+<h1>
+CARD POCKET
+</h1>
 
-<section class="about" id="about">
-<div class="wrap">
-<h2>CARD POCKET</h2>
-<p>카드 한 장을 수집하는 즐거움에서 시작해,
-좋아하는 카드를 일상 속 공간에 두는 방법을 제안합니다.</p>
-</div>
-</section>
+<p>
 
-<div class="wrap">
-<section id="notice">
-<div class="title"><h2>NOTICE</h2></div>
-<ul>
-<li>상품 사진과 실제 상품은 모니터 환경에 따라 색상이 다를 수 있습니다.</li>
-<li>배송·교환·환불 조건은 실제 운영 정책에 맞게 수정해주세요.</li>
-<li>실제 판매 전 사업자 정보와 이용약관·개인정보처리방침을 입력해주세요.</li>
-</ul>
-</section>
-</div>
-</main>
+특별한 포켓몬 카드를 일상 속에서 즐기는 방법.<br>
 
-<footer>
-<div class="wrap">
-CARD POCKET · 실제 운영 시 사업자 정보 입력 · 본 파일은 쇼핑몰 구축용 프로토타입입니다.
-</div>
-</footer>
+정품 트레이딩 카드를 활용한 수제 카드 마그넷입니다.
 
-<div class="modalbg" id="mb">
-<div class="modal" id="modal"></div>
-</div>
-
-<script>
-const PKEY="CP_PRODUCTS_V3";
-const CKEY="CP_CART_V3";
-
-const seed=[
-{id:1,name:"CHARIZARD CARD MAGNET",price:15000,cat:"CARD MAGNET",img:"",desc:"정품 카드를 활용한 카드 마그넷입니다."},
-{id:2,name:"PIKACHU CARD MAGNET",price:12000,cat:"CARD MAGNET",img:"",desc:"좋아하는 카드를 일상 공간에 장식해보세요."},
-{id:3,name:"VINTAGE CARD MAGNET",price:18000,cat:"VINTAGE",img:"",desc:"빈티지 카드 컬렉션을 위한 제품입니다."}
-];
-
-let products=JSON.parse(localStorage.getItem(PKEY)||"null")||seed;
-let cart=JSON.parse(localStorage.getItem(CKEY)||"[]");
-let filter="ALL";
-
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({
-"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-}[c]));
-
-const won=n=>Number(n).toLocaleString("ko-KR")+"원";
-
-function save(){
-localStorage.setItem(PKEY,JSON.stringify(products));
-localStorage.setItem(CKEY,JSON.stringify(cart));
-}
-
-function render(){
-renderCats();
-
-let arr=filter==="ALL"
-?products
-:products.filter(p=>p.cat===filter);
-
-document.getElementById("count").textContent=arr.length+" PRODUCTS";
-
-document.getElementById("grid").innerHTML=arr.map(p=>`
-<article class="card" onclick="detail(${p.id})">
-<div class="pic">
-${p.img
-?`<img src="${esc(p.img)}" alt="${esc(p.name)}">`
-:`<div class="placeholder">PRODUCT IMAGE</div>`}
-</div>
-<div class="meta">
-<div class="tag">${esc(p.cat)}</div>
-<div class="pname">${esc(p.name)}</div>
-<div class="price">${won(p.price)}</div>
-</div>
-</article>
-`).join("")||'<div class="empty" style="grid-column:1/-1">등록된 상품이 없습니다.</div>';
-
-document.getElementById("cc").textContent=cart.length;
-}
-
-function renderCats(){
-let a=["ALL",...new Set(products.map(p=>p.cat))];
-
-document.getElementById("cats").innerHTML=a.map(x=>`
-<button class="cat ${x===filter?"on":""}"
-onclick="setFilter('${esc(x)}')">${esc(x)}</button>
-`).join("");
-}
-
-function setFilter(value){
-filter=value;
-render();
-}
-
-function modal(content){
-document.getElementById("modal").innerHTML=content;
-document.getElementById("mb").style.display="flex";
-}
-
-function closeM(){
-document.getElementById("mb").style.display="none";
-}
-
-document.getElementById("mb").onclick=e=>{
-if(e.target.id==="mb")closeM();
-};
-
-function detail(id){
-let p=products.find(x=>x.id===id);
-if(!p)return;
-
-modal(`
-<button class="x" onclick="closeM()">×</button>
-<div class="detail">
-<div class="pic">
-${p.img
-?`<img class="big" src="${esc(p.img)}" alt="${esc(p.name)}">`
-:`<div class="placeholder">PRODUCT IMAGE</div>`}
-</div>
-<div>
-<div class="tag">${esc(p.cat)}</div>
-<h2>${esc(p.name)}</h2>
-<h3>${won(p.price)}</h3>
-<p class="muted">${esc(p.desc)}</p>
-<button class="btn" onclick="add(${p.id})">장바구니 담기</button>
-</div>
-</div>
-`);
-}
-
-function add(id){
-cart.push(id);
-save();
-render();
-closeM();
-alert("장바구니에 담았습니다.");
-}
-
-function openCart(){
-let rows=cart.map((id,i)=>{
-let p=products.find(x=>x.id===id);
-if(!p)return "";
-
-return `
-<div class="cartrow">
-${p.img
-?`<img class="thumb" src="${esc(p.img)}">`
-:`<div class="thumb"></div>`}
-<div>${esc(p.name)}<br><b>${won(p.price)}</b></div>
-<button class="danger right" onclick="delCart(${i})">삭제</button>
-</div>`;
-}).join("");
-
-let total=cart.reduce((s,id)=>{
-let p=products.find(x=>x.id===id);
-return s+(p?p.price:0);
-},0);
-
-modal(`
-<button class="x" onclick="closeM()">×</button>
-<h2>SHOPPING CART</h2>
-${rows||'<div class="empty">장바구니가 비어 있습니다.</div>'}
-${rows?`
-<h3 style="text-align:right">TOTAL ${won(total)}</h3>
-<button class="btn" style="width:100%" onclick="openCheckout()">CHECKOUT</button>
-`:""}
-`);
-}
-
-function delCart(i){
-cart.splice(i,1);
-save();
-openCart();
-render();
-}
-
-function openSearch(){
-modal(`
-<button class="x" onclick="closeM()">×</button>
-<h2>SEARCH</h2>
-<input class="search" autofocus placeholder="상품명 검색" oninput="doSearch(this.value)">
-`);
-}
-
-function doSearch(q){
-let a=products.filter(p=>
-(p.name+" "+p.cat).toLowerCase().includes(q.toLowerCase())
-);
-
-document.getElementById("grid").innerHTML=a.map(p=>`
-<article class="card" onclick="closeM();detail(${p.id})">
-<div class="pic">
-${p.img
-?`<img src="${esc(p.img)}" alt="${esc(p.name)}">`
-:`<div class="placeholder">PRODUCT IMAGE</div>`}
-</div>
-<div class="meta">
-<div class="tag">${esc(p.cat)}</div>
-<div class="pname">${esc(p.name)}</div>
-<div class="price">${won(p.price)}</div>
-</div>
-</article>
-`).join("")||'<div class="empty" style="grid-column:1/-1">검색 결과가 없습니다.</div>';
-}
-
-/* 결제 정보 입력 화면 */
-function openCheckout(){
-let total=cart.reduce((sum,id)=>{
-let p=products.find(x=>x.id===id);
-return sum+(p?p.price:0);
-},0);
-
-modal(`
-<button class="x" onclick="closeM()">×</button>
-<h2>ORDER / PAYMENT</h2>
-<p class="muted">주문 정보를 입력해주세요. 현재는 테스트용 화면입니다.</p>
-
-<div class="checkout-section">
-<h3>주문자 정보</h3>
-<input class="field" id="buyerName" placeholder="이름">
-<br><br>
-<input class="field" id="buyerPhone" placeholder="휴대폰 번호">
-</div>
-
-<div class="checkout-section">
-<h3>배송지</h3>
-<input class="field" id="buyerZip" placeholder="우편번호">
-<br><br>
-<input class="field" id="buyerAddress" placeholder="주소">
-<br><br>
-<input class="field" id="buyerAddress2" placeholder="상세주소">
-</div>
-
-<div class="checkout-section">
-<h3>결제수단</h3>
-<select class="field" id="paymentMethod">
-<option value="신용카드">신용카드</option>
-<option value="카카오페이">카카오페이</option>
-<option value="네이버페이">네이버페이</option>
-<option value="무통장입금">무통장입금</option>
-</select>
-</div>
-
-<div class="line">
-<strong>결제 예정 금액</strong>
-<strong style="float:right">${won(total)}</strong>
-</div>
-
-<br>
-<button class="btn" style="width:100%" onclick="testPayment()">결제하기</button>
-`);
-}
-
-function testPayment(){
-const name=document.getElementById("buyerName").value.trim();
-const phone=document.getElementById("buyerPhone").value.trim();
-const address=document.getElementById("buyerAddress").value.trim();
-
-if(!name||!phone||!address){
-alert("이름, 휴대폰 번호, 주소를 입력해주세요.");
-return;
-}
-
-alert("테스트 화면입니다. 실제 결제는 진행되지 않았습니다.");
-}
-
-/* 관리자 상품 관리 */
-function admin(){
-modal(`
-<button class="x" onclick="closeM()">×</button>
-<h2>상품 관리</h2>
-<p class="muted">
-상품명, 가격, 카테고리, 이미지 URL, 설명을 입력하세요.<br>
-상품 정보는 현재 사용 중인 브라우저에 저장됩니다.
 </p>
 
-<div class="formgrid">
-<input class="field" id="productName" placeholder="상품명">
-<input class="field" id="productPrice" type="number" placeholder="가격">
-<input class="field" id="productCategory" value="CARD MAGNET" placeholder="카테고리">
-<input class="field" id="productImage" placeholder="이미지 URL">
-<textarea class="field full" id="productDesc" placeholder="상품 설명"></textarea>
-<button class="btn full" onclick="addProduct()">상품 추가</button>
+</section>
+
+
+
+<div class="container">
+
+
+<!-- 상품 -->
+
+<section id="products">
+
+<h2 class="section-title">
+PRODUCT
+</h2>
+
+
+<input
+id="searchInput"
+class="search"
+placeholder="상품명을 검색해보세요."
+oninput="renderProducts()"
+>
+
+
+<div
+id="filters"
+class="filters"
+></div>
+
+
+<div
+id="productList"
+class="products"
+>
+
+<div class="empty">
+상품을 불러오는 중...
 </div>
 
-<div style="margin-top:25px">
-${products.map(p=>`
-<div class="adminrow">
-<span>${esc(p.name)} · ${won(p.price)}</span>
-<button class="danger" onclick="removeProduct(${p.id})">삭제</button>
 </div>
-`).join("")}
+
+</section>
+
+
+
+<!-- ABOUT -->
+
+<section id="about">
+
+<h2 class="section-title">
+ABOUT
+</h2>
+
+
+<div class="notice">
+
+CARD POCKET은 정품 트레이딩 카드를 활용하여 제작한
+수제 카드 마그넷을 판매합니다.
+
+<br><br>
+
+본 상품은 해당 카드 제조사 또는 캐릭터 IP의
+공식 라이선스 상품이 아닙니다.
+
 </div>
-`);
+
+</section>
+
+
+
+<!-- NOTICE -->
+
+<section id="notice">
+
+<h2 class="section-title">
+NOTICE
+</h2>
+
+
+<div class="notice">
+
+• 상품에 따라 카드의 상태가 다를 수 있습니다.<br>
+
+• 수작업으로 제작되기 때문에 제품마다
+약간의 차이가 있을 수 있습니다.<br>
+
+• 실제 상품의 색상은 모니터 환경에 따라
+다르게 보일 수 있습니다.
+
+</div>
+
+</section>
+
+
+</div>
+
+</main>
+
+
+
+<!-- ==================================
+     FOOTER
+================================== -->
+
+<footer class="footer">
+
+<strong>
+CARD POCKET
+</strong>
+
+<br><br>
+
+Handmade Card Magnet Shop
+
+</footer>
+
+
+
+<!-- ==================================
+     상품 상세
+================================== -->
+
+<div
+id="productModal"
+class="modal-bg"
+>
+
+<div class="modal">
+
+<button
+class="close"
+onclick="closeModal('productModal')"
+>
+×
+</button>
+
+
+<img
+id="detailImage"
+>
+
+
+<h2
+id="detailName"
+></h2>
+
+
+<div
+id="detailPrice"
+class="modal-price"
+></div>
+
+
+<div
+id="detailDescription"
+class="modal-description"
+></div>
+
+
+<button
+class="btn"
+onclick="addDetailToCart()"
+>
+장바구니 담기
+</button>
+
+
+</div>
+
+</div>
+
+
+
+<!-- ==================================
+     장바구니
+================================== -->
+
+<div
+id="cartModal"
+class="modal-bg"
+>
+
+<div class="modal">
+
+<button
+class="close"
+onclick="closeModal('cartModal')"
+>
+×
+</button>
+
+
+<h2>
+장바구니
+</h2>
+
+
+<div id="cartItems"></div>
+
+
+<div class="cart-total">
+
+총 금액:
+
+<span id="cartTotal">
+0원
+</span>
+
+</div>
+
+
+<button
+class="btn"
+onclick="openCheckout()"
+>
+주문하기
+</button>
+
+
+</div>
+
+</div>
+
+
+
+<!-- ==================================
+     주문
+================================== -->
+
+<div
+id="checkoutModal"
+class="modal-bg"
+>
+
+<div class="modal">
+
+<button
+class="close"
+onclick="closeModal('checkoutModal')"
+>
+×
+</button>
+
+
+<h2>
+주문하기
+</h2>
+
+
+<p
+style="color:#777;margin-bottom:10px;line-height:1.6"
+>
+배송받으실 정보를 입력해주세요.
+</p>
+
+
+<input
+id="buyerName"
+class="input"
+placeholder="이름"
+>
+
+
+<input
+id="buyerPhone"
+class="input"
+placeholder="전화번호"
+>
+
+
+<input
+id="buyerAddress"
+class="input"
+placeholder="배송 주소"
+>
+
+
+<button
+class="btn"
+onclick="createOrder()"
+>
+결제하기
+</button>
+
+
+</div>
+
+</div>
+
+
+
+<!-- ==================================
+     관리자 로그인
+================================== -->
+
+<div
+id="adminLoginModal"
+class="modal-bg"
+>
+
+<div class="modal">
+
+<button
+class="close"
+onclick="closeModal('adminLoginModal')"
+>
+×
+</button>
+
+
+<h2>
+관리자 로그인
+</h2>
+
+
+<input
+id="adminPassword"
+type="password"
+class="input"
+placeholder="관리자 비밀번호"
+>
+
+
+<button
+class="btn"
+onclick="loginAdmin()"
+>
+로그인
+</button>
+
+
+</div>
+
+</div>
+
+
+
+<!-- ==================================
+     관리자
+================================== -->
+
+<div
+id="adminModal"
+class="modal-bg"
+>
+
+<div class="modal">
+
+<button
+class="close"
+onclick="closeModal('adminModal')"
+>
+×
+</button>
+
+
+<h2>
+CARD POCKET 관리자
+</h2>
+
+
+
+<!-- 상품 관리 -->
+
+<h3 style="margin-top:25px;">
+상품 관리
+</h3>
+
+
+<div class="admin-form">
+
+
+<input
+id="adminName"
+placeholder="상품명"
+>
+
+
+<input
+id="adminPrice"
+type="number"
+placeholder="가격"
+>
+
+
+<input
+id="adminCategory"
+placeholder="카테고리"
+>
+
+
+<input
+id="adminImage"
+placeholder="이미지 URL (선택)"
+>
+
+
+<input
+id="adminImageFile"
+class="file-input"
+type="file"
+accept="image/*"
+onchange="previewImage()"
+>
+
+
+<img
+id="imagePreview"
+class="preview"
+>
+
+
+<textarea
+id="adminDescription"
+rows="5"
+placeholder="상품 설명"
+></textarea>
+
+
+<button
+id="saveProductButton"
+class="btn"
+onclick="saveProduct()"
+>
+상품 등록
+</button>
+
+
+<button
+id="cancelEditButton"
+class="btn btn-gray"
+onclick="cancelEdit()"
+style="display:none"
+>
+수정 취소
+</button>
+
+
+</div>
+
+
+<div
+id="adminProductList"
+>
+</div>
+
+
+
+<!-- 주문 관리 -->
+
+<h3 style="margin-top:40px;">
+주문 관리
+</h3>
+
+
+<button
+class="btn"
+onclick="loadOrders()"
+>
+주문 새로고침
+</button>
+
+
+<div
+id="orderList"
+>
+
+<div
+style="color:#888;text-align:center;padding:30px"
+>
+주문을 불러오려면 새로고침을 눌러주세요.
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+
+<script>
+
+
+/* ==========================================
+   SUPABASE
+========================================== */
+
+const SUPABASE_URL =
+"https://liyjjunpwexsqvmrdeas.supabase.co";
+
+
+const SUPABASE_KEY =
+"sb_publishable_9NwuhkCzUm9xwgr_OrdeDA_4rpIsND5";
+
+
+const supabaseClient =
+window.supabase.createClient(
+SUPABASE_URL,
+SUPABASE_KEY
+);
+
+/* ==========================================
+   TOSS PAYMENTS
+========================================== */
+
+let tossPayments = null;
+let tossWidgets = null;
+
+async function initTossPayments(){
+
+try{
+
+const response = await fetch("/api/toss-config");
+
+if(!response.ok){
+throw new Error("토스 설정을 불러오지 못했습니다.");
 }
 
-function addProduct(){
-const name=document.getElementById("productName").value.trim();
-const price=Number(document.getElementById("productPrice").value);
-const cat=document.getElementById("productCategory").value.trim()||"CARD MAGNET";
-const img=document.getElementById("productImage").value.trim();
-const desc=document.getElementById("productDesc").value.trim();
+const config = await response.json();
 
-if(!name||!price||price<0){
-alert("상품명과 올바른 가격을 입력해주세요.");
+if(!config.clientKey){
+throw new Error("TOSS_CLIENT_KEY가 설정되지 않았습니다.");
+}
+
+tossPayments = TossPayments(config.clientKey);
+
+tossWidgets = tossPayments.widgets({
+customerKey: "ANONYMOUS"
+});
+
+}catch(error){
+
+console.error(error);
+
+}
+
+}
+
+initTossPayments();
+
+
+
+/* ==========================================
+   전역 변수
+========================================== */
+
+let products = [];
+
+let cart = [];
+
+let selectedProduct = null;
+
+let currentCategory = "전체";
+
+let editingProductId = null;
+
+let editingOldImage = null;
+
+
+
+/* ==========================================
+   시작
+========================================== */
+
+document.addEventListener(
+"DOMContentLoaded",
+async function(){
+
+loadCart();
+
+await loadProducts();
+
+}
+);
+
+
+
+/* ==========================================
+   상품 불러오기
+========================================== */
+
+async function loadProducts(){
+
+const {
+data,
+error
+} = await supabaseClient
+.from("products")
+.select("*")
+.order(
+"id",
+{
+ascending:false
+}
+);
+
+
+if(error){
+
+console.error(error);
+
+
+document.getElementById(
+"productList"
+).innerHTML = `
+
+<div class="empty">
+
+상품을 불러오지 못했습니다.
+
+<br><br>
+
+${escapeHtml(error.message)}
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+products = data || [];
+
+
+renderFilters();
+
+renderProducts();
+
+}
+
+
+
+/* ==========================================
+   카테고리
+========================================== */
+
+function renderFilters(){
+
+const container =
+document.getElementById(
+"filters"
+);
+
+
+const categories = [
+
+"전체",
+
+...new Set(
+
+products
+.map(
+product => product.category
+)
+.filter(Boolean)
+
+)
+
+];
+
+
+container.innerHTML = "";
+
+
+categories.forEach(
+category => {
+
+const button =
+document.createElement(
+"button"
+);
+
+
+button.textContent =
+category;
+
+
+if(
+category === currentCategory
+){
+
+button.classList.add(
+"active"
+);
+
+}
+
+
+button.onclick = function(){
+
+currentCategory =
+category;
+
+renderFilters();
+
+renderProducts();
+
+};
+
+
+container.appendChild(
+button
+);
+
+});
+
+}
+
+
+
+/* ==========================================
+   상품 표시
+========================================== */
+
+function renderProducts(){
+
+const list =
+document.getElementById(
+"productList"
+);
+
+
+const keyword =
+document.getElementById(
+"searchInput"
+).value
+.toLowerCase();
+
+
+const filtered =
+products.filter(
+product => {
+
+const search =
+
+(product.name || "")
+.toLowerCase()
+.includes(keyword);
+
+
+const category =
+
+currentCategory === "전체" ||
+product.category === currentCategory;
+
+
+return search && category;
+
+});
+
+
+if(
+filtered.length === 0
+){
+
+list.innerHTML = `
+
+<div class="empty">
+
+등록된 상품이 없습니다.
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+list.innerHTML =
+
+filtered.map(
+product => {
+
+const image =
+
+product.image_url ||
+
+"https://placehold.co/600x600?text=CARD+POCKET";
+
+
+return `
+
+<div class="product">
+
+
+<img
+
+class="product-image"
+
+src="${escapeHtml(image)}"
+
+onclick="openProduct(${product.id})"
+
+>
+
+
+<div class="product-info">
+
+
+<div class="product-category">
+
+${escapeHtml(
+product.category || ""
+)}
+
+</div>
+
+
+<div class="product-name">
+
+${escapeHtml(
+product.name || ""
+)}
+
+</div>
+
+
+<div class="product-price">
+
+${Number(
+product.price || 0
+).toLocaleString()}원
+
+</div>
+
+
+<button
+onclick="openProduct(${product.id})"
+>
+
+상품 보기
+
+</button>
+
+
+</div>
+
+</div>
+
+`;
+
+}).join("");
+
+}
+
+
+
+/* ==========================================
+   상품 상세
+========================================== */
+
+function openProduct(id){
+
+const product =
+products.find(
+p => p.id === id
+);
+
+
+if(!product){
 return;
 }
 
-products.push({
-id:Date.now(),
-name:name,
-price:price,
-cat:cat,
-img:img,
-desc:desc
-});
 
-save();
-render();
-admin();
+selectedProduct =
+product;
+
+
+document.getElementById(
+"detailImage"
+).src =
+
+product.image_url ||
+
+"https://placehold.co/600x600?text=CARD+POCKET";
+
+
+document.getElementById(
+"detailName"
+).textContent =
+
+product.name || "";
+
+
+document.getElementById(
+"detailPrice"
+).textContent =
+
+Number(
+product.price || 0
+).toLocaleString()
++
+"원";
+
+
+document.getElementById(
+"detailDescription"
+).textContent =
+
+product.description || "";
+
+
+document.getElementById(
+"productModal"
+).style.display =
+"flex";
+
 }
 
-function removeProduct(id){
-if(confirm("이 상품을 삭제할까요?")){
-products=products.filter(p=>p.id!==id);
-cart=cart.filter(cartId=>products.some(p=>p.id===cartId));
-save();
-render();
-admin();
-}
+
+
+/* ==========================================
+   상세 → 장바구니
+========================================== */
+
+function addDetailToCart(){
+
+if(!selectedProduct){
+return;
 }
 
-/* 로고를 더블클릭하면 관리자 로그인 */
-document.querySelector(".logo").addEventListener("dblclick",()=>{
-if(prompt("관리자 비밀번호")==="cardpocket"){
-admin();
+
+addToCart(
+selectedProduct
+);
+
+
+closeModal(
+"productModal"
+);
+
+}
+
+
+
+/* ==========================================
+   장바구니 불러오기
+========================================== */
+
+function loadCart(){
+
+try{
+
+cart = JSON.parse(
+
+localStorage.getItem(
+"CARD_POCKET_CART"
+)
+
+) || [];
+
+}catch(error){
+
+cart = [];
+
+}
+
+
+updateCartCount();
+
+}
+
+
+
+/* ==========================================
+   장바구니 저장
+========================================== */
+
+function saveCart(){
+
+localStorage.setItem(
+
+"CARD_POCKET_CART",
+
+JSON.stringify(cart)
+
+);
+
+
+updateCartCount();
+
+}
+
+
+
+/* ==========================================
+   장바구니 추가
+========================================== */
+
+function addToCart(product){
+
+const existing =
+
+cart.find(
+item => item.id === product.id
+);
+
+
+if(existing){
+
+existing.quantity++;
+
 }else{
-alert("비밀번호가 틀렸습니다.");
-}
+
+cart.push({
+
+id:
+product.id,
+
+name:
+product.name,
+
+price:
+Number(product.price),
+
+image_url:
+product.image_url,
+
+quantity:
+1
+
 });
 
-render();
+}
+
+
+saveCart();
+
+
+alert(
+"장바구니에 담았습니다."
+);
+
+}
+
+
+
+/* ==========================================
+   장바구니 수량
+========================================== */
+
+function updateCartCount(){
+
+const count =
+
+cart.reduce(
+
+(sum,item) =>
+
+sum + Number(
+item.quantity
+),
+
+0
+
+);
+
+
+document.getElementById(
+"cartCount"
+).textContent =
+count;
+
+}
+
+
+
+/* ==========================================
+   장바구니 열기
+========================================== */
+
+function openCart(){
+
+renderCart();
+
+
+document.getElementById(
+"cartModal"
+).style.display =
+"flex";
+
+}
+
+
+
+/* ==========================================
+   장바구니 표시
+========================================== */
+
+function renderCart(){
+
+const container =
+document.getElementById(
+"cartItems"
+);
+
+
+if(
+cart.length === 0
+){
+
+container.innerHTML = `
+
+<div class="empty">
+
+장바구니가 비어있습니다.
+
+</div>
+
+`;
+
+
+document.getElementById(
+"cartTotal"
+).textContent =
+"0원";
+
+
+return;
+
+}
+
+
+let total = 0;
+
+
+container.innerHTML =
+
+cart.map(
+(item,index) => {
+
+total +=
+
+item.price *
+item.quantity;
+
+
+return `
+
+<div class="cart-item">
+
+
+<div class="cart-item-info">
+
+
+<div class="cart-item-name">
+
+${escapeHtml(
+item.name
+)}
+
+</div>
+
+
+<div class="cart-item-price">
+
+${Number(
+item.price
+).toLocaleString()}원
+×
+${item.quantity}
+
+</div>
+
+
+</div>
+
+
+<button
+
+class="delete-btn"
+
+onclick="removeCartItem(${index})"
+
+>
+
+삭제
+
+</button>
+
+
+</div>
+
+`;
+
+}).join("");
+
+
+document.getElementById(
+"cartTotal"
+).textContent =
+
+total.toLocaleString()
++
+"원";
+
+}
+
+
+
+/* ==========================================
+   장바구니 상품 삭제
+========================================== */
+
+function removeCartItem(index){
+
+cart.splice(
+index,
+1
+);
+
+
+saveCart();
+
+
+renderCart();
+
+}
+
+
+
+/* ==========================================
+   ★ 주문하기 화면 열기
+========================================== */
+
+function openCheckout(){
+
+/* 장바구니 확인 */
+
+if(
+cart.length === 0
+){
+
+alert(
+"장바구니가 비어있습니다."
+);
+
+return;
+
+}
+
+
+/* 장바구니 닫기 */
+
+closeModal(
+"cartModal"
+);
+
+
+/* 주문창 열기 */
+
+document.getElementById(
+"checkoutModal"
+).style.display =
+"flex";
+
+}
+
+
+
+/* ==========================================
+   주문 생성
+========================================== */
+
+async function createOrder(){
+
+const name =
+document.getElementById("buyerName").value.trim();
+
+const phone =
+document.getElementById("buyerPhone").value.trim();
+
+const address =
+document.getElementById("buyerAddress").value.trim();
+
+if(!name){
+alert("이름을 입력해주세요.");
+return;
+}
+
+if(!phone){
+alert("전화번호를 입력해주세요.");
+return;
+}
+
+if(!address){
+alert("배송 주소를 입력해주세요.");
+return;
+}
+
+if(cart.length === 0){
+alert("장바구니가 비어있습니다.");
+return;
+}
+
+const total = cart.reduce(
+(sum,item) => sum + Number(item.price) * Number(item.quantity),
+0
+);
+
+const now = new Date();
+
+const orderNumber =
+"CP" +
+now.getFullYear() +
+String(now.getMonth()+1).padStart(2,"0") +
+String(now.getDate()).padStart(2,"0") +
+String(now.getHours()).padStart(2,"0") +
+String(now.getMinutes()).padStart(2,"0") +
+String(now.getSeconds()).padStart(2,"0") +
+"-" +
+crypto.randomUUID().replace(/-/g,"").substring(0,8).toUpperCase();
+
+/* 결제 전에 주문을 먼저 저장합니다. */
+const { error } = await supabaseClient
+.from("orders")
+.insert([{
+order_number: orderNumber,
+buyer_name: name,
+buyer_phone: phone,
+buyer_address: address,
+items: cart,
+total_price: total,
+status: "결제대기"
+}]);
+
+if(error){
+console.error(error);
+alert("주문 저장 실패\n\n" + error.message);
+return;
+}
+
+if(!tossWidgets){
+await initTossPayments();
+}
+
+if(!tossWidgets){
+alert("토스 결제 설정을 불러오지 못했습니다.\nVercel 환경변수를 확인해주세요.");
+return;
+}
+
+try{
+
+const firstProductName = cart[0]?.name || "CARD POCKET 상품";
+const orderName = cart.length > 1
+? `${firstProductName} 외 ${cart.length - 1}건`
+: firstProductName;
+
+await tossWidgets.setAmount({
+value: total,
+currency: "KRW"
+});
+
+const paymentWindow = await tossWidgets.renderPaymentWindow({
+orderName: orderName
+});
+
+paymentWindow.on("paymentRequest", async (paymentMethod) => {
+
+try{
+
+await tossWidgets.requestPayment({
+orderId: orderNumber,
+orderName: orderName,
+successUrl: `${window.location.origin}/success.html`,
+failUrl: `${window.location.origin}/fail.html`,
+customerName: name,
+customerMobilePhone: phone.replace(/\D/g,"")
+});
+
+}catch(paymentError){
+console.error(paymentError);
+alert(paymentError?.message || "결제를 시작하지 못했습니다.");
+}
+
+});
+
+}catch(error){
+console.error(error);
+alert(error?.message || "토스 결제창을 열지 못했습니다.");
+}
+
+}
+
+/* ==========================================
+   관리자 로그인
+========================================== */
+
+function openAdminLogin(){
+
+document.getElementById(
+"adminPassword"
+).value = "";
+
+
+document.getElementById(
+"adminLoginModal"
+).style.display =
+"flex";
+
+}
+
+
+
+/* ==========================================
+   관리자 로그인 확인
+========================================== */
+
+function loginAdmin(){
+
+const password =
+
+document.getElementById(
+"adminPassword"
+).value;
+
+
+if(
+password === "cardpocket"
+){
+
+closeModal(
+"adminLoginModal"
+);
+
+
+openAdmin();
+
+}else{
+
+alert(
+"관리자 비밀번호가 틀렸습니다."
+);
+
+}
+
+}
+
+
+
+/* ==========================================
+   관리자 열기
+========================================== */
+
+function openAdmin(){
+
+resetAdminForm();
+
+
+document.getElementById(
+"adminModal"
+).style.display =
+"flex";
+
+
+renderAdminProducts();
+
+
+loadOrders();
+
+}
+
+
+
+/* ==========================================
+   이미지 미리보기
+========================================== */
+
+function previewImage(){
+
+const file =
+
+document.getElementById(
+"adminImageFile"
+).files[0];
+
+
+const preview =
+
+document.getElementById(
+"imagePreview"
+);
+
+
+if(!file){
+
+preview.style.display =
+"none";
+
+return;
+
+}
+
+
+const reader =
+new FileReader();
+
+
+reader.onload =
+function(event){
+
+preview.src =
+event.target.result;
+
+preview.style.display =
+"block";
+
+};
+
+
+reader.readAsDataURL(
+file
+);
+
+}
+
+
+
+/* ==========================================
+   이미지 업로드
+========================================== */
+
+async function uploadProductImage(file){
+
+if(!file){
+return null;
+}
+
+
+const extension =
+
+file.name
+.split(".")
+.pop()
+.toLowerCase();
+
+
+const fileName =
+
+Date.now() +
+
+"-" +
+
+Math.random()
+.toString(36)
+.substring(
+2,
+10
+) +
+
+"." +
+
+extension;
+
+
+
+const {
+error
+} =
+
+await supabaseClient
+.storage
+.from("product-images")
+.upload(
+
+fileName,
+
+file,
+
+{
+
+cacheControl:
+"3600",
+
+upsert:
+false
+
+}
+
+);
+
+
+
+if(error){
+
+throw new Error(
+
+"사진 업로드 실패: " +
+
+error.message
+
+);
+
+}
+
+
+
+const {
+data
+} =
+
+supabaseClient
+.storage
+.from("product-images")
+.getPublicUrl(
+fileName
+);
+
+
+return data.publicUrl;
+
+}
+
+
+
+/* ==========================================
+   Storage 경로 추출
+========================================== */
+
+function getStoragePathFromUrl(url){
+
+if(!url){
+return null;
+}
+
+
+const marker =
+
+"/storage/v1/object/public/product-images/";
+
+
+const index =
+url.indexOf(marker);
+
+
+if(
+index === -1
+){
+
+return null;
+
+}
+
+
+return decodeURIComponent(
+
+url.substring(
+
+index +
+marker.length
+
+)
+
+);
+
+}
+
+
+
+/* ==========================================
+   Storage 이미지 삭제
+========================================== */
+
+async function deleteStorageImage(url){
+
+const path =
+getStoragePathFromUrl(url);
+
+
+if(!path){
+return;
+}
+
+
+await supabaseClient
+.storage
+.from("product-images")
+.remove([path]);
+
+}
+
+
+
+/* ==========================================
+   상품 저장
+========================================== */
+
+async function saveProduct(){
+
+const name =
+
+document.getElementById(
+"adminName"
+).value.trim();
+
+
+const price =
+
+Number(
+
+document.getElementById(
+"adminPrice"
+).value
+
+);
+
+
+const category =
+
+document.getElementById(
+"adminCategory"
+).value.trim();
+
+
+const imageUrl =
+
+document.getElementById(
+"adminImage"
+).value.trim();
+
+
+const file =
+
+document.getElementById(
+"adminImageFile"
+).files[0];
+
+
+const description =
+
+document.getElementById(
+"adminDescription"
+).value.trim();
+
+
+
+/* 상품명 */
+
+if(!name){
+
+alert(
+"상품명을 입력해주세요."
+);
+
+return;
+
+}
+
+
+/* 가격 */
+
+if(!price){
+
+alert(
+"가격을 입력해주세요."
+);
+
+return;
+
+}
+
+
+
+/* 기본 이미지 */
+
+let finalImage =
+imageUrl;
+
+
+
+/* 파일 업로드 */
+
+if(file){
+
+try{
+
+finalImage =
+
+await uploadProductImage(
+file
+);
+
+}catch(error){
+
+alert(
+error.message
+);
+
+return;
+
+}
+
+}
+
+
+
+/* ==================================
+   기존 상품 수정
+================================== */
+
+if(
+editingProductId
+){
+
+const {
+error
+} =
+
+await supabaseClient
+.from("products")
+.update({
+
+name:
+name,
+
+price:
+price,
+
+category:
+category,
+
+image_url:
+finalImage,
+
+description:
+description
+
+})
+.eq(
+"id",
+editingProductId
+);
+
+
+
+if(error){
+
+alert(
+
+"상품 수정 실패\n\n" +
+
+error.message
+
+);
+
+return;
+
+}
+
+
+
+/* 기존 이미지 삭제 */
+
+if(
+
+file &&
+
+editingOldImage &&
+
+editingOldImage !== finalImage
+
+){
+
+await deleteStorageImage(
+editingOldImage
+);
+
+}
+
+
+
+alert(
+"상품이 수정되었습니다."
+);
+
+
+editingProductId =
+null;
+
+
+editingOldImage =
+null;
+
+
+resetAdminForm();
+
+
+await loadProducts();
+
+
+renderAdminProducts();
+
+
+return;
+
+}
+
+
+
+/* ==================================
+   신규 상품 등록
+================================== */
+
+const {
+error
+} =
+
+await supabaseClient
+.from("products")
+.insert([{
+
+name:
+name,
+
+price:
+price,
+
+category:
+category,
+
+image_url:
+finalImage,
+
+description:
+description
+
+}]);
+
+
+
+if(error){
+
+alert(
+
+"상품 등록 실패\n\n" +
+
+error.message
+
+);
+
+return;
+
+}
+
+
+alert(
+"상품이 등록되었습니다."
+);
+
+
+resetAdminForm();
+
+
+await loadProducts();
+
+
+renderAdminProducts();
+
+}
+
+
+
+/* ==========================================
+   상품 수정
+========================================== */
+
+function editProduct(id){
+
+const product =
+
+products.find(
+p => p.id === id
+);
+
+
+if(!product){
+return;
+}
+
+
+editingProductId =
+id;
+
+
+editingOldImage =
+product.image_url || null;
+
+
+
+document.getElementById(
+"adminName"
+).value =
+
+product.name || "";
+
+
+document.getElementById(
+"adminPrice"
+).value =
+
+product.price || "";
+
+
+document.getElementById(
+"adminCategory"
+).value =
+
+product.category || "";
+
+
+document.getElementById(
+"adminImage"
+).value =
+
+product.image_url || "";
+
+
+document.getElementById(
+"adminDescription"
+).value =
+
+product.description || "";
+
+
+document.getElementById(
+"adminImageFile"
+).value = "";
+
+
+const preview =
+
+document.getElementById(
+"imagePreview"
+);
+
+
+if(
+product.image_url
+){
+
+preview.src =
+product.image_url;
+
+preview.style.display =
+"block";
+
+}else{
+
+preview.style.display =
+"none";
+
+}
+
+
+document.getElementById(
+"saveProductButton"
+).textContent =
+"상품 수정";
+
+
+document.getElementById(
+"cancelEditButton"
+).style.display =
+"block";
+
+}
+
+
+
+/* ==========================================
+   수정 취소
+========================================== */
+
+function cancelEdit(){
+
+editingProductId =
+null;
+
+
+editingOldImage =
+null;
+
+
+resetAdminForm();
+
+}
+
+
+
+/* ==========================================
+   관리자 입력창 초기화
+========================================== */
+
+function resetAdminForm(){
+
+document.getElementById(
+"adminName"
+).value = "";
+
+
+document.getElementById(
+"adminPrice"
+).value = "";
+
+
+document.getElementById(
+"adminCategory"
+).value = "";
+
+
+document.getElementById(
+"adminImage"
+).value = "";
+
+
+document.getElementById(
+"adminImageFile"
+).value = "";
+
+
+document.getElementById(
+"adminDescription"
+).value = "";
+
+
+document.getElementById(
+"imagePreview"
+).style.display =
+"none";
+
+
+document.getElementById(
+"saveProductButton"
+).textContent =
+"상품 등록";
+
+
+document.getElementById(
+"cancelEditButton"
+).style.display =
+"none";
+
+}
+
+
+
+/* ==========================================
+   관리자 상품 목록
+========================================== */
+
+function renderAdminProducts(){
+
+const container =
+
+document.getElementById(
+"adminProductList"
+);
+
+
+if(
+products.length === 0
+){
+
+container.innerHTML =
+
+`
+<p style="color:#888;margin-top:15px">
+등록된 상품이 없습니다.
+</p>
+`;
+
+return;
+
+}
+
+
+
+container.innerHTML =
+
+products.map(
+product => {
+
+const image =
+
+product.image_url ||
+
+"https://placehold.co/100x100?text=NO+IMAGE";
+
+
+return `
+
+<div class="admin-product">
+
+
+<div class="admin-product-left">
+
+
+<img
+
+class="admin-product-thumb"
+
+src="${escapeHtml(image)}"
+
+>
+
+
+<div>
+
+<strong>
+
+${escapeHtml(
+product.name
+)}
+
+</strong>
+
+
+<br>
+
+
+<small>
+
+${Number(
+product.price || 0
+).toLocaleString()}원
+
+</small>
+
+</div>
+
+
+</div>
+
+
+
+<div class="admin-buttons">
+
+
+<button
+
+class="edit-btn"
+
+onclick="editProduct(${product.id})"
+
+>
+
+수정
+
+</button>
+
+
+<button
+
+class="delete-btn"
+
+onclick="deleteProduct(${product.id})"
+
+>
+
+삭제
+
+</button>
+
+
+</div>
+
+
+</div>
+
+`;
+
+}).join("");
+
+}
+
+
+
+/* ==========================================
+   상품 삭제
+========================================== */
+
+async function deleteProduct(id){
+
+const product =
+
+products.find(
+p => p.id === id
+);
+
+
+if(!product){
+return;
+}
+
+
+const confirmed =
+
+confirm(
+
+"정말 이 상품을 삭제할까요?\n\n" +
+
+product.name
+
+);
+
+
+if(!confirmed){
+return;
+}
+
+
+
+const {
+error
+} =
+
+await supabaseClient
+.from("products")
+.delete()
+.eq(
+"id",
+id
+);
+
+
+
+if(error){
+
+alert(
+
+"상품 삭제 실패\n\n" +
+
+error.message
+
+);
+
+return;
+
+}
+
+
+
+/* Storage 이미지 삭제 */
+
+if(
+product.image_url
+){
+
+await deleteStorageImage(
+product.image_url
+);
+
+}
+
+
+alert(
+"상품이 삭제되었습니다."
+);
+
+
+await loadProducts();
+
+
+renderAdminProducts();
+
+}
+
+
+
+/* ==========================================
+   주문 불러오기
+========================================== */
+
+async function loadOrders(){
+
+const container =
+
+document.getElementById(
+"orderList"
+);
+
+
+container.innerHTML = `
+
+<div
+style="color:#888;text-align:center;padding:30px"
+>
+
+주문을 불러오는 중...
+
+</div>
+
+`;
+
+
+
+const {
+data,
+error
+} =
+
+await supabaseClient
+.from("orders")
+.select("*")
+.order(
+"created_at",
+{
+ascending:false
+}
+);
+
+
+
+if(error){
+
+container.innerHTML = `
+
+<div
+style="color:#d00;padding:20px"
+>
+
+주문을 불러오지 못했습니다.
+
+<br><br>
+
+${escapeHtml(
+error.message
+)}
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+
+if(
+!data ||
+data.length === 0
+){
+
+container.innerHTML = `
+
+<div
+style="color:#888;text-align:center;padding:30px"
+>
+
+아직 주문이 없습니다.
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+
+container.innerHTML =
+
+data.map(
+order => {
+
+
+let items = [];
+
+
+try{
+
+items =
+
+typeof order.items === "string"
+
+?
+
+JSON.parse(
+order.items
+)
+
+:
+
+order.items;
+
+}catch(error){
+
+items = [];
+
+}
+
+
+
+const itemText =
+
+(items || [])
+.map(
+item =>
+
+`${escapeHtml(item.name)}
+× ${item.quantity}`
+
+)
+.join(
+"<br>"
+);
+
+
+
+const date =
+
+new Date(
+order.created_at
+).toLocaleString(
+"ko-KR"
+);
+
+
+
+return `
+
+<div class="order">
+
+
+<div class="order-header">
+
+
+<div class="order-number">
+
+${escapeHtml(
+order.order_number
+)}
+
+</div>
+
+
+<div class="order-date">
+
+${escapeHtml(
+date
+)}
+
+</div>
+
+
+</div>
+
+
+
+<div class="order-info">
+
+
+<strong>
+주문자
+</strong>
+
+:
+
+${escapeHtml(
+order.buyer_name
+)}
+
+<br>
+
+
+<strong>
+전화번호
+</strong>
+
+:
+
+${escapeHtml(
+order.buyer_phone
+)}
+
+<br>
+
+
+<strong>
+주소
+</strong>
+
+:
+
+${escapeHtml(
+order.buyer_address
+)}
+
+
+</div>
+
+
+
+<div class="order-items">
+
+
+<strong>
+상품
+</strong>
+
+
+<br><br>
+
+
+${itemText}
+
+
+</div>
+
+
+
+<div class="order-total">
+
+총
+
+${Number(
+order.total_price
+).toLocaleString()}
+
+원
+
+</div>
+
+
+
+<select
+
+class="order-select"
+
+onchange="changeOrderStatus(${order.id},this.value)"
+
+>
+
+
+<option
+
+value="결제대기"
+
+${order.status === "결제대기" ? "selected" : ""}
+
+>
+
+결제대기
+
+</option>
+
+
+<option
+
+value="결제완료"
+
+${order.status === "결제완료" ? "selected" : ""}
+
+>
+
+결제완료
+
+</option>
+
+
+<option
+
+value="배송준비"
+
+${order.status === "배송준비" ? "selected" : ""}
+
+>
+
+배송준비
+
+</option>
+
+
+<option
+
+value="배송중"
+
+${order.status === "배송중" ? "selected" : ""}
+
+>
+
+배송중
+
+</option>
+
+
+<option
+
+value="배송완료"
+
+${order.status === "배송완료" ? "selected" : ""}
+
+>
+
+배송완료
+
+</option>
+
+
+<option
+
+value="주문취소"
+
+${order.status === "주문취소" ? "selected" : ""}
+
+>
+
+주문취소
+
+</option>
+
+
+</select>
+
+
+</div>
+
+`;
+
+}).join("");
+
+}
+
+
+
+/* ==========================================
+   주문 상태 변경
+========================================== */
+
+async function changeOrderStatus(
+id,
+status
+){
+
+const {
+error
+} =
+
+await supabaseClient
+.from("orders")
+.update({
+
+status:
+status
+
+})
+.eq(
+"id",
+id
+);
+
+
+
+if(error){
+
+alert(
+
+"주문 상태 변경 실패\n\n" +
+
+error.message
+
+);
+
+return;
+
+}
+
+
+alert(
+"주문 상태가 변경되었습니다."
+);
+
+}
+
+
+
+/* ==========================================
+   모달 닫기
+========================================== */
+
+function closeModal(id){
+
+const modal =
+
+document.getElementById(
+id
+);
+
+
+if(modal){
+
+modal.style.display =
+"none";
+
+}
+
+}
+
+
+
+/* ==========================================
+   메뉴 이동
+========================================== */
+
+function scrollToSection(id){
+
+const section =
+
+document.getElementById(
+id
+);
+
+
+if(section){
+
+section.scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+}
+
+
+
+/* ==========================================
+   HTML 보안 처리
+========================================== */
+
+function escapeHtml(value){
+
+return String(
+value ?? ""
+)
+
+.replace(
+/&/g,
+"&amp;"
+)
+
+.replace(
+/</g,
+"&lt;"
+)
+
+.replace(
+/>/g,
+"&gt;"
+)
+
+.replace(
+/"/g,
+"&quot;"
+)
+
+.replace(
+/'/g,
+"&#039;"
+);
+
+}
+
 </script>
 
 </body>
