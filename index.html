@@ -655,6 +655,9 @@ Handmade Card Magnet Shop
 
 </footer>
 
+
+<!-- 상품 상세 -->
+
 <div
 id="productModal"
 class="modal-bg"
@@ -698,6 +701,9 @@ onclick="addDetailToCart()"
 
 </div>
 
+
+<!-- 장바구니 -->
+
 <div
 id="cartModal"
 class="modal-bg"
@@ -738,6 +744,9 @@ onclick="openCheckout()"
 </div>
 
 </div>
+
+
+<!-- 주문 -->
 
 <div
 id="checkoutModal"
@@ -816,6 +825,9 @@ onclick="createOrder()"
 
 </div>
 
+
+<!-- 결제 로딩 -->
+
 <div
 id="paymentLoading"
 class="payment-loading"
@@ -835,6 +847,9 @@ class="payment-loading"
 </div>
 
 </div>
+
+
+<!-- 관리자 로그인 -->
 
 <div
 id="adminLoginModal"
@@ -872,6 +887,9 @@ onclick="loginAdmin()"
 
 </div>
 
+
+<!-- 관리자 -->
+
 <div
 id="adminModal"
 class="modal-bg"
@@ -889,6 +907,7 @@ onclick="closeModal('adminModal')"
 <h2>
 CARD POCKET 관리자
 </h2>
+
 
 <h3 style="margin-top:25px;">
 상품 관리
@@ -960,6 +979,7 @@ id="adminProductList"
 >
 </div>
 
+
 <h3 style="margin-top:40px;">
 주문 관리
 </h3>
@@ -986,6 +1006,7 @@ style="color:#888;text-align:center;padding:30px"
 </div>
 
 </div>
+
 
 <script>
 
@@ -1056,6 +1077,8 @@ return false;
 
 }
 
+}
+
 
 /* ==========================================
    전역 변수
@@ -1098,12 +1121,27 @@ await initTossPayments();
 
 async function loadProducts(){
 
-const {
-data,
-error
-} =
+const list =
+document.getElementById(
+"productList"
+);
 
-await supabaseClient
+list.innerHTML = `
+
+<div class="empty">
+상품을 불러오는 중...
+</div>
+
+`;
+
+try{
+
+console.log("상품 불러오기 시작");
+
+
+const result = await Promise.race([
+
+supabaseClient
 .from("products")
 .select("*")
 .order(
@@ -1111,15 +1149,46 @@ await supabaseClient
 {
 ascending:false
 }
+),
+
+new Promise(
+(_,reject) =>
+
+setTimeout(
+() => reject(
+new Error(
+"Supabase 응답 시간이 초과되었습니다."
+)
+),
+10000
+)
+
+)
+
+]);
+
+
+const {
+data,
+error
+} = result;
+
+
+console.log(
+"Supabase 상품 조회 결과:",
+data,
+error
 );
+
 
 if(error){
 
-console.error(error);
+console.error(
+"상품 조회 오류:",
+error
+);
 
-document.getElementById(
-"productList"
-).innerHTML = `
+list.innerHTML = `
 
 <div class="empty">
 
@@ -1127,7 +1196,11 @@ document.getElementById(
 
 <br><br>
 
-${escapeHtml(error.message)}
+오류:<br>
+
+${escapeHtml(
+error.message
+)}
 
 </div>
 
@@ -1137,12 +1210,40 @@ return;
 
 }
 
+
 products =
 data || [];
+
 
 renderFilters();
 
 renderProducts();
+
+
+}catch(error){
+
+console.error(
+"상품 불러오기 실패:",
+error
+);
+
+list.innerHTML = `
+
+<div class="empty">
+
+상품을 불러오지 못했습니다.
+
+<br><br>
+
+${escapeHtml(
+error.message
+)}
+
+</div>
+
+`;
+
+}
 
 }
 
@@ -1257,6 +1358,7 @@ return search && category;
 
 });
 
+
 if(
 filtered.length === 0
 ){
@@ -1275,6 +1377,7 @@ return;
 
 }
 
+
 list.innerHTML =
 
 filtered.map(
@@ -1285,6 +1388,7 @@ const image =
 product.image_url ||
 
 "https://placehold.co/600x600?text=CARD+POCKET";
+
 
 return `
 
@@ -1757,6 +1861,7 @@ document.getElementById(
 "buyerAddress"
 ).value.trim();
 
+
 if(!name){
 
 alert(
@@ -1798,9 +1903,7 @@ return;
 }
 
 
-/* ==================================
-   총 결제금액 계산
-================================== */
+/* 총 결제금액 */
 
 const total =
 cart.reduce(
@@ -1815,6 +1918,7 @@ Number(item.quantity),
 
 );
 
+
 if(total <= 0){
 
 alert(
@@ -1826,9 +1930,7 @@ return;
 }
 
 
-/* ==================================
-   주문번호 생성
-================================== */
+/* 주문번호 */
 
 const now =
 new Date();
@@ -1871,9 +1973,7 @@ crypto
 .toUpperCase();
 
 
-/* ==================================
-   주문 저장
-================================== */
+/* 주문 저장 */
 
 const {
 error
@@ -1906,6 +2006,7 @@ status:
 
 }]);
 
+
 if(error){
 
 console.error(error);
@@ -1923,9 +2024,7 @@ return;
 }
 
 
-/* ==================================
-   토스 초기화
-================================== */
+/* Toss 초기화 */
 
 if(!tossPayments){
 
@@ -1948,9 +2047,7 @@ return;
 }
 
 
-/* ==================================
-   주문명
-================================== */
+/* 주문명 */
 
 const firstProductName =
 cart[0]?.name ||
@@ -1968,9 +2065,7 @@ cart.length > 1
 firstProductName;
 
 
-/* ==================================
-   로딩 표시
-================================== */
+/* 로딩 */
 
 document.getElementById(
 "paymentLoading"
@@ -1980,20 +2075,21 @@ document.getElementById(
 
 try{
 
-
 /* ==================================
-   토스 결제 객체 생성
+   Toss V2 결제 객체
 ================================== */
 
 const payment =
 tossPayments.payment({
+
 customerKey:
 `CARDPOCKET-${orderNumber}`
+
 });
 
 
 /* ==================================
-   토스 결제창
+   결제 요청
 ================================== */
 
 await payment.requestPayment({
@@ -2038,9 +2134,6 @@ console.error(
 "Toss Payment Error:",
 error
 );
-
-
-/* 결제창을 닫거나 취소한 경우 */
 
 if(
 error?.code === "USER_CANCEL"
@@ -2385,6 +2478,7 @@ document.getElementById(
 "adminDescription"
 ).value.trim();
 
+
 if(!name){
 
 alert(
@@ -2433,9 +2527,7 @@ return;
 }
 
 
-/* ==================================
-   기존 상품 수정
-================================== */
+/* 기존 상품 수정 */
 
 if(
 editingProductId
@@ -2524,9 +2616,7 @@ return;
 }
 
 
-/* ==================================
-   신규 상품 등록
-================================== */
+/* 신규 상품 등록 */
 
 const {
 error
@@ -2552,6 +2642,7 @@ description:
 description
 
 }]);
+
 
 if(error){
 
@@ -2908,9 +2999,6 @@ error.message
 return;
 
 }
-
-
-/* Storage 이미지 삭제 */
 
 if(
 product.image_url
