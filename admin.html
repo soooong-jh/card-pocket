@@ -175,6 +175,11 @@
       margin-top: 10px;
     }
 
+    .detail-button {
+      background: #444;
+      margin-top: 15px;
+    }
+
     .price {
       font-size: 18px;
       font-weight: bold;
@@ -199,12 +204,67 @@
       margin-bottom: 15px;
     }
 
-    .success {
-      background: #effaf0;
-      color: #187a1f;
-      padding: 15px;
+    /* 상세보기 모달 */
+
+    .modal-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1000;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .modal {
+      background: white;
+      max-width: 600px;
+      margin: 40px auto;
+      border-radius: 16px;
+      padding: 25px;
+      position: relative;
+    }
+
+    .modal h2 {
+      margin-bottom: 20px;
+    }
+
+    .close-button {
+      position: absolute;
+      right: 18px;
+      top: 15px;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      color: #222;
+      font-size: 28px;
+    }
+
+    .detail-row {
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+      line-height: 1.6;
+    }
+
+    .detail-label {
+      color: #777;
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+
+    .detail-value {
+      font-size: 15px;
+      word-break: break-all;
+    }
+
+    .detail-items {
+      background: #f7f7f7;
       border-radius: 8px;
-      margin-bottom: 15px;
+      padding: 14px;
+      white-space: pre-wrap;
+      line-height: 1.7;
     }
 
     @media (max-width: 600px) {
@@ -234,6 +294,10 @@
       .shipping-inputs select {
         width: 100%;
         flex: none;
+      }
+
+      .modal {
+        margin: 10px auto;
       }
     }
   </style>
@@ -320,6 +384,40 @@
 </div>
 
 
+<!-- ================================
+     주문 상세보기
+================================ -->
+
+<div
+  id="detailModal"
+  class="modal-bg"
+  onclick="closeModalOutside(event)"
+>
+
+  <div
+    class="modal"
+    onclick="event.stopPropagation()"
+  >
+
+    <button
+      class="close-button"
+      onclick="closeDetailModal()"
+    >
+      ×
+    </button>
+
+    <h2>
+      주문 상세보기
+    </h2>
+
+    <div id="detailContent">
+    </div>
+
+  </div>
+
+</div>
+
+
 <script>
 
   const SUPABASE_URL =
@@ -336,6 +434,9 @@
 
   const ADMIN_PASSWORD =
     "cardpocket";
+
+
+  let ordersData = [];
 
 
   /* ================================
@@ -417,10 +518,15 @@
         throw error;
       }
 
-      countElement.textContent =
-        `총 ${data.length}건의 주문`;
+      ordersData = data || [];
 
-      if (!data || data.length === 0) {
+      countElement.textContent =
+        `총 ${ordersData.length}건의 주문`;
+
+      if (
+        !ordersData ||
+        ordersData.length === 0
+      ) {
 
         ordersElement.innerHTML =
           '<div class="empty">아직 주문이 없습니다.</div>';
@@ -429,7 +535,7 @@
       }
 
       ordersElement.innerHTML =
-        data
+        ordersData
           .map(order =>
             createOrderHTML(order)
           )
@@ -534,7 +640,9 @@
         </div>
 
 
-        <strong>주문 상품</strong>
+        <strong>
+          주문 상품
+        </strong>
 
         <div class="items">
           ${escapeHtml(itemsText)}
@@ -709,6 +817,16 @@
         </div>
 
 
+        <!-- 상세보기 -->
+
+        <button
+          class="detail-button"
+          onclick="showOrderDetail('${order.id}')"
+        >
+          📋 주문 상세보기
+        </button>
+
+
       </div>
 
     `;
@@ -875,6 +993,236 @@
         "배송정보 저장에 실패했습니다.\n\n" +
         error.message
       );
+
+    }
+
+  }
+
+
+  /* ================================
+     주문 상세보기
+  ================================= */
+
+  function showOrderDetail(
+    orderId
+  ) {
+
+    const order =
+      ordersData.find(
+        item =>
+          String(item.id) ===
+          String(orderId)
+      );
+
+    if (!order) {
+
+      alert(
+        "주문 정보를 찾을 수 없습니다."
+      );
+
+      return;
+
+    }
+
+
+    const createdAt =
+      order.created_at
+        ? new Date(
+            order.created_at
+          ).toLocaleString("ko-KR")
+        : "-";
+
+
+    const itemsText =
+      formatItems(order.items);
+
+
+    const detailContent =
+      document.getElementById(
+        "detailContent"
+      );
+
+
+    detailContent.innerHTML = `
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          주문번호
+        </div>
+
+        <div class="detail-value">
+          ${escapeHtml(
+            order.order_number || "-"
+          )}
+        </div>
+
+      </div>
+
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          주문일시
+        </div>
+
+        <div class="detail-value">
+          ${createdAt}
+        </div>
+
+      </div>
+
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          구매자
+        </div>
+
+        <div class="detail-value">
+          ${escapeHtml(
+            order.buyer_name || "-"
+          )}
+        </div>
+
+      </div>
+
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          전화번호
+        </div>
+
+        <div class="detail-value">
+          ${escapeHtml(
+            order.buyer_phone || "-"
+          )}
+        </div>
+
+      </div>
+
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          배송주소
+        </div>
+
+        <div class="detail-value">
+          ${escapeHtml(
+            order.buyer_address || "-"
+          )}
+        </div>
+
+      </div>
+
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          주문 상품
+        </div>
+
+        <div class="detail-items">
+          ${escapeHtml(itemsText)}
+        </div>
+
+      </div>
+
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          결제금액
+        </div>
+
+        <div class="detail-value">
+          <strong>
+            ${Number(
+              order.total_price || 0
+            ).toLocaleString()}원
+          </strong>
+        </div>
+
+      </div>
+
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          주문 상태
+        </div>
+
+        <div class="detail-value">
+          ${escapeHtml(
+            order.status || "-"
+          )}
+        </div>
+
+      </div>
+
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          택배사
+        </div>
+
+        <div class="detail-value">
+          ${escapeHtml(
+            order.courier || "-"
+          )}
+        </div>
+
+      </div>
+
+
+      <div class="detail-row">
+
+        <div class="detail-label">
+          운송장번호
+        </div>
+
+        <div class="detail-value">
+          ${escapeHtml(
+            order.tracking_number || "-"
+          )}
+        </div>
+
+      </div>
+
+    `;
+
+
+    document.getElementById(
+      "detailModal"
+    ).style.display = "block";
+
+  }
+
+
+  /* ================================
+     상세보기 닫기
+  ================================= */
+
+  function closeDetailModal() {
+
+    document.getElementById(
+      "detailModal"
+    ).style.display = "none";
+
+  }
+
+
+  function closeModalOutside(event) {
+
+    if (
+      event.target.id ===
+      "detailModal"
+    ) {
+
+      closeDetailModal();
 
     }
 
