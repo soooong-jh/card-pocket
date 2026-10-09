@@ -22,18 +22,22 @@ module.exports = async (req, res) => {
   const cookies = (req.headers.cookie || "").split(";");
 
   const sessionCookie = cookies
-    .map(cookie => cookie.trim())
-    .find(cookie => cookie.startsWith("admin_session="));
+    .map(function (cookie) {
+      return cookie.trim();
+    })
+    .find(function (cookie) {
+      return cookie.indexOf("admin_session=") === 0;
+    });
 
   let sessionValue = "";
 
   try {
-    sessionValue = sessionCookie
-      ? decodeURIComponent(
-          sessionCookie.slice("admin_session=".length)
-        )
-      : "";
-  } catch {
+    if (sessionCookie) {
+      sessionValue = decodeURIComponent(
+        sessionCookie.substring("admin_session=".length)
+      );
+    }
+  } catch (error) {
     sessionValue = "";
   }
 
@@ -44,60 +48,62 @@ module.exports = async (req, res) => {
     });
   }
 
-  // 요청 본문 처리
+  // 요청 내용 확인
   let body = req.body;
 
   if (typeof body === "string") {
     try {
       body = JSON.parse(body);
-    } catch {
+    } catch (error) {
       body = {};
     }
   }
 
-  const orderId =
-    typeof body?.orderId === "string"
-      ? body.orderId.trim()
-      : "";
+  const orderId = body && body.orderId;
+  const orderNumber = body && body.orderNumber;
 
-  const orderNumber =
-    typeof body?.orderNumber === "string"
-      ? body.orderNumber.trim()
-      : "";
+  let filter = "";
 
-  const isUuid =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
-      .test(orderId);
-
-  // 내부 ID 또는 주문번호 중 하나는 필요
-  if (!isUuid && !orderNumber) {
+  // UUID 형식의 주문 ID
+  if (
+    typeof orderId === "string" &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId)
+  ) {
+    filter = "id=eq." + encodeURIComponent(orderId);
+  } else if (
+    typeof orderNumber === "string" &&
+    orderNumber.trim() !== ""
+  ) {
+    filter =
+      "order_number=eq." +
+      encodeURIComponent(orderNumber.trim());
+  } else if (
+    typeof orderId === "string" &&
+    orderId.trim() !== ""
+  ) {
+    filter =
+      "order_number=eq." +
+      encodeURIComponent(orderId.trim());
+  } else {
     return res.status(400).json({
       success: false,
-      message: "주문 ID 또는 주문번호가 필요합니다."
+      message: "주문 번호가 올바르지 않습니다."
     });
   }
 
   try {
-    const baseUrl =
-      `${supabaseUrl.replace(/\/+$/, "")}/rest/v1/orders`;
+    const baseUrl = supabaseUrl.replace(/\/+$/, "");
+    const requestUrl =
+      baseUrl + "/rest/v1/orders?" + filter;
 
-    // 내부 UUID가 있으면 id로 삭제,
-    // 없으면 주문번호로 삭제
-    const filter = isUuid
-      ? `id=eq.${encodeURIComponent(orderId)}`
-      : `order_number=eq.${encodeURIComponent(orderNumber)}`;
-
-    const response = await fetch(
-      `${baseUrl}?${filter}`,
-      {
-        method: "DELETE",
-        headers: {
-          apikey: serviceKey,
-          Authorization: `Bearer ${serviceKey}`,
-          Prefer: "return=representation"
-        }
+    const response = await fetch(requestUrl, {
+      method: "DELETE",
+      headers: {
+        apikey: serviceKey,
+        Authorization: "Bearer " + serviceKey,
+        Prefer: "return=representation"
       }
-    );
+    });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -110,7 +116,7 @@ module.exports = async (req, res) => {
 
       return res.status(502).json({
         success: false,
-        message: "주문 삭제에 실패했습니다. 서버 로그를 확인해 주세요."
+        message: "주문 삭제에 실패했습니다."
       });
     }
 
@@ -130,7 +136,6 @@ module.exports = async (req, res) => {
       success: true,
       message: "주문이 삭제되었습니다."
     });
-
   } catch (error) {
     console.error("주문 삭제 서버 오류:", error);
 
