@@ -1,4 +1,3 @@
-```javascript
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).json({
@@ -18,27 +17,22 @@ module.exports = async (req, res) => {
     });
   }
 
-  // 관리자 로그인 확인
   const cookies = (req.headers.cookie || "").split(";");
-
-  const sessionCookie = cookies
-    .map(function (cookie) {
-      return cookie.trim();
-    })
-    .find(function (cookie) {
-      return cookie.indexOf("admin_session=") === 0;
-    });
-
   let sessionValue = "";
 
-  try {
-    if (sessionCookie) {
-      sessionValue = decodeURIComponent(
-        sessionCookie.substring("admin_session=".length)
-      );
+  for (const cookie of cookies) {
+    const trimmed = cookie.trim();
+
+    if (trimmed.startsWith("admin_session=")) {
+      try {
+        sessionValue = decodeURIComponent(
+          trimmed.substring("admin_session=".length)
+        );
+      } catch (error) {
+        sessionValue = "";
+      }
+      break;
     }
-  } catch (error) {
-    sessionValue = "";
   }
 
   if (sessionValue !== sessionSecret) {
@@ -48,8 +42,7 @@ module.exports = async (req, res) => {
     });
   }
 
-  // 요청 내용 확인
-  let body = req.body;
+  let body = req.body || {};
 
   if (typeof body === "string") {
     try {
@@ -59,12 +52,11 @@ module.exports = async (req, res) => {
     }
   }
 
-  const orderId = body && body.orderId;
-  const orderNumber = body && body.orderNumber;
+  const orderId = body.orderId;
+  const orderNumber = body.orderNumber;
 
-  let filter = "";
+  let filter;
 
-  // UUID 형식의 주문 ID
   if (
     typeof orderId === "string" &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId)
@@ -93,8 +85,7 @@ module.exports = async (req, res) => {
 
   try {
     const baseUrl = supabaseUrl.replace(/\/+$/, "");
-    const requestUrl =
-      baseUrl + "/rest/v1/orders?" + filter;
+    const requestUrl = baseUrl + "/rest/v1/orders?" + filter;
 
     const response = await fetch(requestUrl, {
       method: "DELETE",
@@ -145,4 +136,3 @@ module.exports = async (req, res) => {
     });
   }
 };
-```
