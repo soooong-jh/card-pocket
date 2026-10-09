@@ -1,4 +1,3 @@
-```javascript
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).json({
@@ -56,7 +55,7 @@ module.exports = async (req, res) => {
   const orderId = body.orderId;
   const orderNumber = body.orderNumber;
 
-  let filter = "";
+  let filter;
 
   if (
     typeof orderId === "string" &&
@@ -64,9 +63,8 @@ module.exports = async (req, res) => {
   ) {
     filter = "id=eq." + encodeURIComponent(orderId);
   } else if (
-    (typeof orderId === "number" ||
-      (typeof orderId === "string" && /^\d+$/.test(orderId.trim()))) &&
-    String(orderId).trim() !== ""
+    typeof orderId === "number" ||
+    (typeof orderId === "string" && /^\d+$/.test(orderId.trim()))
   ) {
     filter = "id=eq." + encodeURIComponent(String(orderId).trim());
   } else if (
@@ -140,4 +138,3 @@ module.exports = async (req, res) => {
     });
   }
 };
-```
