@@ -1,3 +1,4 @@
+```javascript
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).json({
@@ -55,13 +56,19 @@ module.exports = async (req, res) => {
   const orderId = body.orderId;
   const orderNumber = body.orderNumber;
 
-  let filter;
+  let filter = "";
 
   if (
     typeof orderId === "string" &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId)
   ) {
     filter = "id=eq." + encodeURIComponent(orderId);
+  } else if (
+    (typeof orderId === "number" ||
+      (typeof orderId === "string" && /^\d+$/.test(orderId.trim()))) &&
+    String(orderId).trim() !== ""
+  ) {
+    filter = "id=eq." + encodeURIComponent(String(orderId).trim());
   } else if (
     typeof orderNumber === "string" &&
     orderNumber.trim() !== ""
@@ -113,10 +120,7 @@ module.exports = async (req, res) => {
 
     const deletedOrders = await response.json();
 
-    if (
-      !Array.isArray(deletedOrders) ||
-      deletedOrders.length === 0
-    ) {
+    if (!Array.isArray(deletedOrders) || deletedOrders.length === 0) {
       return res.status(404).json({
         success: false,
         message: "주문을 찾을 수 없습니다."
@@ -136,3 +140,4 @@ module.exports = async (req, res) => {
     });
   }
 };
+```
