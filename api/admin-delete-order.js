@@ -1,3 +1,4 @@
+```javascript
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).json({
@@ -11,7 +12,7 @@ module.exports = async (req, res) => {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!sessionSecret || !supabaseUrl || !serviceKey) {
-    console.error("서버 환경변수 누락:", {
+    console.error("환경변수 확인:", {
       sessionSecret: !!sessionSecret,
       supabaseUrl: !!supabaseUrl,
       serviceKey: !!serviceKey
@@ -43,6 +44,8 @@ module.exports = async (req, res) => {
   }
 
   if (sessionValue !== sessionSecret) {
+    console.error("관리자 인증 실패");
+
     return res.status(401).json({
       success: false,
       message: "관리자 로그인이 필요합니다."
@@ -63,9 +66,12 @@ module.exports = async (req, res) => {
   const orderId = body.orderId;
   const orderNumber = body.orderNumber;
 
+  console.log("삭제 요청 orderId:", orderId);
+  console.log("삭제 요청 orderNumber:", orderNumber);
+  console.log("요청 데이터 전체:", body);
+
   let filter = "";
 
-  // 숫자 ID
   if (
     typeof orderId === "number" ||
     (
@@ -78,13 +84,11 @@ module.exports = async (req, res) => {
     typeof orderId === "string" &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId.trim())
   ) {
-    // UUID 형식 ID
     filter = "id=eq." + encodeURIComponent(orderId.trim());
   } else if (
     typeof orderNumber === "string" &&
     orderNumber.trim() !== ""
   ) {
-    // 주문번호
     filter =
       "order_number=eq." +
       encodeURIComponent(orderNumber.trim());
@@ -92,12 +96,11 @@ module.exports = async (req, res) => {
     typeof orderId === "string" &&
     orderId.trim() !== ""
   ) {
-    // 숫자 ID나 UUID가 아닌 문자열은 주문번호로 처리
     filter =
       "order_number=eq." +
       encodeURIComponent(orderId.trim());
   } else {
-    console.error("잘못된 주문 삭제 요청:", body);
+    console.error("잘못된 삭제 요청:", body);
 
     return res.status(400).json({
       success: false,
@@ -128,7 +131,7 @@ module.exports = async (req, res) => {
 
     if (!response.ok) {
       console.error(
-        "주문 삭제 실패:",
+        "Supabase 삭제 요청 실패:",
         response.status,
         responseText
       );
@@ -165,6 +168,8 @@ module.exports = async (req, res) => {
       });
     }
 
+    console.log("주문 삭제 성공:", deletedOrders);
+
     return res.status(200).json({
       success: true,
       message: "주문이 삭제되었습니다."
@@ -179,3 +184,4 @@ module.exports = async (req, res) => {
     });
   }
 };
+```
