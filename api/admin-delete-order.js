@@ -1,3 +1,4 @@
+```javascript
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).json({
@@ -11,6 +12,12 @@ module.exports = async (req, res) => {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!sessionSecret || !supabaseUrl || !serviceKey) {
+    console.error("서버 환경변수 누락:", {
+      sessionSecret: !!sessionSecret,
+      supabaseUrl: !!supabaseUrl,
+      serviceKey: !!serviceKey
+    });
+
     return res.status(500).json({
       success: false,
       message: "서버 환경변수를 확인해 주세요."
@@ -59,7 +66,7 @@ module.exports = async (req, res) => {
 
   let filter = "";
 
-  // 숫자 ID 또는 UUID
+  // 숫자 ID
   if (
     typeof orderId === "number" ||
     (
@@ -72,11 +79,13 @@ module.exports = async (req, res) => {
     typeof orderId === "string" &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId.trim())
   ) {
+    // UUID 형식 ID
     filter = "id=eq." + encodeURIComponent(orderId.trim());
   } else if (
     typeof orderNumber === "string" &&
     orderNumber.trim() !== ""
   ) {
+    // 주문번호
     filter =
       "order_number=eq." +
       encodeURIComponent(orderNumber.trim());
@@ -84,11 +93,13 @@ module.exports = async (req, res) => {
     typeof orderId === "string" &&
     orderId.trim() !== ""
   ) {
-    // 숫자 ID나 UUID가 아니라면 주문번호로 검색
+    // 숫자 ID나 UUID가 아닌 문자열은 주문번호로 처리
     filter =
       "order_number=eq." +
       encodeURIComponent(orderId.trim());
   } else {
+    console.error("잘못된 주문 삭제 요청:", body);
+
     return res.status(400).json({
       success: false,
       message: "주문 번호가 올바르지 않습니다."
@@ -98,6 +109,9 @@ module.exports = async (req, res) => {
   try {
     const baseUrl = supabaseUrl.replace(/\/+$/, "");
     const requestUrl = baseUrl + "/rest/v1/orders?" + filter;
+
+    console.log("삭제 대상 필터:", filter);
+    console.log("Supabase 요청 URL:", requestUrl);
 
     const response = await fetch(requestUrl, {
       method: "DELETE",
@@ -109,6 +123,9 @@ module.exports = async (req, res) => {
     });
 
     const responseText = await response.text();
+
+    console.log("Supabase HTTP 상태:", response.status);
+    console.log("Supabase 응답 내용:", responseText);
 
     if (!response.ok) {
       console.error(
@@ -136,7 +153,6 @@ module.exports = async (req, res) => {
       console.error("삭제 결과 파싱 오류:", responseText);
     }
 
-    console.log("삭제 대상 필터:", filter);
     console.log("삭제 결과:", deletedOrders);
 
     if (
@@ -146,7 +162,7 @@ module.exports = async (req, res) => {
       return res.status(404).json({
         success: false,
         message:
-          "삭제된 주문이 없습니다. Vercel 로그에서 삭제 대상 필터와 결과를 확인해 주세요."
+          "삭제된 주문이 없습니다. Vercel 로그에서 삭제 대상 필터와 응답 내용을 확인해 주세요."
       });
     }
 
@@ -164,3 +180,4 @@ module.exports = async (req, res) => {
     });
   }
 };
+```
