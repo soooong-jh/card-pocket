@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -149,7 +148,6 @@
       border-radius: 8px;
       margin-bottom: 15px;
     }
-
     .modal-bg {
       display: none;
       position: fixed;
@@ -194,7 +192,6 @@
       white-space: pre-wrap;
       line-height: 1.7;
     }
-
     @media (max-width: 600px) {
       .container { padding: 0 10px; }
       .order-header {
@@ -226,12 +223,11 @@
       type="password"
       id="adminPassword"
       placeholder="관리자 비밀번호"
+      autocomplete="current-password"
       onkeydown="if(event.key === 'Enter') login()"
     >
-    <button onclick="login()">로그인</button>
-    <p id="loginError" style="color:#d00;display:none;margin-top:15px;">
-      비밀번호가 올바르지 않습니다.
-    </p>
+    <button id="loginButton" onclick="login()">로그인</button>
+    <p id="loginError" style="color:#d00;display:none;margin-top:15px;"></p>
   </div>
 
   <div id="adminArea" class="admin-box" style="display:none;">
@@ -249,7 +245,6 @@
   </div>
 </div>
 
-<!-- 주문 상세보기 모달 -->
 <div id="detailModal" class="modal-bg" onclick="closeModalOutside(event)">
   <div class="modal" onclick="event.stopPropagation()">
     <button class="close-button" onclick="closeDetailModal()">×</button>
@@ -270,21 +265,65 @@
     SUPABASE_KEY
   );
 
-  const ADMIN_PASSWORD = "cardpocket";
   let ordersData = [];
+  let loginInProgress = false;
 
-  /* 로그인 */
-  function login() {
-    const password = document.getElementById("adminPassword").value;
+  /* 관리자 로그인: 서버 API에서 비밀번호 확인 */
+  async function login() {
+    if (loginInProgress) return;
+
+    const passwordInput = document.getElementById("adminPassword");
+    const loginButton = document.getElementById("loginButton");
     const error = document.getElementById("loginError");
+    const password = passwordInput.value;
 
-    if (password === ADMIN_PASSWORD) {
-      error.style.display = "none";
+    error.style.display = "none";
+
+    if (!password) {
+      error.textContent = "비밀번호를 입력해주세요.";
+      error.style.display = "block";
+      return;
+    }
+
+    loginInProgress = true;
+    loginButton.disabled = true;
+    loginButton.textContent = "로그인 확인 중...";
+
+    try {
+      const response = await fetch("/api/admin-login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "same-origin",
+        cache: "no-store",
+        body: JSON.stringify({ password })
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.message || "로그인에 실패했습니다."
+        );
+      }
+
+      passwordInput.value = "";
       document.getElementById("loginArea").style.display = "none";
       document.getElementById("adminArea").style.display = "block";
-      loadOrders();
-    } else {
+
+      await loadOrders();
+
+    } catch (err) {
+      console.error("관리자 로그인 오류:", err);
+      error.textContent =
+        err.message || "로그인에 실패했습니다.";
       error.style.display = "block";
+
+    } finally {
+      loginInProgress = false;
+      loginButton.disabled = false;
+      loginButton.textContent = "로그인";
     }
   }
 
@@ -326,10 +365,12 @@
       ordersElement.innerHTML = ordersData
         .map(order => createOrderHTML(order))
         .join("");
+
     } catch (error) {
       console.error(error);
       countElement.textContent = "주문을 불러오지 못했습니다.";
       ordersElement.innerHTML = "";
+
       showMessage(
         "주문을 불러오지 못했습니다. " + (error.message || ""),
         "error"
@@ -343,6 +384,8 @@
     const createdAt = order.created_at
       ? new Date(order.created_at).toLocaleString("ko-KR")
       : "-";
+
+    const id = escapeHtml(order.id);
 
     return `
       <div class="order">
@@ -374,7 +417,7 @@
 
         <strong>주문 상태</strong>
         <div class="status-box">
-          <select id="status-${escapeHtml(order.id)}">
+          <select id="status-${id}">
             ${statusOption("결제대기", order.status)}
             ${statusOption("결제완료", order.status)}
             ${statusOption("배송준비", order.status)}
@@ -382,7 +425,7 @@
             ${statusOption("배송완료", order.status)}
             ${statusOption("주문취소", order.status)}
           </select>
-          <button onclick="updateStatus('${escapeHtml(order.id)}')">
+          <button onclick="updateStatus('${id}')">
             상태 저장
           </button>
         </div>
@@ -390,7 +433,7 @@
         <div class="shipping-box">
           <div class="shipping-title">🚚 배송 정보</div>
           <div class="shipping-inputs">
-            <select id="courier-${escapeHtml(order.id)}">
+            <select id="courier-${id}">
               <option value="">택배사 선택</option>
               ${courierOption("CJ대한통운", order.courier)}
               ${courierOption("한진택배", order.courier)}
@@ -403,25 +446,25 @@
             </select>
             <input
               type="text"
-              id="tracking-${escapeHtml(order.id)}"
+              id="tracking-${id}"
               value="${escapeHtml(order.tracking_number || "")}"
               placeholder="운송장번호 입력"
             >
           </div>
           <button
             class="shipping-button"
-            onclick="updateShipping('${escapeHtml(order.id)}')"
+            onclick="updateShipping('${id}')"
           >배송정보 저장</button>
         </div>
 
         <button
           class="detail-button"
-          onclick="showOrderDetail('${escapeHtml(order.id)}')"
+          onclick="showOrderDetail('${id}')"
         >📋 주문 상세보기</button>
 
         <button
           class="delete-button"
-          onclick="deleteOrder('${escapeHtml(order.id)}')"
+          onclick="deleteOrder('${id}')"
         >🗑️ 주문 삭제</button>
       </div>
     `;
@@ -460,6 +503,7 @@
 
       alert("주문 상태가 변경되었습니다.");
       await loadOrders();
+
     } catch (error) {
       console.error(error);
       alert("상태 변경에 실패했습니다.\n\n" + error.message);
@@ -500,13 +544,14 @@
 
       alert("배송정보가 저장되었습니다.");
       await loadOrders();
+
     } catch (error) {
       console.error(error);
       alert("배송정보 저장에 실패했습니다.\n\n" + error.message);
     }
   }
 
-  /* 주문 삭제 */
+  /* 주문 삭제: 서버 API를 통해 인증 후 삭제 */
   async function deleteOrder(orderId) {
     const order = ordersData.find(
       item => String(item.id) === String(orderId)
@@ -534,33 +579,48 @@
     buttons.forEach(button => button.disabled = true);
 
     try {
-      const { data, error } = await supabaseClient
-        .from("orders")
-        .delete()
-        .eq("id", orderId)
-        .select("id");
+      const response = await fetch("/api/admin-delete-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "same-origin",
+        cache: "no-store",
+        body: JSON.stringify({
+          orderId: String(orderId)
+        })
+      });
 
-      if (error) throw error;
+      const result = await response.json().catch(() => ({}));
 
-      if (!data || data.length === 0) {
+      if (!response.ok || !result.success) {
+        if (response.status === 401) {
+          throw new Error(
+            "관리자 인증이 만료되었습니다. 페이지를 새로고침하고 다시 로그인해주세요."
+          );
+        }
+
         throw new Error(
-          "주문이 삭제되지 않았습니다. Supabase의 삭제 권한(RLS)을 확인해주세요."
+          result.message || "주문 삭제에 실패했습니다."
         );
       }
 
       closeDetailModal();
       await loadOrders();
+
       showMessage(
         `주문번호 ${orderNumber} 주문이 삭제되었습니다.`,
         "success"
       );
+
     } catch (error) {
       console.error("주문 삭제 오류:", error);
+
       alert(
         "주문 삭제에 실패했습니다.\n\n" +
-        (error.message || "알 수 없는 오류") +
-        "\n\n삭제 권한이 없으면 Supabase 설정 확인이 필요합니다."
+        (error.message || "알 수 없는 오류")
       );
+
       buttons.forEach(button => button.disabled = false);
     }
   }
@@ -596,6 +656,7 @@
     document.getElementById("detailContent").innerHTML =
       details.map(([label, value]) => {
         const isItems = label === "주문 상품";
+
         return `
           <div class="detail-row">
             <div class="detail-label">${escapeHtml(label)}</div>
