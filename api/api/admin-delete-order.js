@@ -22,18 +22,22 @@ module.exports = async (req, res) => {
   const cookies = (req.headers.cookie || "").split(";");
 
   const sessionCookie = cookies
-    .map((cookie) => cookie.trim())
-    .find((cookie) => cookie.startsWith("admin_session="));
+    .map(function (cookie) {
+      return cookie.trim();
+    })
+    .find(function (cookie) {
+      return cookie.indexOf("admin_session=") === 0;
+    });
 
   let sessionValue = "";
 
   try {
-    sessionValue = sessionCookie
-      ? decodeURIComponent(
-          sessionCookie.slice("admin_session=".length)
-        )
-      : "";
-  } catch {
+    if (sessionCookie) {
+      sessionValue = decodeURIComponent(
+        sessionCookie.substring("admin_session=".length)
+      );
+    }
+  } catch (error) {
     sessionValue = "";
   }
 
@@ -44,13 +48,13 @@ module.exports = async (req, res) => {
     });
   }
 
-  // 요청 본문 확인
+  // 요청 내용 확인
   let body = req.body;
 
   if (typeof body === "string") {
     try {
       body = JSON.parse(body);
-    } catch {
+    } catch (error) {
       body = {};
     }
   }
@@ -60,6 +64,7 @@ module.exports = async (req, res) => {
 
   let filter = "";
 
+  // UUID 형식의 주문 ID
   if (
     typeof orderId === "string" &&
     /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId)
@@ -69,13 +74,15 @@ module.exports = async (req, res) => {
     typeof orderNumber === "string" &&
     orderNumber.trim() !== ""
   ) {
-    filter = "order_number=eq." +
+    filter =
+      "order_number=eq." +
       encodeURIComponent(orderNumber.trim());
   } else if (
     typeof orderId === "string" &&
     orderId.trim() !== ""
   ) {
-    filter = "order_number=eq." +
+    filter =
+      "order_number=eq." +
       encodeURIComponent(orderId.trim());
   } else {
     return res.status(400).json({
@@ -109,13 +116,16 @@ module.exports = async (req, res) => {
 
       return res.status(502).json({
         success: false,
-        message: "주문 삭제에 실패했습니다. 서버 로그를 확인해 주세요."
+        message: "주문 삭제에 실패했습니다."
       });
     }
 
     const deletedOrders = await response.json();
 
-    if (!Array.isArray(deletedOrders) || deletedOrders.length === 0) {
+    if (
+      !Array.isArray(deletedOrders) ||
+      deletedOrders.length === 0
+    ) {
       return res.status(404).json({
         success: false,
         message: "주문을 찾을 수 없습니다."
@@ -127,7 +137,7 @@ module.exports = async (req, res) => {
       message: "주문이 삭제되었습니다."
     });
   } catch (error) {
-    console.error("주문 삭제 중 서버 오류:", error);
+    console.error("주문 삭제 서버 오류:", error);
 
     return res.status(500).json({
       success: false,
