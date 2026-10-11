@@ -847,7 +847,7 @@ NOTICE
     <div class="inquiry-intro">
       <span class="inquiry-kicker">WE ARE HERE TO HELP</span>
       <h3>궁금한 점이 있으신가요?</h3>
-      <p>상품, 주문, 배송 관련 문의를 남겨주세요.<br>비밀글은 다른 방문자에게 공개되지 않습니다.</p>
+      <p>상품, 주문, 배송 관련 문의를 남겨주세요.<br>작성한 문의는 다른 방문자에게 공개되지 않으며 관리자만 확인할 수 있습니다.</p>
     </div>
     <form id="inquiryForm" class="inquiry-form" onsubmit="submitInquiry(event)">
       <div class="inquiry-fields">
@@ -856,13 +856,10 @@ NOTICE
       </div>
       <input id="inquiryTitle" class="input" maxlength="100" placeholder="문의 제목" required>
       <textarea id="inquiryContent" class="input" rows="5" maxlength="3000" placeholder="문의 내용을 입력해주세요." required></textarea>
-      <label class="secret-toggle"><input id="inquirySecret" type="checkbox"><span class="secret-icon">🔒</span><span><strong>비밀글로 작성</strong><small>비밀글은 공개 문의 목록에 표시되지 않습니다.</small></span></label>
       <button class="btn inquiry-submit" id="inquirySubmit" type="submit">문의 등록하기 <span>→</span></button>
       <p class="inquiry-privacy">입력한 정보는 문의 답변을 위한 목적으로만 사용해주세요. 민감한 개인정보는 적지 마세요.</p>
     </form>
   </div>
-  <div class="inquiry-list-head"><div><h3>공개 문의</h3><p>공개로 작성된 문의만 표시됩니다.</p></div><button class="refresh-inquiries" type="button" onclick="loadPublicInquiries()">새로고침 ↻</button></div>
-  <div id="publicInquiryList" class="public-inquiry-list"><div class="inquiry-empty">문의 목록을 불러오는 중입니다.</div></div>
 </section>
 
 </div>
@@ -3722,7 +3719,7 @@ async function submitInquiry(event){
   const contact=document.getElementById("inquiryContact").value.trim();
   const title=document.getElementById("inquiryTitle").value.trim();
   const content=document.getElementById("inquiryContent").value.trim();
-  const isSecret=document.getElementById("inquirySecret").checked;
+  const isSecret=true;
   if(!name||!title||!content){alert("작성자명, 제목, 문의 내용을 입력해주세요.");return;}
   button.disabled=true;button.textContent="등록 중...";
   try{
@@ -3731,8 +3728,7 @@ async function submitInquiry(event){
     }]);
     if(error) throw error;
     document.getElementById("inquiryForm").reset();
-    alert(isSecret?"비밀 문의가 등록되었습니다. 공개 목록에는 표시되지 않습니다.\n관리자는 Supabase 대시보드에서 확인할 수 있습니다.":"문의가 등록되었습니다.");
-    await loadPublicInquiries();
+    alert("비밀 문의가 등록되었습니다. 관리자만 확인할 수 있습니다.");
   }catch(error){
     console.error("문의 등록 실패:",error);
     alert("문의 등록에 실패했습니다. Supabase에 inquiries 테이블과 정책을 설정했는지 확인해주세요.");
