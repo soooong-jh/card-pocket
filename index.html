@@ -8,9 +8,7 @@
 
 <title>CARD POCKET</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">document.addEventListener("DOMContentLoaded",()=>{loadPublicInquiries();});
-
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://js.tosspayments.com/v2/standard"></script>
 
 <style>
@@ -642,27 +640,6 @@ button:active{transform:scale(.98)}
   *,*:before,*:after{transition:none!important}
 }
 
-
-/* ===== Premium inquiry board ===== */
-.inquiry-panel{display:grid;grid-template-columns:.8fr 1.2fr;gap:34px;background:linear-gradient(135deg,#f0f6f1,#fff 65%);border:1px solid #dfe9e1;border-radius:22px;padding:32px;box-shadow:0 12px 32px rgba(23,44,32,.045)}
-.inquiry-intro{padding:10px 4px}.inquiry-kicker{font-size:11px;letter-spacing:2px;font-weight:800;color:var(--cp-green)}.inquiry-intro h3{font-size:25px;line-height:1.4;margin:15px 0 12px;letter-spacing:-.7px}.inquiry-intro p{font-size:14px;color:#68756c;line-height:1.9}.inquiry-form{min-width:0}.inquiry-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.inquiry-form .input{margin-top:10px;background:rgba(255,255,255,.9);font:inherit}.inquiry-form textarea{resize:vertical;min-height:130px}.secret-toggle{display:flex;align-items:center;gap:10px;margin-top:15px;padding:13px 14px;border:1px solid #e1e9e2;border-radius:10px;background:#fff;cursor:pointer}.secret-toggle input{accent-color:var(--cp-green);width:17px;height:17px}.secret-toggle span:nth-child(2){font-size:17px}.secret-toggle strong,.secret-toggle small{display:block}.secret-toggle strong{font-size:13px}.secret-toggle small{font-size:11px;color:#7a857d;margin-top:3px}.inquiry-submit{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:13px}.inquiry-submit span{font-size:18px}.inquiry-privacy{font-size:11px;color:#89938c;line-height:1.6;margin-top:10px}.inquiry-list-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:30px 0 12px}.inquiry-list-head h3{font-size:19px}.inquiry-list-head p{font-size:12px;color:#78837b;margin-top:3px}.refresh-inquiries{border:1px solid #dce6de;background:#fff;border-radius:999px;padding:9px 13px;color:var(--cp-green);font-weight:700}.public-inquiry-list{display:grid;gap:10px}.public-inquiry{background:#fff;border:1px solid var(--cp-line);border-radius:12px;padding:17px 19px}.public-inquiry-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.public-inquiry-title{font-weight:800;overflow-wrap:anywhere}.public-inquiry-meta{font-size:11px;color:#89938c;white-space:nowrap}.public-inquiry-content{white-space:pre-wrap;overflow-wrap:anywhere;color:#5f6b62;font-size:13px;line-height:1.8;margin-top:10px}.inquiry-empty{padding:26px;text-align:center;color:#89938c;background:#fff;border:1px dashed #dce5de;border-radius:12px;font-size:13px}.footer-inquiry{margin-top:4px;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:transparent;color:#fff;padding:10px 17px;font-weight:700}.footer-inquiry:hover{background:rgba(255,255,255,.1)}
-@media(max-width:700px){.inquiry-panel{grid-template-columns:1fr;gap:18px;padding:22px 16px}.inquiry-intro{padding:0}.inquiry-intro h3{font-size:22px;margin:10px 0}.inquiry-fields{grid-template-columns:1fr;gap:0}.inquiry-list-head{margin-top:24px}.public-inquiry{padding:14px}.public-inquiry-top{align-items:flex-start;flex-direction:column;gap:5px}}
-
-
-/* 관리자 문의 관리 */
-.inquiry-admin-modal{max-width:760px}
-.admin-inquiry-list{display:grid;gap:12px}
-.admin-inquiry-card{border:1px solid #e1e8e2;border-radius:12px;padding:16px;background:#fff}
-.admin-inquiry-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px}
-.admin-inquiry-title{font-weight:800;font-size:16px;overflow-wrap:anywhere}
-.admin-inquiry-meta{font-size:12px;color:#7b857e;margin-top:5px;line-height:1.6}
-.admin-inquiry-body{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.75;color:#37423b;margin:12px 0}
-.admin-inquiry-contact{font-size:13px;color:#647067;background:#f5f8f5;border-radius:8px;padding:9px 11px}
-.secret-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:800;color:#80531a;background:#fff2d8;border-radius:999px;padding:5px 8px;white-space:nowrap}
-.public-badge{display:inline-flex;font-size:11px;font-weight:800;color:#1f6b4f;background:#e8f3ed;border-radius:999px;padding:5px 8px;white-space:nowrap}
-.inquiry-delete-btn{border:0;border-radius:7px;background:#c53e3e;color:#fff;padding:8px 11px;font-weight:700;white-space:nowrap}
-@media(max-width:600px){.admin-inquiry-card-head{flex-direction:column}.admin-inquiry-card-head>div:last-child{width:100%;display:flex;justify-content:space-between;align-items:center}}
-
 </style>
 
 </head>
@@ -703,10 +680,6 @@ ABOUT
 
 <button onclick="scrollToSection('notice')">
 NOTICE
-</button>
-
-<button onclick="scrollToSection('inquiry')">
-INQUIRY
 </button>
 
 </nav>
@@ -840,28 +813,6 @@ NOTICE
 </section>
 
 
-<!-- INQUIRY / COMMUNITY -->
-<section id="inquiry">
-  <h2 class="section-title">INQUIRY <span style="font-size:13px;color:#718078;font-weight:500;letter-spacing:0">문의 및 비밀글</span></h2>
-  <div class="inquiry-panel">
-    <div class="inquiry-intro">
-      <span class="inquiry-kicker">WE ARE HERE TO HELP</span>
-      <h3>궁금한 점이 있으신가요?</h3>
-      <p>상품, 주문, 배송 관련 문의를 남겨주세요.<br>작성한 문의는 다른 방문자에게 공개되지 않으며 관리자만 확인할 수 있습니다.</p>
-    </div>
-    <form id="inquiryForm" class="inquiry-form" onsubmit="submitInquiry(event)">
-      <div class="inquiry-fields">
-        <input id="inquiryName" class="input" maxlength="40" placeholder="작성자명" required>
-        <input id="inquiryContact" class="input" maxlength="100" placeholder="답변받을 연락처 또는 이메일 (선택)">
-      </div>
-      <input id="inquiryTitle" class="input" maxlength="100" placeholder="문의 제목" required>
-      <textarea id="inquiryContent" class="input" rows="5" maxlength="3000" placeholder="문의 내용을 입력해주세요." required></textarea>
-      <button class="btn inquiry-submit" id="inquirySubmit" type="submit">문의 등록하기 <span>→</span></button>
-      <p class="inquiry-privacy">입력한 정보는 문의 답변을 위한 목적으로만 사용해주세요. 민감한 개인정보는 적지 마세요.</p>
-    </form>
-  </div>
-</section>
-
 </div>
 
 </main>
@@ -881,8 +832,6 @@ CARD POCKET
 <br><br>
 
 Handmade Card Magnet Shop
-<br><br>
-<button class="footer-inquiry" onclick="scrollToSection('inquiry')">문의 남기기 ↗</button>
 
 </footer>
 
@@ -1245,33 +1194,11 @@ style="color:#888;text-align:center;padding:30px"
 
 </div>
 
-<h3 style="margin-top:40px;">문의 관리</h3>
-<p style="color:#6d7770;font-size:14px;line-height:1.7;margin-top:8px;">비밀 문의 확인 및 문의 삭제는 관리자 인증 후 이용할 수 있습니다.</p>
-<button class="btn" type="button" onclick="openInquiryAdminLogin()">비밀 문의 확인 / 문의 관리</button>
 
 </div>
 
 </div>
 
-<!-- 관리자 문의 인증 및 관리 -->
-<div id="inquiryAdminModal" class="modal-bg">
-  <div class="modal inquiry-admin-modal">
-    <button class="close" onclick="closeModal('inquiryAdminModal')">×</button>
-    <h2>문의 관리</h2>
-    <p style="color:#707a74;line-height:1.7;margin-bottom:12px;">Supabase 관리자 계정으로 로그인하면 공개·비밀 문의를 모두 확인하고 삭제할 수 있습니다.</p>
-    <div id="inquiryAdminLoginBox">
-      <input id="inquiryAdminEmail" class="input" type="email" autocomplete="username" placeholder="관리자 이메일">
-      <input id="inquiryAdminPassword" class="input" type="password" autocomplete="current-password" placeholder="관리자 비밀번호">
-      <button class="btn" type="button" onclick="loginInquiryAdmin()">관리자 로그인</button>
-      <p style="font-size:12px;color:#89918b;line-height:1.6;margin-top:10px;">Supabase Dashboard → Authentication → Users에서 관리자 계정을 먼저 생성해야 합니다.</p>
-    </div>
-    <div id="inquiryAdminContent" style="display:none;">
-      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin:18px 0;"><strong>전체 문의</strong><button class="refresh-inquiries" type="button" onclick="loadAdminInquiries()">새로고침 ↻</button></div>
-      <div id="adminInquiryList" class="admin-inquiry-list"><div class="inquiry-empty">문의를 불러오는 중입니다.</div></div>
-      <button class="btn btn-gray" type="button" onclick="logoutInquiryAdmin()">관리자 로그아웃</button>
-    </div>
-  </div>
-</div>
 
 
 <script>
@@ -1414,55 +1341,30 @@ await loadProducts();
 
 async function loadProducts(){
 
-const {
-data,
-error
-} = await supabaseClient
-.from("products")
-.select("*")
-.order(
-"id",
-{
-ascending:false
+const list = document.getElementById("productList");
+list.innerHTML = `<div class="empty">상품을 불러오는 중...</div>`;
+
+try {
+  const { data, error } = await supabaseClient
+    .from("products")
+    .select("*");
+
+  if (error) {
+    console.error("상품 조회 오류:", error);
+    list.innerHTML = `<div class="empty">상품 조회 실패<br><br>${escapeHtml(error.message)}</div>`;
+    return;
+  }
+
+  console.log("Supabase 상품 조회 결과:", data);
+  products = Array.isArray(data) ? data : [];
+  currentCategory = "전체";
+  renderFilters();
+  renderProducts();
+} catch (error) {
+  console.error("상품 조회 중 예외:", error);
+  list.innerHTML = `<div class="empty">상품 조회 중 오류가 발생했습니다.<br><br>${escapeHtml(error?.message || String(error))}</div>`;
 }
-);
-
-
-if(error){
-
-console.error(error);
-
-
-document.getElementById(
-"productList"
-).innerHTML = `
-
-<div class="empty">
-
-상품을 불러오지 못했습니다.
-
-<br><br>
-
-${escapeHtml(error.message)}
-
-</div>
-
-`;
-
-return;
-
 }
-
-
-products = data || [];
-
-
-renderFilters();
-
-renderProducts();
-
-}
-
 
 
 /* ==========================================
@@ -1555,11 +1457,8 @@ document.getElementById(
 );
 
 
-const keyword =
-document.getElementById(
-"searchInput"
-).value
-.toLowerCase();
+const searchInput = document.getElementById("searchInput");
+const keyword = (searchInput?.value || "").toLowerCase();
 
 
 const filtered =
@@ -2346,7 +2245,7 @@ document.getElementById(
 
 
 if(
-password === "aa08130012??"
+password === "cardpocket"
 ){
 
 closeModal(
@@ -3705,106 +3604,6 @@ alert(
 }
 
 
-
-
-
-/* ==========================================
-   문의 게시판 / 비밀글
-   Requires the inquiries table and RLS policies in setup.sql.
-========================================== */
-async function submitInquiry(event){
-  event.preventDefault();
-  const button=document.getElementById("inquirySubmit");
-  const name=document.getElementById("inquiryName").value.trim();
-  const contact=document.getElementById("inquiryContact").value.trim();
-  const title=document.getElementById("inquiryTitle").value.trim();
-  const content=document.getElementById("inquiryContent").value.trim();
-  const isSecret=true;
-  if(!name||!title||!content){alert("작성자명, 제목, 문의 내용을 입력해주세요.");return;}
-  button.disabled=true;button.textContent="등록 중...";
-  try{
-    const {error}=await supabaseClient.from("inquiries").insert([{
-      customer_name:name, contact:contact||null, title, content, is_secret:isSecret
-    }]);
-    if(error) throw error;
-    document.getElementById("inquiryForm").reset();
-    alert("비밀 문의가 등록되었습니다. 관리자만 확인할 수 있습니다.");
-  }catch(error){
-    console.error("문의 등록 실패:",error);
-    alert("문의 등록에 실패했습니다. Supabase에 inquiries 테이블과 정책을 설정했는지 확인해주세요.");
-  }finally{button.disabled=false;button.innerHTML='문의 등록하기 <span>→</span>';}
-}
-
-async function loadPublicInquiries(){
-  const list=document.getElementById("publicInquiryList");
-  if(!list)return;
-  list.innerHTML='<div class="inquiry-empty">문의 목록을 불러오는 중입니다.</div>';
-  try{
-    const {data,error}=await supabaseClient.from("inquiries").select("id,customer_name,title,content,created_at").eq("is_secret",false).order("created_at",{ascending:false}).limit(30);
-    if(error)throw error;
-    if(!data||data.length===0){list.innerHTML='<div class="inquiry-empty">아직 공개 문의가 없습니다. 첫 문의를 남겨보세요.</div>';return;}
-    list.innerHTML=data.map(item=>{
-      const date=item.created_at?new Date(item.created_at).toLocaleDateString("ko-KR"):"";
-      return `<article class="public-inquiry"><div class="public-inquiry-top"><div class="public-inquiry-title">${escapeHtml(item.title)}</div><div class="public-inquiry-meta">${escapeHtml(item.customer_name)} · ${escapeHtml(date)}</div></div><div class="public-inquiry-content">${escapeHtml(item.content)}</div></article>`;
-    }).join("");
-  }catch(error){
-    console.error("공개 문의 불러오기 실패:",error);
-    list.innerHTML='<div class="inquiry-empty">문의 게시판 준비 중입니다. 관리자에게 문의해주세요.</div>';
-  }
-}
-
-/* ==========================================
-   관리자 문의 확인 / 삭제 (Supabase Auth)
-========================================== */
-function openInquiryAdminLogin(){
-  document.getElementById("inquiryAdminModal").style.display="flex";
-  syncInquiryAdminSession();
-}
-async function syncInquiryAdminSession(){
-  try{
-    const {data,error}=await supabaseClient.auth.getSession();
-    if(error) throw error;
-    const signedIn=!!data.session;
-    document.getElementById("inquiryAdminLoginBox").style.display=signedIn?"none":"block";
-    document.getElementById("inquiryAdminContent").style.display=signedIn?"block":"none";
-    if(signedIn) await loadAdminInquiries();
-  }catch(error){console.error("관리자 세션 확인 실패:",error);alert("관리자 로그인 상태를 확인하지 못했습니다.");}
-}
-async function loginInquiryAdmin(){
-  const email=document.getElementById("inquiryAdminEmail").value.trim();
-  const password=document.getElementById("inquiryAdminPassword").value;
-  if(!email||!password){alert("관리자 이메일과 비밀번호를 입력해주세요.");return;}
-  const button=document.querySelector("#inquiryAdminLoginBox .btn");button.disabled=true;button.textContent="로그인 중...";
-  try{
-    const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
-    if(error) throw error;if(!data.session)throw new Error("관리자 세션을 만들지 못했습니다.");
-    document.getElementById("inquiryAdminPassword").value="";await syncInquiryAdminSession();
-  }catch(error){console.error("문의 관리자 로그인 실패:",error);alert("로그인에 실패했습니다. Supabase Authentication에 등록한 관리자 이메일과 비밀번호를 확인해주세요.");}
-  finally{button.disabled=false;button.textContent="관리자 로그인";}
-}
-async function loadAdminInquiries(){
-  const list=document.getElementById("adminInquiryList");list.innerHTML='<div class="inquiry-empty">전체 문의를 불러오는 중입니다.</div>';
-  try{
-    const {data,error}=await supabaseClient.from("inquiries").select("id,customer_name,contact,title,content,is_secret,created_at").order("created_at",{ascending:false}).limit(200);
-    if(error)throw error;if(!data||data.length===0){list.innerHTML='<div class="inquiry-empty">등록된 문의가 없습니다.</div>';return;}
-    list.innerHTML=data.map(item=>{
-      const date=item.created_at?new Date(item.created_at).toLocaleString("ko-KR"):"날짜 없음";
-      const badge=item.is_secret?'<span class="secret-badge">🔒 비밀 문의</span>':'<span class="public-badge">공개 문의</span>';
-      const contact=item.contact?`<div class="admin-inquiry-contact">답변 연락처: ${escapeHtml(item.contact)}</div>`:"";
-      return `<article class="admin-inquiry-card"><div class="admin-inquiry-card-head"><div><div class="admin-inquiry-title">${escapeHtml(item.title||"제목 없음")}</div><div class="admin-inquiry-meta">${escapeHtml(item.customer_name||"익명")} · ${escapeHtml(date)} · 문의번호 ${escapeHtml(String(item.id))}</div></div><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${badge}<button class="inquiry-delete-btn" type="button" onclick="deleteAdminInquiry(${Number(item.id)})">삭제</button></div></div><div class="admin-inquiry-body">${escapeHtml(item.content||"")}</div>${contact}</article>`;
-    }).join("");
-  }catch(error){console.error("관리자 문의 불러오기 실패:",error);list.innerHTML='<div class="inquiry-empty">문의 목록을 불러오지 못했습니다. SQL 설정 파일을 실행하고 관리자 인증 및 RLS 정책을 확인해주세요.</div>'; }
-}
-async function deleteAdminInquiry(id){
-  if(!Number.isSafeInteger(id)||id<=0)return;if(!confirm("이 문의를 영구 삭제할까요? 삭제한 문의는 복구할 수 없습니다."))return;
-  try{const {data:sessionData}=await supabaseClient.auth.getSession();if(!sessionData.session){alert("관리자 로그인이 필요합니다.");await syncInquiryAdminSession();return;}
-    const {error}=await supabaseClient.from("inquiries").delete().eq("id",id);if(error)throw error;await loadAdminInquiries();await loadPublicInquiries();
-  }catch(error){console.error("문의 삭제 실패:",error);alert("문의 삭제에 실패했습니다. SQL 설정 파일의 관리자 삭제 정책을 실행했는지 확인해주세요.");}
-}
-async function logoutInquiryAdmin(){
-  const {error}=await supabaseClient.auth.signOut();if(error){alert("로그아웃에 실패했습니다.");return;}
-  document.getElementById("inquiryAdminContent").style.display="none";document.getElementById("inquiryAdminLoginBox").style.display="block";document.getElementById("adminInquiryList").innerHTML="";
-}
 
 /* ==========================================
    모달 닫기
