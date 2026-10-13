@@ -682,6 +682,10 @@ ABOUT
 NOTICE
 </button>
 
+<button onclick="scrollToSection('inquiry')">
+INQUIRY
+</button>
+
 </nav>
 
 
@@ -810,6 +814,21 @@ NOTICE
 
 </div>
 
+</section>
+
+
+<!-- 고객 비밀 문의 -->
+<section id="inquiry">
+  <h2 class="section-title">INQUIRY</h2>
+  <div class="notice">
+    <p>상품 및 주문 관련 문의를 남겨주세요. 문의 내용은 공개되지 않습니다.</p>
+    <input id="inquiryName" class="input" maxlength="40" placeholder="이름">
+    <input id="inquiryContact" class="input" maxlength="100" placeholder="연락처 또는 이메일">
+    <input id="inquiryTitle" class="input" maxlength="100" placeholder="문의 제목">
+    <textarea id="inquiryContent" class="input" maxlength="3000" rows="6" placeholder="문의 내용을 입력해주세요."></textarea>
+    <button class="btn" onclick="submitInquiry()">비밀 문의 보내기</button>
+    <p style="font-size:12px;color:#777;margin-top:10px">문의 내용은 공개 게시판에 표시되지 않습니다.</p>
+  </div>
 </section>
 
 
@@ -1014,46 +1033,16 @@ onclick="createOrder()"
      관리자 로그인
 ================================== -->
 
-<div
-id="adminLoginModal"
-class="modal-bg"
->
-
-<div class="modal">
-
-<button
-class="close"
-onclick="closeModal('adminLoginModal')"
->
-×
-</button>
-
-
-<h2>
-관리자 로그인
-</h2>
-
-
-<input
-id="adminPassword"
-type="password"
-class="input"
-placeholder="관리자 비밀번호"
->
-
-
-<button
-class="btn"
-onclick="loginAdmin()"
->
-로그인
-</button>
-
-
+<div id="adminLoginModal" class="modal-bg">
+  <div class="modal">
+    <button class="close" onclick="closeModal('adminLoginModal')">×</button>
+    <h2>관리자 로그인</h2>
+    <p style="color:#777;line-height:1.7">Supabase 관리자 계정으로 로그인해주세요.</p>
+    <input id="adminEmail" type="email" class="input" placeholder="관리자 이메일" autocomplete="username">
+    <input id="adminPassword" type="password" class="input" placeholder="관리자 비밀번호" autocomplete="current-password">
+    <button class="btn" onclick="loginAdmin()">로그인</button>
+  </div>
 </div>
-
-</div>
-
 
 
 <!-- ==================================
@@ -1194,6 +1183,11 @@ style="color:#888;text-align:center;padding:30px"
 
 </div>
 
+<h3 style="margin-top:40px;">고객 문의 관리</h3>
+<button class="btn" onclick="loadInquiries()">문의 새로고침</button>
+<div id="inquiryAdminList">
+  <p style="color:#888;padding:20px">문의 목록을 불러오려면 새로고침을 눌러주세요.</p>
+</div>
 
 </div>
 
@@ -2217,9 +2211,8 @@ checkoutButton.textContent = "결제하기";
 
 function openAdminLogin(){
 
-document.getElementById(
-"adminPassword"
-).value = "";
+document.getElementById("adminEmail").value = "";
+document.getElementById("adminPassword").value = "";
 
 
 document.getElementById(
@@ -2235,36 +2228,31 @@ document.getElementById(
    관리자 로그인 확인
 ========================================== */
 
-function loginAdmin(){
+async function loginAdmin(){
+  const email = document.getElementById("adminEmail").value.trim();
+  const password = document.getElementById("adminPassword").value;
 
-const password =
+  if(!email || !password){
+    alert("이메일과 비밀번호를 입력해주세요.");
+    return;
+  }
 
-document.getElementById(
-"adminPassword"
-).value;
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  if(error){
+    console.error("관리자 로그인 오류:", error);
+    alert("로그인 실패: 이메일과 비밀번호를 확인해주세요.");
+    return;
+  }
 
+  if(data.user?.id !== "f120d04c-12b2-4873-9b1f-2aceb2c9a4d7"){
+    await supabaseClient.auth.signOut();
+    alert("관리자 권한이 없는 계정입니다.");
+    return;
+  }
 
-if(
-password === "cardpocket"
-){
-
-closeModal(
-"adminLoginModal"
-);
-
-
-openAdmin();
-
-}else{
-
-alert(
-"관리자 비밀번호가 틀렸습니다."
-);
-
+  closeModal("adminLoginModal");
+  openAdmin();
 }
-
-}
-
 
 
 /* ==========================================
@@ -2284,8 +2272,9 @@ document.getElementById(
 
 renderAdminProducts();
 
-
 loadOrders();
+
+loadInquiries();
 
 }
 
@@ -3194,6 +3183,116 @@ renderAdminProducts();
 
 }
 
+
+
+/* ==========================================
+   고객 비밀 문의 등록
+========================================== */
+async function submitInquiry(){
+  const customer_name = document.getElementById("inquiryName").value.trim();
+  const contact = document.getElementById("inquiryContact").value.trim();
+  const title = document.getElementById("inquiryTitle").value.trim();
+  const content = document.getElementById("inquiryContent").value.trim();
+
+  if(!customer_name || !title || !content){
+    alert("이름, 문의 제목, 문의 내용을 입력해주세요.");
+    return;
+  }
+  if(customer_name.length > 40 || title.length > 100 || content.length > 3000){
+    alert("입력 내용이 너무 깁니다. 내용을 줄여주세요.");
+    return;
+  }
+
+  const { error } = await supabaseClient.from("inquiries").insert([{
+    customer_name,
+    contact,
+    title,
+    content,
+    is_secret: true
+  }]);
+
+  if(error){
+    console.error("문의 등록 오류:", error);
+    alert("문의 등록에 실패했습니다.\n\n" + error.message);
+    return;
+  }
+
+  document.getElementById("inquiryName").value = "";
+  document.getElementById("inquiryContact").value = "";
+  document.getElementById("inquiryTitle").value = "";
+  document.getElementById("inquiryContent").value = "";
+  alert("비밀 문의가 접수되었습니다.");
+}
+
+
+/* ==========================================
+   관리자 문의 목록
+========================================== */
+async function loadInquiries(){
+  const container = document.getElementById("inquiryAdminList");
+  if(!container) return;
+  container.innerHTML = '<p style="color:#888;padding:20px">문의 불러오는 중...</p>';
+
+  const { data: authData, error: authError } = await supabaseClient.auth.getUser();
+  if(authError || authData.user?.id !== "f120d04c-12b2-4873-9b1f-2aceb2c9a4d7"){
+    container.innerHTML = '<p style="color:#888;padding:20px">관리자 계정으로 로그인하면 문의를 확인할 수 있습니다.</p>';
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("inquiries")
+    .select("id, customer_name, contact, title, content, is_secret, created_at")
+    .order("created_at", { ascending:false });
+
+  if(error){
+    console.error("문의 조회 오류:", error);
+    container.innerHTML = '<p style="color:#c00;padding:20px">문의 조회 실패: ' + escapeHtml(error.message) + '</p>';
+    return;
+  }
+  if(!data || data.length === 0){
+    container.innerHTML = '<p style="color:#888;padding:20px">접수된 문의가 없습니다.</p>';
+    return;
+  }
+
+  container.innerHTML = data.map(item => `
+    <div class="order">
+      <div class="order-header">
+        <strong>${escapeHtml(item.title)}</strong>
+        <span class="order-date">${escapeHtml(new Date(item.created_at).toLocaleString("ko-KR"))}</span>
+      </div>
+      <div class="order-info">
+        <strong>이름:</strong> ${escapeHtml(item.customer_name)}<br>
+        <strong>연락처:</strong> ${escapeHtml(item.contact || "미입력")}<br>
+        <strong>비밀 문의:</strong> ${item.is_secret ? "예" : "아니오"}
+      </div>
+      <div class="order-items" style="white-space:pre-wrap;overflow-wrap:anywhere">${escapeHtml(item.content)}</div>
+      <button class="btn btn-red" onclick="deleteInquiry(${Number(item.id)})">문의 삭제</button>
+    </div>
+  `).join("");
+}
+
+
+/* ==========================================
+   관리자 문의 삭제
+========================================== */
+async function deleteInquiry(id){
+  if(!confirm("이 문의를 삭제할까요? 삭제 후 복구할 수 없습니다.")) return;
+
+  const { data: authData, error: authError } = await supabaseClient.auth.getUser();
+  if(authError || authData.user?.id !== "f120d04c-12b2-4873-9b1f-2aceb2c9a4d7"){
+    alert("관리자 로그인이 필요합니다.");
+    return;
+  }
+
+  const { error } = await supabaseClient.from("inquiries").delete().eq("id", id);
+  if(error){
+    console.error("문의 삭제 오류:", error);
+    alert("문의 삭제 실패\n\n" + error.message);
+    return;
+  }
+  alert("문의가 삭제되었습니다.");
+  await loadInquiries();
+}
 
 
 /* ==========================================
